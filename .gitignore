@@ -1,0 +1,34 @@
+# Игнорируем папки и файлы, которые не нужны в репозитории
+.idea/
+.gradle/
+target/
+*.iml
+*.iws
+*.ipr
+
+# Игнорируем системные файлы
+.DS_Store
+
+# Игнорируем временные файлы и каталоги
+bin/
+build/
+
+# Игнорируем файлы Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Игнорируем настройки проекта Eclipse
+.settings/
+
+# Игнорируем настройки, относящиеся к IntelliJ IDEA
+*.ipr
+*.iws
+*.iml
+
+# Добавляем нужные файлы и папки
+!src/
+!.gitignore
+!.gitattributes
+!pom.xml
