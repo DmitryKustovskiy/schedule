@@ -12,7 +12,7 @@ import spring.service.StudentService;
 @SpringBootApplication
 public class SpringJdbcBootApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SpringJdbcBootApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(SpringJdbcBootApplication.class, args);
     }
 
 }
