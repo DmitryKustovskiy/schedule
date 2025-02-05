@@ -36,8 +36,8 @@ public class ScheduleItemRepository {
 
     public ScheduleItem save(ScheduleItem scheduleItem) {
         scheduleItem.setId(template.queryForObject(SAVE_SQL,
-                Integer.class, scheduleItem.getGroup().getId(),
-                scheduleItem.getSubject().getId(), scheduleItem.getStartTime(), scheduleItem.getEndTime()));
+                Integer.class, scheduleItem.getClassId(),
+                scheduleItem.getSubjectId(), scheduleItem.getStartTime(), scheduleItem.getEndTime()));
         return scheduleItem;
     }
 

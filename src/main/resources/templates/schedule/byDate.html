@@ -51,8 +51,10 @@
         <p><b>Group:</b> <span th:text="${schedule.getGroup().getName()}"></span></p>
         <p><b>Subject:</b> <span th:text="${schedule.getSubject().getName()}"></span></p>
         <p><b>Time:</b>
-            <span th:text="${#numbers.formatInteger(schedule.getStartTime().getHour(), 2)}"></span>:<span th:text="${#numbers.formatInteger(schedule.getStartTime().getMinute(), 2)}"></span> -
-            <span th:text="${#numbers.formatInteger(schedule.getEndTime().getHour(), 2)}"></span>:<span th:text="${#numbers.formatInteger(schedule.getEndTime().getMinute(), 2)}"></span>
+            <span th:text="${#numbers.formatInteger(schedule.getStartTime().getHour(), 2)}"></span>:<span
+                    th:text="${#numbers.formatInteger(schedule.getStartTime().getMinute(), 2)}"></span> -
+            <span th:text="${#numbers.formatInteger(schedule.getEndTime().getHour(), 2)}"></span>:<span
+                    th:text="${#numbers.formatInteger(schedule.getEndTime().getMinute(), 2)}"></span>
         </p>
     </li>
 </ul>

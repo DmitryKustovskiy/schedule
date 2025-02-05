@@ -3,9 +3,7 @@ package spring.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import spring.model.ScheduleItem;
 import spring.service.GroupService;
 import spring.service.ScheduleItemService;
@@ -34,11 +32,9 @@ public class ScheduleItemController {
     @GetMapping
     public String findAll(Model model) {
         List<ScheduleItem> schedules = scheduleItemService.findAll();
-
-        // Собираем уникальные даты
         Set<LocalDate> uniqueDates = schedules.stream()
-                .map(schedule -> schedule.getStartTime().toLocalDate()) // Берем только дату
-                .collect(Collectors.toSet()); // Убираем дубли
+                .map(schedule -> schedule.getStartTime().toLocalDate())
+                .collect(Collectors.toSet());
 
         model.addAttribute("uniqueDates", uniqueDates);
         return "schedule/findAll";
@@ -47,10 +43,23 @@ public class ScheduleItemController {
     @GetMapping("/{date}")
     public String findByDate(@PathVariable("date") LocalDate date, Model model) {
         List<ScheduleItem> schedules = scheduleItemService.findAllWithDetails().stream()
-                .filter(schedule -> schedule.getStartTime().toLocalDate().equals(date)) // Фильтруем по дате
+                .filter(schedule -> schedule.getStartTime().toLocalDate().equals(date))
                 .collect(Collectors.toList());
         model.addAttribute("schedules", schedules);
         model.addAttribute("date", date);
         return "schedule/byDate";
+    }
+
+    @GetMapping("/new")
+    public String newSchedule(@ModelAttribute("schedule") ScheduleItem scheduleItem) {
+        return "schedule/new";
+    }
+
+    @PostMapping
+    public String save(@ModelAttribute("schedule") ScheduleItem scheduleItem, Model model) {
+        model.addAttribute("group", groupService.findAll());
+        model.addAttribute("subject", subjectService.findAll());
+        scheduleItemService.save(scheduleItem);
+        return "redirect:/schedule";
     }
 }

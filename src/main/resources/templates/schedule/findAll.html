@@ -43,8 +43,8 @@
      th:text="${date.getDayOfMonth() + ' of ' + date.getMonth() + ', ' + date.getYear()}">
   </a>
 </div>
-<!--<a href="/groups/new" class="button">New sch</a>-->
-<!--<br/>-->
+
 <a th:href="@{/menu}" class="button">Main Menu</a>
+<a th:href="@{schedule/new}" class="button">Create new schedule</a>
 </body>
 </html>
