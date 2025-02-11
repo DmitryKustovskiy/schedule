@@ -12,40 +12,40 @@ import spring.model.Subject;
 
 @Repository
 public class SubjectRepository {
-	private static final String SAVE_SQL = "INSERT INTO subject (name) values(?) RETURNING id";
-	private static final String FIND_ALL_SQL = "SELECT * FROM subject";
-	private static final String FIND_BY_ID_SQL = "SELECT * FROM subject WHERE id=?";
-	private static final String UPDATE_SQL = "UPDATE subject set name=? WHERE id=?";
-	private static final String DELETE_SQL = "DELETE FROM subject WHERE id=?";
-	
-	private final JdbcTemplate template;
+    private final JdbcTemplate template;
 
-	@Autowired
-	public SubjectRepository(JdbcTemplate template) {
-		this.template = template;
-	}
+    private static final String SAVE_SQL = "INSERT INTO subject (name) values(?) RETURNING id";
+    private static final String FIND_ALL_SQL = "SELECT * FROM subject";
+    private static final String FIND_BY_ID_SQL = "SELECT * FROM subject WHERE id=?";
+    private static final String UPDATE_SQL = "UPDATE subject set name=? WHERE id=?";
+    private static final String DELETE_SQL = "DELETE FROM subject WHERE id=?";
 
-	public List<Subject> findAll() {
-		return template.query(FIND_ALL_SQL, new BeanPropertyRowMapper<>(Subject.class));
-	}
+    @Autowired
+    public SubjectRepository(JdbcTemplate template) {
+        this.template = template;
+    }
 
-	public Subject findById(int id) {
-		return template.query(FIND_BY_ID_SQL, new BeanPropertyRowMapper<>(Subject.class), id)
-				.stream().findFirst()
-				.orElse(null);
-	}
+    public List<Subject> findAll() {
+        return template.query(FIND_ALL_SQL, new BeanPropertyRowMapper<>(Subject.class));
+    }
 
-	public Subject save(Subject subject) {
-		subject.setId(template.queryForObject(SAVE_SQL, Integer.class, subject.getName()));
-		return subject;
-	}
+    public Subject findById(int id) {
+        return template.query(FIND_BY_ID_SQL, new BeanPropertyRowMapper<>(Subject.class), id)
+                .stream().findFirst()
+                .orElse(null);
+    }
 
-	public void update(Subject subject, int id) {
-		template.update(UPDATE_SQL, subject.getName(), id);
-	}
+    public Subject save(Subject subject) {
+        subject.setId(template.queryForObject(SAVE_SQL, Integer.class, subject.getName()));
+        return subject;
+    }
 
-	public boolean delete(int id) {
-		return template.update(DELETE_SQL, id) > 0;
-	}
+    public void update(Subject subject, int id) {
+        template.update(UPDATE_SQL, subject.getName(), id);
+    }
+
+    public boolean delete(int id) {
+        return template.update(DELETE_SQL, id) > 0;
+    }
 
 }

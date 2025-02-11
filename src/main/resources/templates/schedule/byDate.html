@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Schedule on <span th:text="${date}"></span></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,11 +39,9 @@
             cursor: pointer;
         }
     </style>
-</head>
+
 <body>
-
-<h4>Schedule for <span th:text="${date.getDayOfMonth() + ' ' + date.getMonth() + ' of ' + date.getYear()}"></span>:</h4>
-
+<h4>Schedule for <span th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:</h4>
 <ul>
     <li th:each="schedule : ${schedules}">
         <p><b>Group:</b> <span th:text="${schedule.getGroup().getName()}"></span></p>
@@ -58,8 +54,6 @@
         </p>
     </li>
 </ul>
-
 <a th:href="@{/schedule}" class="button">Back to all schedules</a>
-
 </body>
 </html>

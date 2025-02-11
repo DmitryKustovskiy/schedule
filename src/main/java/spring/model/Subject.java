@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Component
 public class Subject {
-	
 	private int id;
 	private String name;
 	private List<ScheduleItem> schedules;

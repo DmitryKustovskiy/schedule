@@ -14,9 +14,7 @@ import lombok.Setter;
 @Data
 @NoArgsConstructor
 @Component
-@Getter
 public class Student {
-
 	private int id;
 	private String firstName;
 	private String lastName;

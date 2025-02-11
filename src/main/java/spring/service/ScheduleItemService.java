@@ -17,7 +17,7 @@ public class ScheduleItemService {
 
     @Autowired
     public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupRepository groupRepository, SubjectRepository subjectRepository) {
-        this.scheduleRepository=scheduleRepository;
+        this.scheduleRepository = scheduleRepository;
         this.groupRepository = groupRepository;
         this.subjectRepository = subjectRepository;
     }
@@ -49,6 +49,14 @@ public class ScheduleItemService {
 
     public boolean delete(int id) {
         return scheduleRepository.delete(id);
+    }
+
+    public boolean deleteByClassId(int classId) {
+        return scheduleRepository.deleteScheduleByClassId(classId);
+    }
+
+    public boolean deleteBySubjectId(int subjectId) {
+        return scheduleRepository.deleteScheduleBySubjectId(subjectId);
     }
 
 }

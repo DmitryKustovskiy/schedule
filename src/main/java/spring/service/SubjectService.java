@@ -11,7 +11,6 @@ import spring.repository.SubjectRepository;
 
 @Service
 public class SubjectService {
-
 	private final SubjectRepository repository;
 
 	@Autowired

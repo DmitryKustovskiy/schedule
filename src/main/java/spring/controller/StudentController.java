@@ -62,16 +62,13 @@ public class StudentController {
     public String changeGroup(@PathVariable("id") int id, Model model) {
         model.addAttribute("student", studentService.findById(id));
         model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("group", groupService.findGroupByStudentId(id));
         return "student/changeGroup";
     }
 
     @PostMapping("/{id}/changeGroup")
     public String updateGroup(@ModelAttribute("student") Student student, @PathVariable("id") int id, Model model) {
         model.addAttribute("groups", groupService.findAll());
-        if (!studentService.checkIfClassIdExists(student.getClassId())) {
-            model.addAttribute("errorMessage", "Sorry! Group with this Id doesn't exist.");
-            return "student/changeGroup";
-        }
         studentService.setGroup(student, id);
         return "redirect:/students";
     }

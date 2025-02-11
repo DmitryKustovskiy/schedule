@@ -2,6 +2,7 @@ package spring.model;
 
 import java.util.List;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;

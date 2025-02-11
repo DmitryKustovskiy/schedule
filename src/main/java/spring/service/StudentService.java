@@ -12,7 +12,6 @@ import spring.repository.StudentRepository;
 
 @Service
 public class StudentService {
-
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
 

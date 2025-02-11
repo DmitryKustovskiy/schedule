@@ -8,45 +8,42 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import spring.model.Group;
-import spring.model.Student;
 
 @Repository
 public class GroupRepository {
-	private static final String SAVE_SQL = "INSERT INTO class (name) values(?) RETURNING id";
-	private static final String FIND_ALL_SQL = "SELECT * FROM class";
-	private static final String FIND_BY_ID_SQL = "SELECT * FROM class WHERE id=?";
-	private static final String UPDATE_SQL = "UPDATE class set name=? WHERE id=?";
-	private static final String DELETE_SQL = "DELETE FROM class WHERE id=?";
+    private final JdbcTemplate template;
 
-	private final JdbcTemplate template;
+    private static final String SAVE_SQL = "INSERT INTO class (name) values(?) RETURNING id";
+    private static final String FIND_ALL_SQL = "SELECT * FROM class";
+    private static final String FIND_BY_ID_SQL = "SELECT * FROM class WHERE id=?";
+    private static final String UPDATE_SQL = "UPDATE class set name=? WHERE id=?";
+    private static final String DELETE_SQL = "DELETE FROM class WHERE id=?";
 
-	private final StudentRepository studentRepository;
-	@Autowired
-	public GroupRepository(JdbcTemplate template, StudentRepository studentRepository) {
-		this.template = template;
-		this.studentRepository = studentRepository;
-	}
+    @Autowired
+    public GroupRepository(JdbcTemplate template) {
+        this.template = template;
+    }
 
-	public List<Group> findAll() {
-		return template.query(FIND_ALL_SQL, new BeanPropertyRowMapper<>(Group.class));
-	}
+    public List<Group> findAll() {
+        return template.query(FIND_ALL_SQL, new BeanPropertyRowMapper<>(Group.class));
+    }
 
-	public Group findById(int id) {
-		return template.query(FIND_BY_ID_SQL, new BeanPropertyRowMapper<>(Group.class), id)
-				.stream().findFirst()
-				.orElse(null);
-	}
+    public Group findById(int id) {
+        return template.query(FIND_BY_ID_SQL, new BeanPropertyRowMapper<>(Group.class), id)
+                .stream().findFirst()
+                .orElse(null);
+    }
 
-	public Group save(Group group) {
-		group.setId(template.queryForObject(SAVE_SQL, Integer.class, group.getName()));
-		return group;
-	}
+    public Group save(Group group) {
+        group.setId(template.queryForObject(SAVE_SQL, Integer.class, group.getName()));
+        return group;
+    }
 
-	public void update(Group group, int id) {
-		template.update(UPDATE_SQL, group.getName(), id);
-	}
+    public void update(Group group, int id) {
+        template.update(UPDATE_SQL, group.getName(), id);
+    }
 
-	public boolean delete(int id) {
-		return template.update(DELETE_SQL, id) > 0;
-	}
+    public boolean delete(int id) {
+        return template.update(DELETE_SQL, id) > 0;
+    }
 }

@@ -11,14 +11,14 @@ import spring.model.Student;
 
 @Repository
 public class StudentRepository {
+    private final JdbcTemplate template;
+
     private static final String SAVE_SQL = "INSERT INTO student (first_name, last_name, class_id) values(?,?,?) RETURNING id";
     private static final String FIND_ALL_SQL = "SELECT * FROM student";
     private static final String FIND_BY_ID_SQL = "SELECT * FROM student WHERE id=?";
     private static final String UPDATE_SQL = "UPDATE student SET first_name=?, last_name=? WHERE id=?";
     private static final String DELETE_SQL = "DELETE FROM student WHERE id=?";
     private static final String UPDATE_GROUP_FROM_STUDENT = "UPDATE student SET class_id = ? WHERE id = ?";
-
-    private final JdbcTemplate template;
 
     @Autowired
     public StudentRepository(JdbcTemplate template) {

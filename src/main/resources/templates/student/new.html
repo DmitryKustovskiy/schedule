@@ -49,16 +49,19 @@
         color: white;
         border: none;
         border-radius: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 2px;
+        margin-top: 8px;
         text-decoration: none;
         cursor: pointer;
     }
 </style>
+
 <head>
     <title>Create new student</title>
 </head>
 <body>
-<p style="font-weight: bold; color: slateblue; text-align: left;">Please enter name, lastname and group of a new student.</p>
+<p style="font-weight: bold; color: slateblue; text-align: left;">Please enter name, last name and group of a new
+    student.</p>
 <form th:method="POST" th:action="@{/students/new}" th:object="${student}">
     <label for="firstName">Enter first name: </label>
     <input type="text" th:field="*{firstName}" id="firstName"/>
@@ -66,13 +69,11 @@
     <label for="lastName">Enter last name: </label>
     <input type="text" th:field="*{lastName}" id="lastName"/>
     <br/>
-    <label for="classId">Enter class Id: </label>
-    <input type="number" th:field="*{classId}" id="classId"/>
-    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
-    <p style="font-weight: bold; color: black;">Enter Id of the Group you want to attach.</p>
-    <div th:each="group : ${groups}">
-        <p th:utext="${group.getId() + ': ' + group.getName()}">Group</p>
-    </div>
+    <label for="classId">Enter Group: </label>
+    <select th:field="*{classId}" id="classId">
+        <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
+    </select>
+    <br/>
     <input type="submit" value="Create" class="button"/>
 </form>
 <a th:href="@{/students}" class="button">Cancel</a>

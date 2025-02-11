@@ -11,13 +11,15 @@ import java.util.List;
 
 @Repository
 public class ScheduleItemRepository {
+    private final JdbcTemplate template;
+
     private static final String SAVE_SQL = "INSERT INTO schedule (class_id, subject_id, start_time, end_time) values(?,?,?,?) RETURNING id";
     private static final String FIND_ALL_SQL = "SELECT * FROM schedule";
     private static final String FIND_BY_ID_SQL = "SELECT * FROM schedule WHERE id=?";
     private static final String UPDATE_SQL = "UPDATE schedule set class_id=?, subject_id=?, start_time=?, end_time=? WHERE id=?";
     private static final String DELETE_SQL = "DELETE FROM schedule WHERE id=?";
-
-    private final JdbcTemplate template;
+    private static final String DELETE_SCHEDULE_BY_CLASS_ID = "DELETE FROM schedule WHERE class_id=?";
+    private static final String DELETE_SCHEDULE_BY_SUBJECT_ID = "DELETE FROM schedule WHERE subject_id=?";
 
     @Autowired
     public ScheduleItemRepository(JdbcTemplate template) {
@@ -48,6 +50,14 @@ public class ScheduleItemRepository {
 
     public boolean delete(int id) {
         return template.update(DELETE_SQL, id) > 0;
+    }
+
+    public boolean deleteScheduleByClassId(int classId) {
+        return template.update(DELETE_SCHEDULE_BY_CLASS_ID, classId) > 0;
+    }
+
+    public boolean deleteScheduleBySubjectId(int subjectId) {
+        return template.update(DELETE_SCHEDULE_BY_SUBJECT_ID, subjectId) > 0;
     }
 }
 

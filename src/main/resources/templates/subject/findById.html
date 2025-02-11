@@ -1,55 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <style>
-a {
-	margin-bottom: 10px;
-	display: block;
-	text-decoration: none;
-}
+    a {
+        margin-bottom: 10px;
+        display: block;
+        text-decoration: none;
+    }
 
-a:hover {
-	color: rgb(27, 179, 25);
-}
+    a:hover {
+        color: rgb(27, 179, 25);
+    }
 
-button:hover, input[type="submit"]:hover {
-	background-color: rgb(0, 123, 255);
-	color: white;
-	text-decoration: none;
-}
+    button:hover, input[type="submit"]:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
 
-a.button:hover {
-	background-color: rgb(0, 123, 255);
-	color: white;
-	text-decoration: none;
-}
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
 
-.button {
-	display: inline-block;
-	padding: 7px 16px;
-	font-size: 12px;
-	text-align: center;
-	background-color: #343a40;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	margin-bottom: 10px;
-	cursor: pointer;
-	text-decoration: none;
-}
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-decoration: none;
+    }
 </style>
+
 <head>
-<title>Subject</title>
+    <title>Subject</title>
 </head>
 <body>
-	<p th:text="${'Subject: ' + subject.getName()}">VALUE</p>
-	<a th:href="@{/subjects/{id}/edit(id=${subject.getId()})}"
-		class="button">Edit</a>
+<p th:text="${'Subject: ' + subject.getName()}">VALUE</p>
+<a th:href="@{/subjects/{id}/edit(id=${subject.getId()})}"
+   class="button">Edit</a>
 
-	<form th:method="DELETE"
-		th:action="@{/subjects/{id}/delete(id=${subject.getId()})}">
-		<input type="submit" value="Delete" class="button" />
-	</form>
+<form th:method="DELETE"
+      th:action="@{/subjects/{id}/delete(id=${subject.getId()})}">
+    <input type="submit" value="Delete" class="button"/>
+</form>
 
-	<a th:href="@{/subjects}" class="button">Back to the Main Page</a>
+<a th:href="@{/subjects}" class="button">Back to the Main Page</a>
 </body>
 </html>

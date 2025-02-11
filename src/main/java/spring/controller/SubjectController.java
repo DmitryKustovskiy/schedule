@@ -10,17 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import spring.model.Subject;
+import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
 
 @Controller
 @RequestMapping("/subjects")
 public class SubjectController {
-
     private final SubjectService subjectService;
+    private final ScheduleItemService scheduleItemService;
 
     @Autowired
-    public SubjectController(SubjectService subjectService) {
+    public SubjectController(SubjectService subjectService, ScheduleItemService scheduleItemService) {
         this.subjectService = subjectService;
+        this.scheduleItemService = scheduleItemService;
     }
 
     @GetMapping
@@ -64,6 +66,7 @@ public class SubjectController {
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable("id") int id) {
+        scheduleItemService.deleteBySubjectId(id);
         subjectService.delete(id);
         return "redirect:/subjects";
     }

@@ -31,6 +31,7 @@
         cursor: pointer;
     }
 </style>
+
 <head>
     <meta charset="UTF-8">
     <title>All Students</title>
@@ -40,7 +41,6 @@
     <a th:href="@{/students/{id}(id=${student.getId()})}"
        th:text="${student.getFirstName() + ' ' + student.getLastName()}">Student</a>
 </div>
-
 <a href="/students/new" class="button">New Student</a>
 <br/>
 <a th:href="@{/menu}" class="button">Main menu</a>

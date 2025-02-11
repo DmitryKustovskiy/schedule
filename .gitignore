@@ -5,6 +5,7 @@ target/
 *.iml
 *.iws
 *.ipr
+*.yaml
 
 # Игнорируем системные файлы
 .DS_Store

@@ -54,11 +54,11 @@
         cursor: pointer;
     }
 </style>
+
 <head>
     <title>Update student</title>
 </head>
 <body>
-
 <form th:method="POST" th:action="@{/students/{id}(id=${student.getId()})}" th:object="${student}">
     <label for="firstName">Enter first name: </label>
     <input type="text" th:field="*{firstName}" id="firstName"/>

@@ -36,21 +36,21 @@
         cursor: pointer;
         text-decoration: none;
     }
+
 </style>
+
 <head>
     <title>Group</title>
 </head>
 <body>
-<p th:text="${'Group: ' + group.getName()}">VALUE</p>
+<p> Group: <b th:text="${group.getName()}">VALUE</b></p>
 <a th:href="@{/groups/{id}/edit(id=${group.getId()})}"
    class="button">Edit</a>
-
 <form th:method="DELETE"
       th:action="@{/groups/{id}/delete(id=${group.getId()})}">
     <input type="submit" value="Delete" class="button"/>
     <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
 </form>
-
 <a th:href="@{/groups}" class="button">Back to the Main Page</a>
 </body>
 </html>
