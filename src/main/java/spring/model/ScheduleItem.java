@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 public class ScheduleItem {
 	private int id;
 	private int classId;
-	private Group group;
 	private int subjectId;
+	private Group group;
 	private Subject subject;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;

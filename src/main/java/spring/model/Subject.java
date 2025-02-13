@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class Subject {
 	private int id;
 	private String name;
-	private List<ScheduleItem> schedules;
 	
 	public Subject(String name) {
 		this.name = name;
