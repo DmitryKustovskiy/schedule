@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-        h4 {
-            color: salmon;
-        }
+    h4 {
+        color: salmon;
+    }
 
-        a {
-            margin-bottom: 10px;
-            display: block;
-            text-decoration: none;
-        }
+    a {
+        margin-bottom: 10px;
+        display: block;
+        text-decoration: none;
+    }
 
-        a:hover {
-            color: rgb(27, 179, 25);
-        }
+    a:hover {
+        color: rgb(27, 179, 25);
+    }
 
-        a.button:hover {
-            background-color: rgb(0, 123, 255);
-            color: white;
-            text-decoration: none;
-        }
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
 
-        .button {
-            display: inline-block;
-            padding: 7px 16px;
-            font-size: 12px;
-            text-align: center;
-            background-color: #343a40;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
 
 <body>
-<h4>Schedule for <span th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:</h4>
+<h4>Schedule for <span
+        th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:
+</h4>
 <ul>
     <li th:each="schedule : ${schedules}">
         <p><b>Group:</b> <span th:text="${schedule.getGroup().getName()}"></span></p>

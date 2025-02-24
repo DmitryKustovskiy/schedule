@@ -1,63 +1,63 @@
 package spring.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import spring.model.Group;
+import org.springframework.transaction.annotation.Transactional;
 import spring.model.ScheduleItem;
+import spring.service.GroupService;
 
 import java.util.List;
 
 @Repository
+@Transactional(readOnly = true)
 public class ScheduleItemRepository {
-    private final JdbcTemplate template;
-
-    private static final String SAVE_SQL = "INSERT INTO schedule (class_id, subject_id, start_time, end_time) values(?,?,?,?) RETURNING id";
-    private static final String FIND_ALL_SQL = "SELECT * FROM schedule";
-    private static final String FIND_BY_ID_SQL = "SELECT * FROM schedule WHERE id=?";
-    private static final String UPDATE_SQL = "UPDATE schedule set class_id=?, subject_id=?, start_time=?, end_time=? WHERE id=?";
-    private static final String DELETE_SQL = "DELETE FROM schedule WHERE id=?";
-    private static final String DELETE_SCHEDULE_BY_CLASS_ID = "DELETE FROM schedule WHERE class_id=?";
-    private static final String DELETE_SCHEDULE_BY_SUBJECT_ID = "DELETE FROM schedule WHERE subject_id=?";
-
-    @Autowired
-    public ScheduleItemRepository(JdbcTemplate template) {
-        this.template = template;
-    }
+    @PersistenceContext
+    private EntityManager manager;
 
     public List<ScheduleItem> findAll() {
-        return template.query(FIND_ALL_SQL, new BeanPropertyRowMapper<>(ScheduleItem.class));
+        return manager.createQuery("FROM ScheduleItem", ScheduleItem.class).getResultList();
     }
 
     public ScheduleItem findById(int id) {
-        return template.query(FIND_BY_ID_SQL, new BeanPropertyRowMapper<>(ScheduleItem.class), id)
-                .stream().findFirst()
-                .orElse(null);
+        return manager.find(ScheduleItem.class, id);
     }
 
+    @Transactional
     public ScheduleItem save(ScheduleItem scheduleItem) {
-        scheduleItem.setId(template.queryForObject(SAVE_SQL,
-                Integer.class, scheduleItem.getClassId(),
-                scheduleItem.getSubjectId(), scheduleItem.getStartTime(), scheduleItem.getEndTime()));
+        manager.persist(scheduleItem);
         return scheduleItem;
     }
 
+    @Transactional
     public void update(ScheduleItem scheduleItem, int id) {
-        template.update(UPDATE_SQL, scheduleItem.getGroup().getId(),
-                scheduleItem.getSubject().getId(), scheduleItem.getStartTime(), scheduleItem.getEndTime(), id);
+        ScheduleItem updatedScheduleItem = manager.find(ScheduleItem.class, id);
+        updatedScheduleItem.setGroup(scheduleItem.getGroup());
+        updatedScheduleItem.setSubject(scheduleItem.getSubject());
+        updatedScheduleItem.setStartTime(scheduleItem.getStartTime());
+        updatedScheduleItem.setEndTime(scheduleItem.getEndTime());
     }
 
-    public boolean delete(int id) {
-        return template.update(DELETE_SQL, id) > 0;
+    @Transactional
+    public void delete(int id) {
+        ScheduleItem scheduleItemToBeRemoved = manager.find(ScheduleItem.class, id);
+        manager.remove(scheduleItemToBeRemoved);
     }
 
-    public boolean deleteScheduleByClassId(int classId) {
-        return template.update(DELETE_SCHEDULE_BY_CLASS_ID, classId) > 0;
+    @Transactional
+    public void deleteScheduleByClassId(int classId) {
+        ScheduleItem scheduleItemToBeRemoved = manager.find(ScheduleItem.class, classId);
+        if (scheduleItemToBeRemoved != null) {
+            manager.remove(scheduleItemToBeRemoved);
+        }
     }
 
-    public boolean deleteScheduleBySubjectId(int subjectId) {
-        return template.update(DELETE_SCHEDULE_BY_SUBJECT_ID, subjectId) > 0;
+    @Transactional
+    public void deleteScheduleBySubjectId(int subjectId) {
+        ScheduleItem scheduleItemToBeRemoved = manager.find(ScheduleItem.class, subjectId);
+        if (scheduleItemToBeRemoved != null) {
+            manager.remove(scheduleItemToBeRemoved);
+        }
     }
 }
 

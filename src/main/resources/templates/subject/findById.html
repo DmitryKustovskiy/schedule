@@ -42,7 +42,7 @@
     <title>Subject</title>
 </head>
 <body>
-<p th:text="${'Subject: ' + subject.getName()}">VALUE</p>
+<p> Subject: <b th:text="${subject.getName()}">VALUE</b></p>
 <a th:href="@{/subjects/{id}/edit(id=${subject.getId()})}"
    class="button">Edit</a>
 

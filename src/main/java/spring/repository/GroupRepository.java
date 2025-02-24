@@ -2,48 +2,49 @@ package spring.repository;
 
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.transaction.annotation.Transactional;
+import spring.configuration.EntityManagerUtil;
 import spring.model.Group;
+import spring.model.Student;
 
 @Repository
 public class GroupRepository {
-    private final JdbcTemplate template;
 
-    private static final String SAVE_SQL = "INSERT INTO class (name) values(?) RETURNING id";
-    private static final String FIND_ALL_SQL = "SELECT * FROM class";
-    private static final String FIND_BY_ID_SQL = "SELECT * FROM class WHERE id=?";
-    private static final String UPDATE_SQL = "UPDATE class set name=? WHERE id=?";
-    private static final String DELETE_SQL = "DELETE FROM class WHERE id=?";
-
-    @Autowired
-    public GroupRepository(JdbcTemplate template) {
-        this.template = template;
+    public List<Group> findAll(EntityManager entityManager) {
+        return entityManager.createQuery("FROM Group", Group.class).getResultList();
     }
 
-    public List<Group> findAll() {
-        return template.query(FIND_ALL_SQL, new BeanPropertyRowMapper<>(Group.class));
+    public Group findById(EntityManager entityManager, int id) {
+        return entityManager.find(Group.class, id);
     }
 
-    public Group findById(int id) {
-        return template.query(FIND_BY_ID_SQL, new BeanPropertyRowMapper<>(Group.class), id)
-                .stream().findFirst()
-                .orElse(null);
-    }
-
-    public Group save(Group group) {
-        group.setId(template.queryForObject(SAVE_SQL, Integer.class, group.getName()));
+    public Group save(EntityManager entityManager, Group group) {
+        entityManager.persist(group);
         return group;
     }
 
-    public void update(Group group, int id) {
-        template.update(UPDATE_SQL, group.getName(), id);
+
+    public void update(EntityManager entityManager, Group updatedGroup, int id) {
+        Group groupTobeUpdated = entityManager.find(Group.class, id);
+        if (groupTobeUpdated != null) {
+            groupTobeUpdated.setName(updatedGroup.getName());
+        }
     }
 
-    public boolean delete(int id) {
-        return template.update(DELETE_SQL, id) > 0;
+
+    public void delete(EntityManager entityManager, int id) {
+        Group groupToBeRemoved = entityManager.find(Group.class, id);
+        if (groupToBeRemoved != null) {
+            entityManager.remove(groupToBeRemoved);
+        }
     }
+
 }

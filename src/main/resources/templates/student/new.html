@@ -70,7 +70,7 @@
     <input type="text" th:field="*{lastName}" id="lastName"/>
     <br/>
     <label for="classId">Enter Group: </label>
-    <select th:field="*{classId}" id="classId">
+    <select th:field="*{group.id}" id="classId">
         <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
     </select>
     <br/>

@@ -59,7 +59,7 @@
     <p th:utext="${student.getFirstName() + ' ' + student.getLastName() + ' is now studying in <b>' + '' + group.getName() + '</b>'}">
     </p>
     <label for="classId">Choose a new Group:</label>
-    <select th:field="*{classId}" id="classId">
+    <select th:field="*{group.id}" id="classId">
         <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
     </select>
     <br/>

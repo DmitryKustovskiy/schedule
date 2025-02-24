@@ -3,23 +3,23 @@ package spring.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.model.ScheduleItem;
-import spring.repository.GroupRepository;
 import spring.repository.ScheduleItemRepository;
 import spring.repository.SubjectRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ScheduleItemService {
     private final ScheduleItemRepository scheduleRepository;
-    private final GroupRepository groupRepository;
-    private final SubjectRepository subjectRepository;
+    private final GroupService groupService;
+    private final SubjectService subjectService;
 
     @Autowired
-    public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupRepository groupRepository, SubjectRepository subjectRepository) {
+    public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupService groupService, SubjectService subjectService) {
         this.scheduleRepository = scheduleRepository;
-        this.groupRepository = groupRepository;
-        this.subjectRepository = subjectRepository;
+        this.groupService = groupService;
+        this.subjectService = subjectService;
     }
 
     public List<ScheduleItem> findAll() {
@@ -29,8 +29,8 @@ public class ScheduleItemService {
     public List<ScheduleItem> findAllWithDetails() {
         List<ScheduleItem> schedules = scheduleRepository.findAll();
         for (ScheduleItem schedule : schedules) {
-            schedule.setGroup(groupRepository.findById(schedule.getClassId()));
-            schedule.setSubject(subjectRepository.findById(schedule.getSubjectId()));
+            schedule.setGroup(groupService.findById(schedule.getGroup().getId()));
+            schedule.setSubject(subjectService.findById(schedule.getSubject().getId()));
         }
         return schedules;
     }
@@ -47,16 +47,26 @@ public class ScheduleItemService {
         scheduleRepository.update(scheduleItem, id);
     }
 
-    public boolean delete(int id) {
-        return scheduleRepository.delete(id);
+    public void delete(int id) {
+        scheduleRepository.delete(id);
     }
 
-    public boolean deleteByClassId(int classId) {
-        return scheduleRepository.deleteScheduleByClassId(classId);
+    public void deleteByClassId(int classId) {
+        scheduleRepository.deleteScheduleByClassId(classId);
     }
 
-    public boolean deleteBySubjectId(int subjectId) {
-        return scheduleRepository.deleteScheduleBySubjectId(subjectId);
+    public void deleteBySubjectId(int subjectId) {
+        scheduleRepository.deleteScheduleBySubjectId(subjectId);
+    }
+
+    public boolean checkIfSubjectIsNull(int subjectId) {
+        return subjectId == 0;
+    }
+    public boolean checkIfStartTimeNull(LocalDateTime startTime) {
+       return startTime == null;
+    }
+    public boolean checkIfEndTimeNull(LocalDateTime endTime) {
+        return endTime == null;
     }
 
 }

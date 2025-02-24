@@ -1,27 +1,33 @@
 package spring.model;
 
-import java.util.List;
-
+import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Component
+@Entity
+@Table(name = "student")
 public class Student {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@Column(name = "first_name")
 	private String firstName;
+	@Column(name = "last_name")
 	private String lastName;
-	private int classId;
+	@ManyToOne
+	@JoinColumn(name = "class_id") // Для связывания с таблицей Group
 	private Group group;
 
-	public Student(String firstName, String lastName) {
+	public Student(String firstName, String lastName, Group group) {
+		this.group=group;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
@@ -29,7 +35,7 @@ public class Student {
 	@Override
 	public String toString() {
 		return "id = " + id + ", " + " FirstName = " + firstName + ", " + " LastName = " + lastName + ", " + 
-			   " Group = " + classId;
+			   " Group = " + group;
 	}
 
 }

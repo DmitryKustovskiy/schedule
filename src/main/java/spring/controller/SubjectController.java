@@ -59,7 +59,11 @@ public class SubjectController {
     }
 
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("subject") Subject subject, @PathVariable("id") int id) {
+    public String update(@ModelAttribute("subject") Subject subject, @PathVariable("id") int id, Model model) {
+        if (subjectService.checkIfSubjectExists(subject.getName())) {
+            model.addAttribute("errorMessage", "Sorry! Subject with this name already exists!");
+            return "subject/edit";
+        }
         subjectService.update(subject, id);
         return "redirect:/subjects";
     }

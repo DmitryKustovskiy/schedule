@@ -12,10 +12,7 @@ import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -59,8 +56,27 @@ public class ScheduleItemController {
         return "schedule/new";
     }
 
-    @PostMapping
-    public String save(@ModelAttribute("schedule") ScheduleItem scheduleItem) {
+    @PostMapping("/new")
+    public String save(@ModelAttribute("schedule") ScheduleItem scheduleItem, Model model) {
+        Map<String, String> errors = new HashMap<>();
+
+        if (scheduleItemService.checkIfSubjectIsNull(scheduleItem.getSubject().getId())) {
+            errors.put("errorMessageSubject", "Sorry, you should enter Subject");
+        }
+        if (scheduleItemService.checkIfStartTimeNull(scheduleItem.getStartTime())) {
+            errors.put("errorMessageStartTime", "Sorry, you should enter Start time");
+        }
+        if (scheduleItemService.checkIfEndTimeNull(scheduleItem.getEndTime())) {
+            errors.put("errorMessageEndTime", "Sorry, you should enter End time");
+        }
+
+        if (!errors.isEmpty()) {
+            model.addAllAttributes(errors);
+            model.addAttribute("groups", groupService.findAll());
+            model.addAttribute("subjects", subjectService.findAll());
+            return "schedule/new";
+        }
+
         scheduleItemService.save(scheduleItem);
         return "redirect:/schedule";
     }

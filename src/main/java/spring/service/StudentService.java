@@ -2,9 +2,12 @@ package spring.service;
 
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import spring.configuration.EntityManagerUtil;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
@@ -13,40 +16,88 @@ import spring.repository.StudentRepository;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
-    private final GroupRepository groupRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.groupRepository = groupRepository;
     }
 
     public List<Student> findAll() {
-        return studentRepository.findAll();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            return studentRepository.findAll(entityManager);
+        }
+
     }
 
     public Student findById(int id) {
-        return studentRepository.findById(id);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            return studentRepository.findById(entityManager, id);
+        }
+
     }
 
     public Student save(Student student) {
-        return studentRepository.save(student);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                studentRepository.save(entityManager, student);
+                transaction.commit();
+                return student;
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
     }
 
     public void update(Student student, int id) {
-        studentRepository.update(student, id);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                studentRepository.update(entityManager, student, id);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
     }
 
-    public boolean setGroup(Student student, int id) {
-        return studentRepository.setGroup(student, id);
+    public void setGroup(Student student, int id) {
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                studentRepository.setGroup(entityManager, student, id);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
     }
 
-    public boolean delete(int id) {
-        return studentRepository.delete(id);
+    public void delete(int id) {
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                studentRepository.delete(entityManager, id);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
     }
-
-    public boolean checkIfClassIdExists(int classId) {
-        return groupRepository.findAll().stream().anyMatch(existingClassId -> existingClassId.getId() == classId);
-    }
-
 }

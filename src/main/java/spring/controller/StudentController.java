@@ -50,17 +50,14 @@ public class StudentController {
     @PostMapping("/new")
     public String save(@ModelAttribute("student") Student student, Model model) {
         model.addAttribute("groups", groupService.findAll());
-        if (!studentService.checkIfClassIdExists(student.getClassId())) {
-            model.addAttribute("errorMessage", "Sorry! Group with this Id doesn't exist.");
-            return "student/new";
-        }
         studentService.save(student);
         return "redirect:/students";
     }
 
     @GetMapping("/{id}/changeGroup")
     public String changeGroup(@PathVariable("id") int id, Model model) {
-        model.addAttribute("student", studentService.findById(id));
+        Student student = studentService.findById(id);
+        model.addAttribute("student", student);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("group", groupService.findGroupByStudentId(id));
         return "student/changeGroup";

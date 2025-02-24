@@ -2,23 +2,36 @@ package spring.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Component
+@Entity
+@Table(name = "schedule")
 public class ScheduleItem {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int classId;
-	private int subjectId;
-	private Group group;
-	private Subject subject;
+	@Column(name = "start_time")
 	private LocalDateTime startTime;
+	@Column(name = "end_time")
 	private LocalDateTime endTime;
-	
+	@OneToOne
+	@JoinColumn(name = "class_id")
+	private Group group;
+	@OneToOne
+	@JoinColumn(name = "subject_id")
+	private Subject subject;
+
 	public ScheduleItem(Group group, Subject subject, LocalDateTime startTime, LocalDateTime endTime) {
 		this.group = group;
 		this.subject = subject;
@@ -28,7 +41,7 @@ public class ScheduleItem {
 
 	@Override
 	public String toString() {
-		return "Schedule for group " + classId + ". The subject is " + subjectId +
+		return "Schedule for group " + group.getName() + ". The subject is " + subject.getName() +
 				". Started at: " + startTime + ". " + "End at: " + endTime;
 	}
 
