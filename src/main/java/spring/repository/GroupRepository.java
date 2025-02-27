@@ -3,17 +3,9 @@ package spring.repository;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.transaction.annotation.Transactional;
-import spring.configuration.EntityManagerUtil;
 import spring.model.Group;
-import spring.model.Student;
 
 @Repository
 public class GroupRepository {
@@ -38,7 +30,6 @@ public class GroupRepository {
             groupTobeUpdated.setName(updatedGroup.getName());
         }
     }
-
 
     public void delete(EntityManager entityManager, int id) {
         Group groupToBeRemoved = entityManager.find(Group.class, id);

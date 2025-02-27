@@ -1,8 +1,12 @@
 package spring.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import spring.configuration.EntityManagerUtil;
 import spring.model.ScheduleItem;
+import spring.repository.GroupRepository;
 import spring.repository.ScheduleItemRepository;
 import spring.repository.SubjectRepository;
 
@@ -12,59 +16,125 @@ import java.util.List;
 @Service
 public class ScheduleItemService {
     private final ScheduleItemRepository scheduleRepository;
-    private final GroupService groupService;
-    private final SubjectService subjectService;
+    private final GroupRepository groupRepository;
+    private final SubjectRepository subjectRepository;
 
     @Autowired
-    public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupService groupService, SubjectService subjectService) {
+    public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupRepository groupRepository, SubjectRepository subjectRepository) {
         this.scheduleRepository = scheduleRepository;
-        this.groupService = groupService;
-        this.subjectService = subjectService;
+        this.groupRepository = groupRepository;
+        this.subjectRepository = subjectRepository;
     }
 
     public List<ScheduleItem> findAll() {
-        return scheduleRepository.findAll();
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            return scheduleRepository.findAll(entityManager);
+        }
     }
 
     public List<ScheduleItem> findAllWithDetails() {
-        List<ScheduleItem> schedules = scheduleRepository.findAll();
-        for (ScheduleItem schedule : schedules) {
-            schedule.setGroup(groupService.findById(schedule.getGroup().getId()));
-            schedule.setSubject(subjectService.findById(schedule.getSubject().getId()));
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            List<ScheduleItem> schedules = scheduleRepository.findAll(entityManager);
+            for (ScheduleItem schedule : schedules) {
+                schedule.setGroup(groupRepository.findById(entityManager, schedule.getGroup().getId()));
+                schedule.setSubject(subjectRepository.findById(entityManager, schedule.getSubject().getId()));
+            }
+            return schedules;
         }
-        return schedules;
     }
 
     public ScheduleItem findById(int id) {
-        return scheduleRepository.findById(id);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            return entityManager.find(ScheduleItem.class, id);
+        }
     }
 
     public ScheduleItem save(ScheduleItem scheduleItem) {
-        return scheduleRepository.save(scheduleItem);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                scheduleRepository.save(entityManager, scheduleItem);
+                transaction.commit();
+                return scheduleItem;
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
     }
 
     public void update(ScheduleItem scheduleItem, int id) {
-        scheduleRepository.update(scheduleItem, id);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                scheduleRepository.update(entityManager, scheduleItem, id);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
     }
 
     public void delete(int id) {
-        scheduleRepository.delete(id);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                scheduleRepository.delete(entityManager, id);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+            }
+        }
     }
 
     public void deleteByClassId(int classId) {
-        scheduleRepository.deleteScheduleByClassId(classId);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                scheduleRepository.deleteScheduleByClassId(entityManager, classId);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+            }
+        }
     }
 
     public void deleteBySubjectId(int subjectId) {
-        scheduleRepository.deleteScheduleBySubjectId(subjectId);
+        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+            try {
+                transaction.begin();
+                scheduleRepository.deleteScheduleBySubjectId(entityManager, subjectId);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+            }
+        }
     }
 
     public boolean checkIfSubjectIsNull(int subjectId) {
         return subjectId == 0;
     }
+
     public boolean checkIfStartTimeNull(LocalDateTime startTime) {
-       return startTime == null;
+        return startTime == null;
     }
+
     public boolean checkIfEndTimeNull(LocalDateTime endTime) {
         return endTime == null;
     }

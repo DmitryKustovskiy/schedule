@@ -3,13 +3,8 @@ package spring.repository;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.transaction.annotation.Transactional;
-import spring.configuration.EntityManagerUtil;
 import spring.model.Group;
 import spring.model.Student;
 

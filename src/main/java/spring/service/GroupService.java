@@ -16,13 +16,11 @@ import spring.repository.StudentRepository;
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
-    private final StudentService studentService;
     private final StudentRepository studentRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, StudentService studentService, StudentRepository studentRepository) {
+    public GroupService(GroupRepository groupRepository, StudentRepository studentRepository) {
         this.groupRepository = groupRepository;
-        this.studentService = studentService;
         this.studentRepository = studentRepository;
     }
 
@@ -40,7 +38,7 @@ public class GroupService {
 
     public Group findGroupByStudentId(int id) {
         try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            Student student = studentService.findById(id);
+            Student student = studentRepository.findById(entityManager, id);
             return groupRepository.findById(entityManager, student.getGroup().getId());
         }
     }
