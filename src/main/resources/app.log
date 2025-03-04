@@ -1,4 +1,3 @@
-2025-02-27T23:30:31.969+03:00  WARN 2639 --- [http-nio-8080-exec-1] org.hibernate.orm.connections.pooling    : HHH10001002: Using built-in connection pool (not intended for production use)
-2025-02-27T23:30:36.649+03:00  INFO 2639 --- [http-nio-8080-exec-3] spring.service.GroupService              : Transaction has begun, org.hibernate.engine.transaction.internal.TransactionImpl@5f95a46c
-2025-02-27T23:30:36.675+03:00  INFO 2639 --- [http-nio-8080-exec-3] spring.service.GroupService              : Group 3232 is in persistent state, SessionImpl(963599641<open>)
-2025-02-27T23:30:36.680+03:00  INFO 2639 --- [http-nio-8080-exec-3] spring.service.GroupService              : Group 3232 was saved correctly!
+2025-03-04T17:04:09.103+03:00  WARN 1157 --- [http-nio-8080-exec-2] org.hibernate.orm.connections.pooling    : HHH10001002: Using built-in connection pool (not intended for production use)
+2025-03-04T17:07:35.355+03:00  WARN 1249 --- [http-nio-8080-exec-1] org.hibernate.orm.connections.pooling    : HHH10001002: Using built-in connection pool (not intended for production use)
+2025-03-04T17:23:09.311+03:00  WARN 1381 --- [http-nio-8080-exec-1] org.hibernate.orm.connections.pooling    : HHH10001002: Using built-in connection pool (not intended for production use)
