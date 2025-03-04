@@ -1,0 +1,4 @@
+2025-02-27T23:30:31.969+03:00  WARN 2639 --- [http-nio-8080-exec-1] org.hibernate.orm.connections.pooling    : HHH10001002: Using built-in connection pool (not intended for production use)
+2025-02-27T23:30:36.649+03:00  INFO 2639 --- [http-nio-8080-exec-3] spring.service.GroupService              : Transaction has begun, org.hibernate.engine.transaction.internal.TransactionImpl@5f95a46c
+2025-02-27T23:30:36.675+03:00  INFO 2639 --- [http-nio-8080-exec-3] spring.service.GroupService              : Group 3232 is in persistent state, SessionImpl(963599641<open>)
+2025-02-27T23:30:36.680+03:00  INFO 2639 --- [http-nio-8080-exec-3] spring.service.GroupService              : Group 3232 was saved correctly!

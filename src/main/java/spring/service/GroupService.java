@@ -4,6 +4,8 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import spring.repository.StudentRepository;
 
 @Service
 public class GroupService {
+    private static final Logger log = LoggerFactory.getLogger(GroupService.class);
     private final GroupRepository groupRepository;
     private final StudentRepository studentRepository;
 
@@ -48,8 +51,11 @@ public class GroupService {
             EntityTransaction transaction = entityManager.getTransaction();
             try {
                 transaction.begin();
+                log.info("Transaction has begun, {}", transaction);
                 groupRepository.save(entityManager, group);
+                log.info("Group {} is in persistent state, {}", group, entityManager);
                 transaction.commit();
+                log.info("Group {} was saved correctly!", group);
                 return group;
             } catch (Exception e) {
                 if (transaction.isActive()) {

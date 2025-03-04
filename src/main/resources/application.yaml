@@ -9,9 +9,9 @@ spring:
 server:
  port: 8080
 logging:
+ file:
+   name: src/main/resources/app.log
  level:
-  org:
-   hibernate:
-    orm:
-     connections:
-      pooling: ERROR
+  root: warn
+  spring.service: INFO
+  org.hibernate.sql: debug
