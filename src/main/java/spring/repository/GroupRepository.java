@@ -3,6 +3,8 @@ package spring.repository;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 
 import spring.model.Group;
@@ -10,32 +12,29 @@ import spring.model.Group;
 @Repository
 public class GroupRepository {
 
-    public List<Group> findAll(EntityManager entityManager) {
-        return entityManager.createQuery("FROM Group", Group.class).getResultList();
-    }
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    public Group findById(EntityManager entityManager, int id) {
-        return entityManager.find(Group.class, id);
-    }
+	public List<Group> findAll() {
+		return entityManager.createQuery("FROM Group", Group.class).getResultList();
+	}
 
-    public Group save(EntityManager entityManager, Group group) {
-        entityManager.persist(group);
-        return group;
-    }
+	public Group findById(int id) {
+		return entityManager.find(Group.class, id);
+	}
 
+	public Group save(Group group) {
+		entityManager.persist(group);
+		return group;
+	}
 
-    public void update(EntityManager entityManager, Group updatedGroup, int id) {
-        Group groupTobeUpdated = entityManager.find(Group.class, id);
-        if (groupTobeUpdated != null) {
-            groupTobeUpdated.setName(updatedGroup.getName());
-        }
-    }
+	public Group update(Group updatedGroup) {
+		entityManager.merge(updatedGroup);
+		return updatedGroup;
+	}
 
-    public void delete(EntityManager entityManager, int id) {
-        Group groupToBeRemoved = entityManager.find(Group.class, id);
-        if (groupToBeRemoved != null) {
-            entityManager.remove(groupToBeRemoved);
-        }
-    }
+	public void delete(Group group) {
+		entityManager.remove(group);
+	}
 
 }

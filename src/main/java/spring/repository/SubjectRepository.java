@@ -16,32 +16,29 @@ import spring.model.Subject;
 @Repository
 public class SubjectRepository {
 
-    public List<Subject> findAll(EntityManager entityManager) {
-        return entityManager.createQuery("FROM Subject", Subject.class).getResultList();
-    }
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    public Subject findById(EntityManager entityManager, int id) {
-        return entityManager.find(Subject.class, id);
-    }
+	public List<Subject> findAll() {
+		return entityManager.createQuery("FROM Subject", Subject.class).getResultList();
+	}
 
-    public Subject save(EntityManager entityManager, Subject subject) {
-        entityManager.persist(subject);
-        return subject;
-    }
+	public Subject findById(int id) {
+		return entityManager.find(Subject.class, id);
+	}
 
-    public void update(EntityManager entityManager, Subject updatedSubject, int id) {
-        Subject subjectToBeUpdated = entityManager.find(Subject.class, id);
-        if (subjectToBeUpdated != null) {
-            subjectToBeUpdated.setName(updatedSubject.getName());
-        }
+	public Subject save(Subject subject) {
+		entityManager.persist(subject);
+		return subject;
+	}
 
-    }
+	public Subject update(Subject updatedSubject) {
+		entityManager.merge(updatedSubject);
+		return updatedSubject;
+	}
 
-    public void delete(EntityManager entityManager, int id) {
-        Subject subjectToBeRemoved = entityManager.find(Subject.class, id);
-        if (subjectToBeRemoved != null) {
-            entityManager.remove(subjectToBeRemoved);
-        }
-    }
+	public void delete(Subject subject) {
+		entityManager.remove(subject);
+	}
 
 }

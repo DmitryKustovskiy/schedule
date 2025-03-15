@@ -21,14 +21,18 @@ public class ScheduleItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	@Column(name = "start_time")
 	private LocalDateTime startTime;
+	
 	@Column(name = "end_time")
 	private LocalDateTime endTime;
-	@OneToOne
+	
+	@ManyToOne
 	@JoinColumn(name = "class_id")
 	private Group group;
-	@OneToOne
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subject_id")
 	private Subject subject;
 
@@ -41,8 +45,8 @@ public class ScheduleItem {
 
 	@Override
 	public String toString() {
-		return "Schedule for group " + group.getName() + ". The subject is " + subject.getName() +
-				". Started at: " + startTime + ". " + "End at: " + endTime;
+		return "Schedule for group " + group.getName() + ". The subject is " + subject.getName() + ". Started at: "
+				+ startTime + ". " + "End at: " + endTime;
 	}
 
 }

@@ -3,91 +3,81 @@ package spring.service;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityTransaction;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import spring.configuration.EntityManagerUtil;
 import spring.model.Group;
 import spring.model.Subject;
 import spring.repository.SubjectRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class SubjectService {
-    private final SubjectRepository subjectRepository;
+	private final SubjectRepository subjectRepository;
+	private static final Logger log = LoggerFactory.getLogger(SubjectService.class);
 
-    @Autowired
-    public SubjectService(SubjectRepository subjectRepository) {
-        this.subjectRepository = subjectRepository;
-    }
+	@Autowired
+	public SubjectService(SubjectRepository subjectRepository) {
+		this.subjectRepository = subjectRepository;
+	}
 
-    public List<Subject> findAll() {
-        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            return subjectRepository.findAll(entityManager);
-        }
-    }
+	public List<Subject> findAll() {
+		return subjectRepository.findAll();
+	}
 
-    public Subject findById(int id) {
-        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            return subjectRepository.findById(entityManager, id);
-        }
-    }
+	public Subject findById(int id) {
+		Subject existingSubject = subjectRepository.findById(id);
+		if (existingSubject == null) {
+			log.warn("Subject with this id {} was not found", id);
+			throw new EntityNotFoundException("Subject not found");
+		}
+		return existingSubject;
+	}
 
-    public Subject save(Subject subject) {
-        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                transaction.begin();
-                subjectRepository.save(entityManager, subject);
-                transaction.commit();
-                return subject;
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw e;
-            }
-        }
-    }
+	@Transactional
+	public Subject save(Subject subject) {
+		subjectRepository.save(subject);
+		log.info("Subject {} was saved correctly", subject);
+		return subject;
+	}
 
-    public void update(Subject subject, int id) {
-        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                transaction.begin();
-                subjectRepository.update(entityManager, subject, id);
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw e;
-            }
-        }
-    }
+	@Transactional
+	public Subject update(Subject subject, int id) {
+		Subject existingSubject = subjectRepository.findById(id);
+		if (existingSubject == null) {
+			log.warn("Subject with this id {} was not found", id);
+			throw new EntityNotFoundException("Subject not found");
+		}
+		existingSubject.setName(subject.getName());
+		log.info("Subject {} was updated correctly");
+		return subjectRepository.update(existingSubject);
 
-    public void delete(int id) {
-        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            EntityTransaction transaction = entityManager.getTransaction();
-            try {
-                transaction.begin();
-                subjectRepository.delete(entityManager, id);
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw e;
-            }
-        }
-    }
+	}
 
-    public boolean checkIfSubjectExists(String subjectName) {
-        try (EntityManager entityManager = EntityManagerUtil.getEntityManagerFactory().createEntityManager()) {
-            List<Subject> allSubjects = subjectRepository.findAll(entityManager);
-            return allSubjects.stream().anyMatch(
-                    existingSubject -> existingSubject.getName().equalsIgnoreCase(subjectName));
-        }
-    }
+	@Transactional
+	public void delete(int id) {
+		Subject existingSubject = subjectRepository.findById(id);
+		if (existingSubject == null) {
+			log.warn("Subject with this id {} was not found", id);
+			throw new EntityNotFoundException("Subject not found");
+		}
+		log.info("Subject with this id {} was deleted correctly", id);
+		subjectRepository.delete(existingSubject);
+	}
 
+	public boolean checkIfNull(String subjectName) {
+		return subjectName.isEmpty();
+	}
+
+	public boolean checkIfSubjectExists(String subjectName) {
+		List<Subject> allSubjects = subjectRepository.findAll();
+		return allSubjects.stream()
+				.anyMatch(existingSubject -> existingSubject.getName().equalsIgnoreCase(subjectName));
+	}
 }

@@ -19,8 +19,12 @@ public class Subject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	@Column(name = "name")
 	private String name;
+	
+	@OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
+	private List<ScheduleItem> scheduleItems;
 	
 	public Subject(String name) {
 		this.name = name;

@@ -19,73 +19,83 @@ import spring.service.StudentService;
 @Controller
 @RequestMapping("/students")
 public class StudentController {
-    private final StudentService studentService;
-    private final GroupService groupService;
+	private final StudentService studentService;
+	private final GroupService groupService;
 
-    @Autowired
-    public StudentController(StudentService studentService, GroupService groupService) {
-        this.studentService = studentService;
-        this.groupService = groupService;
-    }
+	@Autowired
+	public StudentController(StudentService studentService, GroupService groupService) {
+		this.studentService = studentService;
+		this.groupService = groupService;
+	}
 
-    @GetMapping
-    public String findAll(Model model) {
-        model.addAttribute("students", studentService.findAll());
-        return "student/findAll";
-    }
+	@GetMapping
+	public String findAll(Model model) {
+		model.addAttribute("students", studentService.findAll());
+		return "student/findAll";
+	}
 
-    @GetMapping("/{id}")
-    public String findById(@PathVariable("id") int id, Model model) {
-        model.addAttribute("student", studentService.findById(id));
-        model.addAttribute("group", groupService.findGroupByStudentId(id));
-        return "student/findById";
-    }
+	@GetMapping("/{id}")
+	public String findById(@PathVariable("id") int id, Model model) {
+		model.addAttribute("student", studentService.findById(id));
+		model.addAttribute("group", groupService.findGroupByStudentId(id));
+		return "student/findById";
+	}
 
-    @GetMapping("/new")
-    public String create(@ModelAttribute("student") Student student, Model model) {
-        model.addAttribute("groups", groupService.findAll());
-        return "student/new";
-    }
+	@GetMapping("/new")
+	public String create(@ModelAttribute("student") Student student, Model model) {
+		model.addAttribute("groups", groupService.findAll());
+		return "student/new";
+	}
 
-    @PostMapping("/new")
-    public String save(@ModelAttribute("student") Student student, Model model) {
-        model.addAttribute("groups", groupService.findAll());
-        studentService.save(student);
-        return "redirect:/students";
-    }
+	@PostMapping("/new")
+	public String save(@ModelAttribute("student") Student student, Model model) {
+		model.addAttribute("groups", groupService.findAll());
+		if (studentService.checkIfNull(student.getFirstName())) {
+			model.addAttribute("nullErrorFirstName", "You should enter first name of a student.");
+			return "student/new";
+		}
 
-    @GetMapping("/{id}/changeGroup")
-    public String changeGroup(@PathVariable("id") int id, Model model) {
-        Student student = studentService.findById(id);
-        model.addAttribute("student", student);
-        model.addAttribute("groups", groupService.findAll());
-        model.addAttribute("group", groupService.findGroupByStudentId(id));
-        return "student/changeGroup";
-    }
+		if (studentService.checkIfNull(student.getLastName())) {
+			model.addAttribute("nullErrorLastName", "You should enter last name of a student.");
+			return "student/new";
+		}
 
-    @PostMapping("/{id}/changeGroup")
-    public String updateGroup(@ModelAttribute("student") Student student, @PathVariable("id") int id, Model model) {
-        model.addAttribute("groups", groupService.findAll());
-        studentService.setGroup(student, id);
-        return "redirect:/students";
-    }
+		studentService.save(student);
+		return "redirect:/students";
+	}
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("student", studentService.findById(id));
-        return "student/edit";
-    }
+	@GetMapping("/{id}/changeGroup")
+	public String changeGroup(@PathVariable("id") int id, Model model) {
+		Student student = studentService.findById(id);
+		model.addAttribute("student", student);
+		model.addAttribute("groups", groupService.findAll());
+		model.addAttribute("group", groupService.findGroupByStudentId(id));
+		return "student/changeGroup";
+	}
 
-    @PostMapping("/{id}")
-    public String update(@ModelAttribute("student") Student student, @PathVariable("id") int id) {
-        studentService.update(student, id);
-        return "redirect:/students";
-    }
+	@PostMapping("/{id}/changeGroup")
+	public String updateGroup(@ModelAttribute("student") Student student, @PathVariable("id") int id, Model model) {
+		model.addAttribute("groups", groupService.findAll());
+		studentService.setGroup(student, id);
+		return "redirect:/students";
+	}
 
-    @PostMapping("/{id}/delete")
-    public String delete(@PathVariable("id") int id) {
-        studentService.delete(id);
-        return "redirect:/students";
-    }
+	@GetMapping("/{id}/edit")
+	public String edit(Model model, @PathVariable("id") int id) {
+		model.addAttribute("student", studentService.findById(id));
+		return "student/edit";
+	}
+
+	@PostMapping("/{id}")
+	public String update(@ModelAttribute("student") Student student, @PathVariable("id") int id) {
+		studentService.update(student, id);
+		return "redirect:/students";
+	}
+
+	@PostMapping("/{id}/delete")
+	public String delete(@PathVariable("id") int id) {
+		studentService.delete(id);
+		return "redirect:/students";
+	}
 
 }

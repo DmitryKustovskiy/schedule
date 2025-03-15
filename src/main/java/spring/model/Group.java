@@ -18,19 +18,23 @@ import java.util.Set;
 @Entity
 @Table(name = "class")
 public class Group {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "name")
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    public Group(String name) {
-        this.name = name;
-    }
+	@Column(nullable = false, unique = true)
+	private String name;
+	
+	@OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+	private List<ScheduleItem> scheduleItems;
 
-    @Override
-    public String toString() {
-        return name;
-    }
+	public Group(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 
 }

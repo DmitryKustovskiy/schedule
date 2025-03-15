@@ -1,17 +1,19 @@
 spring:
- jpa:
-  open-in-view: false
- datasource:
-  url: jdbc:postgresql://localhost:5432/hibernate
-  username: postgres
-  password: 1946
-  driver-class-name: org.postgresql.Driver
-server:
- port: 8080
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hibernate
+    username: postgres
+    password: 1946
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      show-sql: true
 logging:
- file:
-   name: src/main/resources/app.log
- level:
-  root: warn
-  spring.service: INFO
-  org.hibernate.sql: debug
+  file:
+    name: src/main/resources/app.log
+  level:
+    root: warn
+    spring.service: INFO
+    org.hibernate.sql: debug
+    org.hibernate.orm.connections.pooling: error

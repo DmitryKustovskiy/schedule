@@ -65,9 +65,11 @@
 <form th:method="POST" th:action="@{/students/new}" th:object="${student}">
     <label for="firstName">Enter first name: </label>
     <input type="text" th:field="*{firstName}" id="firstName"/>
+    <span th:if="${nullErrorFirstName}" th:text="${nullErrorFirstName}" style="color: red; margin-left: 10px;"></span>
     <br/>
     <label for="lastName">Enter last name: </label>
     <input type="text" th:field="*{lastName}" id="lastName"/>
+    <span th:if="${nullErrorLastName}" th:text="${nullErrorLastName}" style="color: red; margin-left: 10px;"></span>
     <br/>
     <label for="classId">Enter Group: </label>
     <select th:field="*{group.id}" id="classId">

@@ -31,11 +31,8 @@ public class ScheduleItemController {
 
     @GetMapping
     public String findAll(Model model) {
-        List<ScheduleItem> schedules = scheduleItemService.findAll();
-        Set<LocalDate> uniqueDates = schedules.stream()
-                .map(schedule -> schedule.getStartTime().toLocalDate())
-                .collect(Collectors.toSet());
-        model.addAttribute("uniqueDates", uniqueDates.stream().sorted(Comparator.naturalOrder()).toList());
+        Set<LocalDate> uniqueDates = scheduleItemService.findAllUniqueDates();
+        model.addAttribute("uniqueDates", uniqueDates.stream().sorted(Comparator.naturalOrder()));
         return "schedule/findAll";
     }
 
