@@ -400,3 +400,4 @@ org.hibernate.LazyInitializationException: Could not initialize proxy [spring.mo
 	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
 
 2025-03-13T12:54:56.516+03:00  INFO 1326 --- [http-nio-8080-exec-3] spring.service.ScheduleItemService       : Schedule Schedule for group null. The subject is null. Started at: 2025-03-23T12:54. End at: 2025-03-23T12:54 was saved correctly
+2025-03-15T18:58:33.753+03:00  INFO 693 --- [http-nio-8080-exec-7] spring.service.ScheduleItemService       : Schedule Schedule for group null. The subject is null. Started at: 2025-03-04T18:58. End at: 2025-03-04T21:01 was saved correctly
