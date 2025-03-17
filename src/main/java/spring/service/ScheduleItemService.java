@@ -1,14 +1,12 @@
 package spring.service;
 
 import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.hibernate.annotations.SortNatural;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.OrderBy;
 import spring.model.ScheduleItem;
 import spring.repository.GroupRepository;
 import spring.repository.ScheduleItemRepository;
@@ -40,6 +37,11 @@ public class ScheduleItemService {
 
 	public List<ScheduleItem> findAll() {
 		return scheduleRepository.findAll();
+	}
+
+	public ScheduleItem findByDate(LocalDateTime localDateTime) {
+		return scheduleRepository.findByDate(localDateTime);
+
 	}
 
 	public Set<LocalDate> findAllUniqueDates() {
@@ -91,10 +93,10 @@ public class ScheduleItemService {
 	}
 
 	@Transactional
-	public void delete(int id) {
-		ScheduleItem scheduleItemToBeDeleted = scheduleRepository.findById(id);
+	public void delete(LocalDateTime localDateTime) {
+		ScheduleItem scheduleItemToBeDeleted = scheduleRepository.findByDate(localDateTime);
 		if (scheduleItemToBeDeleted == null) {
-			log.warn("Schedule with this id {} was not found", id);
+			log.warn("Schedule with this date {} was not found", localDateTime);
 			throw new EntityNotFoundException("Schedule not found");
 		}
 		scheduleRepository.delete(scheduleItemToBeDeleted);
