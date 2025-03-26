@@ -23,7 +23,7 @@ public class Subject {
 	@Column(name = "name")
 	private String name;
 	
-	@OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	private List<ScheduleItem> scheduleItems;
 	
 	public Subject(String name) {

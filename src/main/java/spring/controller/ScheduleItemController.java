@@ -1,20 +1,27 @@
 package spring.controller;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import spring.model.Group;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import spring.dto.ScheduleItemDto;
 import spring.model.ScheduleItem;
-import spring.model.Subject;
 import spring.service.GroupService;
 import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/schedule")
@@ -40,7 +47,7 @@ public class ScheduleItemController {
 
 	@GetMapping("/{date}")
 	public String findByDate(@PathVariable("date") LocalDate date, Model model) {
-		List<ScheduleItem> schedules = scheduleItemService.findAllWithDetails().stream()
+		List<ScheduleItemDto> schedules = scheduleItemService.findAllWithDetails().stream()
 				.filter(schedule -> schedule.getStartTime().toLocalDate().equals(date)).collect(Collectors.toList());
 		model.addAttribute("schedules", schedules);
 		model.addAttribute("uniqueDate", date);
@@ -48,23 +55,23 @@ public class ScheduleItemController {
 	}
 
 	@GetMapping("/new")
-	public String newSchedule(@ModelAttribute("schedule") ScheduleItem scheduleItem, Model model) {
+	public String newSchedule(@ModelAttribute("schedule") ScheduleItemDto scheduleItemDto, Model model) {
 		model.addAttribute("groups", groupService.findAll());
 		model.addAttribute("subjects", subjectService.findAll());
 		return "schedule/new";
 	}
 
 	@PostMapping("/new")
-	public String save(@ModelAttribute("schedule") ScheduleItem scheduleItem, Model model) {
+	public String save(@ModelAttribute("schedule") ScheduleItemDto scheduleItemDto, Model model) {
 		Map<String, String> errors = new HashMap<>();
 
-		if (scheduleItemService.checkIfSubjectIsNull(scheduleItem.getSubject().getId())) {
+		if (scheduleItemService.checkIfSubjectIsNull(scheduleItemDto.getSubject().getId())) {
 			errors.put("errorMessageSubject", "Sorry, you should enter Subject");
 		}
-		if (scheduleItemService.checkIfStartTimeNull(scheduleItem.getStartTime())) {
+		if (scheduleItemService.checkIfStartTimeNull(scheduleItemDto.getStartTime())) {
 			errors.put("errorMessageStartTime", "Sorry, you should enter Start time");
 		}
-		if (scheduleItemService.checkIfEndTimeNull(scheduleItem.getEndTime())) {
+		if (scheduleItemService.checkIfEndTimeNull(scheduleItemDto.getEndTime())) {
 			errors.put("errorMessageEndTime", "Sorry, you should enter End time");
 		}
 
@@ -75,14 +82,8 @@ public class ScheduleItemController {
 			return "schedule/new";
 		}
 
-		scheduleItemService.save(scheduleItem);
+		scheduleItemService.save(scheduleItemDto);
 		return "redirect:/schedule";
 	}
 
-	@PostMapping("/{date}/delete")
-	public String delete(@PathVariable("date") LocalDateTime localDateTime, Model model) {
-		model.addAttribute("schedule", scheduleItemService.findByDate(localDateTime));
-		scheduleItemService.delete(localDateTime);
-		return "redirect:/schedule";
-	}
 }

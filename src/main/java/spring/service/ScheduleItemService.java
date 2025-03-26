@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import spring.dto.ScheduleItemDto;
+import spring.mapper.ScheduleItemMapper;
 import spring.model.ScheduleItem;
 import spring.repository.GroupRepository;
 import spring.repository.ScheduleItemRepository;
@@ -35,13 +37,9 @@ public class ScheduleItemService {
 		this.subjectRepository = subjectRepository;
 	}
 
-	public List<ScheduleItem> findAll() {
-		return scheduleRepository.findAll();
-	}
-
-	public ScheduleItem findByDate(LocalDateTime localDateTime) {
-		return scheduleRepository.findByDate(localDateTime);
-
+	public List<ScheduleItemDto> findAll() {
+		List<ScheduleItem> allScheduleItems = scheduleRepository.findAll();
+		return ScheduleItemMapper.toDtoList(allScheduleItems);
 	}
 
 	public Set<LocalDate> findAllUniqueDates() {
@@ -50,26 +48,27 @@ public class ScheduleItemService {
 	}
 
 	@Transactional
-	public List<ScheduleItem> findAllWithDetails() {
+	public List<ScheduleItemDto> findAllWithDetails() {
 		List<ScheduleItem> schedules = scheduleRepository.findAll();
 		for (ScheduleItem schedule : schedules) {
 			schedule.setGroup(groupRepository.findById(schedule.getGroup().getId()));
 			schedule.setSubject(subjectRepository.findById(schedule.getSubject().getId()));
 		}
-		return schedules;
+		return ScheduleItemMapper.toDtoList(schedules);
 	}
 
-	public ScheduleItem findById(int id) {
+	public ScheduleItemDto findById(int id) {
 		ScheduleItem existingSchedule = scheduleRepository.findById(id);
 		if (existingSchedule == null) {
 			log.warn("Schedule with this id {} was not found", id);
 			throw new EntityNotFoundException("Schedule not found");
 		}
-		return existingSchedule;
+		return ScheduleItemMapper.toDto(existingSchedule);
 	}
 
 	@Transactional
-	public ScheduleItem save(ScheduleItem scheduleItem) {
+	public ScheduleItem save(ScheduleItemDto scheduleItemDto) {
+		ScheduleItem scheduleItem = ScheduleItemMapper.toEntity(scheduleItemDto);
 		scheduleRepository.save(scheduleItem);
 		log.info("Schedule {} was saved correctly", scheduleItem);
 		return scheduleItem;
@@ -77,30 +76,19 @@ public class ScheduleItemService {
 	}
 
 	@Transactional
-	public ScheduleItem update(ScheduleItem updatedScheduleItem, int id) {
+	public ScheduleItem update(ScheduleItemDto updatedScheduleItemDto, int id) {
 		ScheduleItem scheduleItemToBeUpdated = scheduleRepository.findById(id);
 		if (scheduleItemToBeUpdated == null) {
 			log.warn("Schedule with this id {} was not found", id);
 			throw new EntityNotFoundException("Schedule not found");
 		}
-		scheduleItemToBeUpdated.setGroup(updatedScheduleItem.getGroup());
-		scheduleItemToBeUpdated.setSubject(updatedScheduleItem.getSubject());
-		scheduleItemToBeUpdated.setStartTime(updatedScheduleItem.getStartTime());
-		scheduleItemToBeUpdated.setEndTime(updatedScheduleItem.getEndTime());
+		scheduleItemToBeUpdated.setGroup(updatedScheduleItemDto.getGroup());
+		scheduleItemToBeUpdated.setSubject(updatedScheduleItemDto.getSubject());
+		scheduleItemToBeUpdated.setStartTime(updatedScheduleItemDto.getStartTime());
+		scheduleItemToBeUpdated.setEndTime(updatedScheduleItemDto.getEndTime());
 		scheduleRepository.update(scheduleItemToBeUpdated);
 		log.info("Schedule with id {} was updated correctly", id);
 		return scheduleItemToBeUpdated;
-	}
-
-	@Transactional
-	public void delete(LocalDateTime localDateTime) {
-		ScheduleItem scheduleItemToBeDeleted = scheduleRepository.findByDate(localDateTime);
-		if (scheduleItemToBeDeleted == null) {
-			log.warn("Schedule with this date {} was not found", localDateTime);
-			throw new EntityNotFoundException("Schedule not found");
-		}
-		scheduleRepository.delete(scheduleItemToBeDeleted);
-
 	}
 
 	public boolean checkIfSubjectIsNull(int subjectId) {

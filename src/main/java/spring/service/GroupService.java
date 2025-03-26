@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import spring.dto.GroupDto;
+import spring.mapper.GroupMapper;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
@@ -27,42 +29,46 @@ public class GroupService {
 		this.studentRepository = studentRepository;
 	}
 
-	public List<Group> findAll() {
-		return groupRepository.findAll();
+	public List<GroupDto> findAll() {
+		List<Group> allGroups = groupRepository.findAll();
+		return GroupMapper.toDtoList(allGroups);
 	}
 
-	public Group findById(int id) {
+	public GroupDto findById(int id) {
 		Group existingGroup = groupRepository.findById(id);
 		if (existingGroup == null) {
 			log.warn("Group with id {} was not found", id);
 			throw new EntityNotFoundException("Not found");
 		}
-		return existingGroup;
+		return GroupMapper.toDto(existingGroup);
 
 	}
 
-	public Group findGroupByStudentId(int id) {
+	public GroupDto findGroupByStudentId(int id) {
 		Student student = studentRepository.findById(id);
-		return groupRepository.findById(student.getGroup().getId());
+		Group group = groupRepository.findById(student.getGroup().getId());
+		return GroupMapper.toDto(group);
 	}
 
 	@Transactional
-	public Group save(Group group) {
+	public Group save(GroupDto groupDto) {
+		Group group = GroupMapper.toEntity(groupDto);
 		groupRepository.save(group);
 		log.info("Group {} was saved correctly", group);
 		return group;
 	}
 
 	@Transactional
-	public Group update(Group updatedGroup, int id) {
+	public Group update(GroupDto updatedGroupDto, int id) {
 		Group existingGroup = groupRepository.findById(id);
 		if (existingGroup == null) {
 			log.warn("Group with this id {} was not found", id);
 			throw new EntityNotFoundException("Group was not found");
 		}
-		existingGroup.setName(updatedGroup.getName());
+		existingGroup.setName(updatedGroupDto.getName());
+		Group updatedGroup = groupRepository.update(existingGroup);
 		log.info("Group with id {} was updated correctly", id);
-		return groupRepository.update(existingGroup);
+		return updatedGroup;
 
 	}
 

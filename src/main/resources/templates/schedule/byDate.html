@@ -56,10 +56,6 @@
         </p>
     </li>
 </ul>
-<form th:method="DELETE"
-      th:action="@{/schedule/{date}/delete(date=${schedule.getStartTime()})}">
-    <input type="submit" value="Delete" class="button"/>
-</form>
 <a th:href="@{/schedule}" class="button">Back to all schedules</a>
 </body>
 </html>

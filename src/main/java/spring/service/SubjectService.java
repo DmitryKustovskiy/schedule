@@ -2,17 +2,15 @@ package spring.service;
 
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EntityTransaction;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import spring.model.Group;
+import jakarta.persistence.EntityNotFoundException;
+import spring.dto.SubjectDto;
+import spring.mapper.SubjectMapper;
 import spring.model.Subject;
 import spring.repository.SubjectRepository;
 
@@ -27,34 +25,36 @@ public class SubjectService {
 		this.subjectRepository = subjectRepository;
 	}
 
-	public List<Subject> findAll() {
-		return subjectRepository.findAll();
+	public List<SubjectDto> findAll() {
+		List<Subject> allSubjects = subjectRepository.findAll();
+		return SubjectMapper.toDtoList(allSubjects);
 	}
 
-	public Subject findById(int id) {
+	public SubjectDto findById(int id) {
 		Subject existingSubject = subjectRepository.findById(id);
 		if (existingSubject == null) {
 			log.warn("Subject with this id {} was not found", id);
 			throw new EntityNotFoundException("Subject not found");
 		}
-		return existingSubject;
+		return SubjectMapper.toDto(existingSubject);
 	}
 
 	@Transactional
-	public Subject save(Subject subject) {
+	public Subject save(SubjectDto subjectDto) {
+		Subject subject = SubjectMapper.toEntity(subjectDto);
 		subjectRepository.save(subject);
 		log.info("Subject {} was saved correctly", subject);
 		return subject;
 	}
 
 	@Transactional
-	public Subject update(Subject subject, int id) {
+	public Subject update(SubjectDto subjectDto, int id) {
 		Subject existingSubject = subjectRepository.findById(id);
 		if (existingSubject == null) {
 			log.warn("Subject with this id {} was not found", id);
 			throw new EntityNotFoundException("Subject not found");
 		}
-		existingSubject.setName(subject.getName());
+		existingSubject.setName(subjectDto.getName());
 		log.info("Subject {} was updated correctly");
 		return subjectRepository.update(existingSubject);
 

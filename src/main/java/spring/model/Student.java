@@ -25,7 +25,7 @@ public class Student {
 	@Column(name = "last_name")
 	private String lastName;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id")
 	private Group group;
 

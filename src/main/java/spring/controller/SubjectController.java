@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import spring.dto.SubjectDto;
 import spring.model.Subject;
 import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
@@ -36,21 +37,21 @@ public class SubjectController {
 	}
 
 	@GetMapping("/new")
-	public String create(@ModelAttribute("subject") Subject subject) {
+	public String create(@ModelAttribute("subject") SubjectDto subjectDto) {
 		return "subject/new";
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("subject") Subject subject, Model model) {
-		if (subjectService.checkIfSubjectExists(subject.getName())) {
+	public String save(@ModelAttribute("subject") SubjectDto subjectDto, Model model) {
+		if (subjectService.checkIfSubjectExists(subjectDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Subject with this name already exists.");
 			return "subject/new";
 		}
-		if (subjectService.checkIfNull(subject.getName())) {
+		if (subjectService.checkIfNull(subjectDto.getName())) {
 			model.addAttribute("nullError", "You should enter subject name.");
 			return "subject/new";
 		}
-		subjectService.save(subject);
+		subjectService.save(subjectDto);
 		return "redirect:/subjects";
 	}
 
@@ -61,12 +62,12 @@ public class SubjectController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("subject") Subject subject, @PathVariable("id") int id, Model model) {
-		if (subjectService.checkIfSubjectExists(subject.getName())) {
+	public String update(@ModelAttribute("subject") SubjectDto subjectDto, @PathVariable("id") int id, Model model) {
+		if (subjectService.checkIfSubjectExists(subjectDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Subject with this name already exists!");
 			return "subject/edit";
 		}
-		subjectService.update(subject, id);
+		subjectService.update(subjectDto, id);
 		return "redirect:/subjects";
 	}
 

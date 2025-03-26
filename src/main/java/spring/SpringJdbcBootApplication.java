@@ -12,11 +12,7 @@ import spring.service.ScheduleItemService;
 @SpringBootApplication
 public class SpringJdbcBootApplication {
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(SpringJdbcBootApplication.class, args);
-		ScheduleItemService serviceBean = context.getBean(ScheduleItemService.class);
-		
-		ScheduleItem byDate = serviceBean.findByDate(LocalDateTime.of(2025, 03, 02));
-		System.out.println(byDate);
+		SpringApplication.run(SpringJdbcBootApplication.class, args);
 
 	}
 }

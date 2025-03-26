@@ -1,7 +1,6 @@
 package spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import spring.dto.GroupDto;
 import spring.model.Group;
 import spring.service.GroupService;
 import spring.service.ScheduleItemService;
@@ -37,21 +37,21 @@ public class GroupController {
 	}
 
 	@GetMapping("/new")
-	public String create(@ModelAttribute("group") Group group) {
+	public String create(@ModelAttribute("group") GroupDto groupDto) {
 		return "group/new";
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("group") Group group, Model model) {
-		if (groupService.checkIfGroupExists(group.getName())) {
+	public String save(@ModelAttribute("group") GroupDto groupDto, Model model) {
+		if (groupService.checkIfGroupExists(groupDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Group with this name already exists.");
 			return "group/new";
 		}
-		if (groupService.checkIfNull(group.getName())) {
+		if (groupService.checkIfNull(groupDto.getName())) {
 			model.addAttribute("nullError", "You should enter a group name.");
 			return "group/new";
 		}
-		groupService.save(group);
+		groupService.save(groupDto);
 		return "redirect:/groups";
 	}
 
@@ -62,12 +62,12 @@ public class GroupController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("group") Group group, @PathVariable("id") int id, Model model) {
-		if (groupService.checkIfGroupExists(group.getName())) {
+	public String update(@ModelAttribute("group") GroupDto groupDto, @PathVariable("id") int id, Model model) {
+		if (groupService.checkIfGroupExists(groupDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Group with this name already exists.");
 			return "group/edit";
 		}
-		groupService.update(group, id);
+		groupService.update(groupDto, id);
 		return "redirect:/groups";
 	}
 

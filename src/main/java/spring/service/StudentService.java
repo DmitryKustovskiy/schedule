@@ -2,16 +2,15 @@ package spring.service;
 
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EntityTransaction;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityNotFoundException;
+import spring.dto.StudentDto;
+import spring.mapper.StudentMapper;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
@@ -31,23 +30,25 @@ public class StudentService {
 		this.groupRepository = groupRepository;
 	}
 
-	public List<Student> findAll() {
-		return studentRepository.findAll();
+	public List<StudentDto> findAll() {
+		List<Student> allStudents = studentRepository.findAll();
+		return StudentMapper.toDtoList(allStudents);
 
 	}
 
-	public Student findById(int id) {
+	public StudentDto findById(int id) {
 		Student existingStudent = studentRepository.findById(id);
 		if (existingStudent == null) {
 			log.warn("Student with this id {} was not found", id);
 			throw new EntityNotFoundException("Student not found");
 		}
-		return existingStudent;
+		return StudentMapper.toDto(existingStudent);
 
 	}
 
 	@Transactional
-	public Student save(Student student) {
+	public Student save(StudentDto studentDto) {
+		Student student = StudentMapper.toEntity(studentDto);
 		studentRepository.save(student);
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
 		return student;
@@ -55,25 +56,27 @@ public class StudentService {
 	}
 
 	@Transactional
-	public Student update(Student updatedStudent, int id) {
+	public Student update(StudentDto updatedStudentDto, int id) {
 		Student existingStudent = studentRepository.findById(id);
 		if (existingStudent == null) {
 			log.warn("Student with id {} was not found", id);
 			throw new EntityNotFoundException("Student not found");
 		}
-		existingStudent.setFirstName(updatedStudent.getFirstName());
-		existingStudent.setLastName(updatedStudent.getLastName());
+		existingStudent.setFirstName(updatedStudentDto.getFirstName());
+		existingStudent.setLastName(updatedStudentDto.getLastName());
+		Student updatedStudent = studentRepository.update(existingStudent);
 		log.info("Student with id {} was updated correctly", id);
-		return studentRepository.update(existingStudent);
+		return updatedStudent;
 
 	}
 
 	@Transactional
-	public void setGroup(Student updatedStudent, int id) {
+	public void setGroup(StudentDto updatedStudentDto, int id) {
 		Student studentToBeUpdated = studentRepository.findById(id);
-		Group group = groupRepository.findById(updatedStudent.getGroup().getId());
+		Group group = groupRepository.findById(updatedStudentDto.getGroup().getId());
 		studentToBeUpdated.setGroup(group);
 		studentRepository.setGroup(studentToBeUpdated);
+		log.info("Student with id {} was updated correctly", id);
 
 	}
 

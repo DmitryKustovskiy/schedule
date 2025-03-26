@@ -28,7 +28,7 @@ public class ScheduleItem {
 	@Column(name = "end_time")
 	private LocalDateTime endTime;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id")
 	private Group group;
 	

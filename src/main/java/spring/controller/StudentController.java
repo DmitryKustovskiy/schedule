@@ -1,17 +1,15 @@
 package spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import spring.model.Group;
+import spring.dto.StudentDto;
 import spring.model.Student;
 import spring.service.GroupService;
 import spring.service.StudentService;
@@ -42,41 +40,40 @@ public class StudentController {
 	}
 
 	@GetMapping("/new")
-	public String create(@ModelAttribute("student") Student student, Model model) {
+	public String create(@ModelAttribute("student") StudentDto studentDto, Model model) {
 		model.addAttribute("groups", groupService.findAll());
 		return "student/new";
 	}
 
 	@PostMapping("/new")
-	public String save(@ModelAttribute("student") Student student, Model model) {
-		model.addAttribute("groups", groupService.findAll());
-		if (studentService.checkIfNull(student.getFirstName())) {
+	public String save(@ModelAttribute("student") StudentDto studentDto, Model model) {
+		if (studentService.checkIfNull(studentDto.getFirstName())) {
 			model.addAttribute("nullErrorFirstName", "You should enter first name of a student.");
+			model.addAttribute("groups", groupService.findAll());
 			return "student/new";
 		}
 
-		if (studentService.checkIfNull(student.getLastName())) {
+		if (studentService.checkIfNull(studentDto.getLastName())) {
 			model.addAttribute("nullErrorLastName", "You should enter last name of a student.");
 			return "student/new";
 		}
 
-		studentService.save(student);
+		studentService.save(studentDto);
 		return "redirect:/students";
 	}
 
 	@GetMapping("/{id}/changeGroup")
 	public String changeGroup(@PathVariable("id") int id, Model model) {
-		Student student = studentService.findById(id);
-		model.addAttribute("student", student);
+		StudentDto studentDto = studentService.findById(id);
+		model.addAttribute("student", studentDto);
 		model.addAttribute("groups", groupService.findAll());
 		model.addAttribute("group", groupService.findGroupByStudentId(id));
 		return "student/changeGroup";
 	}
 
 	@PostMapping("/{id}/changeGroup")
-	public String updateGroup(@ModelAttribute("student") Student student, @PathVariable("id") int id, Model model) {
-		model.addAttribute("groups", groupService.findAll());
-		studentService.setGroup(student, id);
+	public String updateGroup(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id, Model model) {
+		studentService.setGroup(studentDto, id);
 		return "redirect:/students";
 	}
 
@@ -87,8 +84,8 @@ public class StudentController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("student") Student student, @PathVariable("id") int id) {
-		studentService.update(student, id);
+	public String update(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id) {
+		studentService.update(studentDto, id);
 		return "redirect:/students";
 	}
 
