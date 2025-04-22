@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<style>
+    a {
+        margin-bottom: 10px;
+        display: block;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: rgb(27, 179, 25);
+    }
+
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+</head>
+<body>
+<h3 style="font-weight: bold; color: slateblue; text-align: left;">University's Schedule:</h3>
+<div th:each="date : ${uniqueDates}">
+    <a th:href="@{/schedule/{date}(date=${date})}"
+       th:text="${date.getDayOfMonth() + ' of ' + date.getMonth() + ', ' + date.getYear()}">
+    </a>
+</div>
+<a th:href="@{/menu}" class="button">Main Menu</a>
+<a th:href="@{schedule/new}" class="button">Create new schedule</a>
+</body>
+</html>
