@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<style>
+    a {
+        margin-bottom: 10px;
+        display: block;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: rgb(27, 179, 25);
+    }
+
+    button:hover, input[type="submit"]:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+</style>
+
+<head>
+    <title>Student</title>
+</head>
+<body>
+<p> Student: <b th:text="${student.getFirstName() + ' ' + student.getLastName()}"></b></p>
+<p> Group: <b th:text="${group.getName()}">VALUE</b></p>
+<a th:href="@{/students/{id}/edit(id=${student.getId()})}" class="button">Edit</a>
+<br/>
+<a th:href="@{/students/{id}/changeGroup(id=${student.getId()})}" class="button">Change group</a>
+<form th:method="DELETE"
+      th:action="@{/students/{id}/delete(id=${student.getId()})}">
+    <input type="submit" value="Delete" class="button"/>
+</form>
+
+<a th:href="@{/students}" class="button">Back to the Main Page</a>
+</body>
+</html>
