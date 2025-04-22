@@ -1,8 +1,0 @@
-*
-
-!src/
-!src/**
-
-!build.gradle
-!.gitignore
-.DS_Store
