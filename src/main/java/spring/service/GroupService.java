@@ -79,8 +79,8 @@ public class GroupService {
 			log.warn("Group with this id {} was not found", id);
 			throw new EntityNotFoundException("Group not found");
 		}
-		log.info("Group with id {} was deleted correctly", id);
 		groupRepository.delete(existingGroup);
+		log.info("Group with id {} was deleted correctly", id);
 	}
 
 	public boolean checkIfNull(String groupName) {

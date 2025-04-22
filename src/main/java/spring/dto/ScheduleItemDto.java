@@ -19,12 +19,12 @@ public class ScheduleItemDto {
 	
 	private int id;
 	
-	private LocalDateTime startTime;
+	private String startTime;
 
-	private LocalDateTime endTime;
+	private String endTime;
 
-	private Group group;
+	private GroupDto groupDto;
 
-	private Subject subject;
+	private SubjectDto subjectDto;
 
 }

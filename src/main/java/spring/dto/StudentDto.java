@@ -16,12 +16,6 @@ public class StudentDto {
 	
 	private String lastName;
 	
-	private Group group;
-
-	@Override
-	public String toString() {
-		return "id = " + id + ", " + " FirstName = " + firstName + ", " + " LastName = " + lastName + ", " + 
-				   " Group = " + group;
-	}
+	private GroupDto groupDto;
 	
 }

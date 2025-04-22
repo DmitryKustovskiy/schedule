@@ -20,7 +20,7 @@ public class Subject {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "name")
+	@Column(nullable = false, unique = true)
 	private String name;
 	
 	@OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

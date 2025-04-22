@@ -1,11 +1,3 @@
-2025-04-14T12:53:26.334+03:00  INFO 793 --- [http-nio-8080-exec-7] spring.service.StudentService            : Student with id 31 was updated correctly
-2025-04-14T12:58:20.179+03:00  INFO 1099 --- [http-nio-8080-exec-6] spring.service.ScheduleItemService       : Schedule Schedule for group null. The subject is null. Started at: 2025-04-18T15:01. End at: 2025-04-18T17:02 was saved correctly
-2025-04-14T12:58:42.745+03:00  INFO 1099 --- [http-nio-8080-exec-1] spring.service.GroupService              : Group with id 25 was deleted correctly
-2025-04-14T12:58:42.754+03:00 DEBUG 1099 --- [http-nio-8080-exec-1] o.h.sql.results.internal.ResultsHelper   : Collection fully initialized: [spring.model.Group.scheduleItems#25]
-2025-04-14T18:41:53.768+03:00  INFO 1396 --- [http-nio-8080-exec-8] spring.service.GroupService              : Group with id 22 was deleted correctly
-2025-04-14T18:41:53.784+03:00 DEBUG 1396 --- [http-nio-8080-exec-8] o.h.sql.results.internal.ResultsHelper   : Collection fully initialized: [spring.model.Group.scheduleItems#22]
-2025-04-14T18:41:56.286+03:00  INFO 1396 --- [http-nio-8080-exec-1] spring.service.GroupService              : Group with id 48 was deleted correctly
-2025-04-14T18:41:56.288+03:00 DEBUG 1396 --- [http-nio-8080-exec-1] o.h.sql.results.internal.ResultsHelper   : Collection fully initialized: [spring.model.Group.scheduleItems#48]
-2025-04-14T18:42:12.550+03:00  INFO 1396 --- [http-nio-8080-exec-7] spring.service.GroupService              : Group Trinixy-1da авыва was saved correctly
-2025-04-14T18:42:22.875+03:00  INFO 1396 --- [http-nio-8080-exec-3] spring.service.SubjectService            : Subject Труды was saved correctly
-2025-04-14T18:42:42.809+03:00  INFO 1396 --- [http-nio-8080-exec-1] spring.service.ScheduleItemService       : Schedule Schedule for group null. The subject is null. Started at: 2025-04-23T22:46. End at: 2025-04-23T23:47 was saved correctly
+2025-04-22T01:02:32.220+03:00  INFO 3196 --- [http-nio-8080-exec-1] spring.service.SubjectService            : Subject with this id 19 was deleted correctly
+2025-04-22T01:02:32.256+03:00 DEBUG 3196 --- [http-nio-8080-exec-1] o.h.sql.results.internal.ResultsHelper   : Collection fully initialized: [spring.model.Subject.scheduleItems#19]
+2025-04-22T12:41:13.965+03:00  INFO 883 --- [http-nio-8080-exec-10] spring.service.ScheduleItemService       : Schedule Schedule for group null. The subject is null. Started at: 2025-04-25T16:45. End at: 2025-04-25T17:46 was saved correctly

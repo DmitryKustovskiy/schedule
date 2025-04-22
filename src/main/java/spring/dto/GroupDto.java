@@ -11,16 +11,9 @@ import spring.model.ScheduleItem;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupDto {
-	
-	private int id;
-	
-	private String name;
-	
-	private List<ScheduleItem> scheduleItems;
 
-	@Override
-	public String toString() {
-		return name;
-	}
+	private int id;
+
+	private String name;
 
 }
