@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<style>
+a {
+        margin-bottom: 10px;
+        display: block;
+        text-decoration: none;
+    }
+    a:hover {
+        color: rgb(27, 179, 25);
+    }
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+    
+.button {
+    display: inline-block;
+    padding: 7px 16px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #343a40;
+	color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+<head>
+<meta charset="UTF-8">
+<title>All Subjects</title>
+</head>
+<body>
+<div th:each="subject : ${subjects}">
+    <a th:href="@{/subjects/{id}(id=${subject.getId()})}"
+       th:text="${subject.getName()}">Subject</a>
+</div>
+<a href="/subjects/new" class="button">New Subject</a>
+<br/>
+<a th:href="@{/menu}" class="button">Main Menu</a>
+</body>
+</html>
