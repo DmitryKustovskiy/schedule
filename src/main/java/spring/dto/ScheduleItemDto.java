@@ -16,15 +16,10 @@ import spring.model.Subject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleItemDto {
-	
 	private int id;
-	
 	private String startTime;
-
 	private String endTime;
-
 	private GroupDto groupDto;
-
 	private SubjectDto subjectDto;
 
 }

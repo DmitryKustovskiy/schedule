@@ -65,9 +65,9 @@ public class StudentController {
 	@GetMapping("/{id}/changeGroup")
 	public String changeGroup(@PathVariable("id") int id, Model model) {
 		StudentDto studentDto = studentService.findById(id);
-		model.addAttribute("student", studentDto);
+		model.addAttribute("studentDto", studentDto);
 		model.addAttribute("groups", groupService.findAll());
-		model.addAttribute("group", groupService.findGroupByStudentId(id));
+		model.addAttribute("groupDto", groupService.findGroupByStudentId(id));
 		return "student/changeGroup";
 	}
 

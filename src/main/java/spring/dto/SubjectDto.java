@@ -11,9 +11,7 @@ import spring.model.ScheduleItem;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectDto {
-
 	private int id;
-
 	private String name;
 
 }

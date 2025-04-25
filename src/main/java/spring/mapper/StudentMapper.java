@@ -8,7 +8,6 @@ import spring.dto.GroupDto;
 import spring.dto.StudentDto;
 import spring.model.Student;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StudentMapper {
 
 	public static StudentDto toDto(Student student) {
@@ -18,7 +17,7 @@ public class StudentMapper {
 		studentDto.setId(student.getId());
 		studentDto.setFirstName(student.getFirstName());
 		studentDto.setLastName(student.getLastName());
-		studentDto.setGroup(student.getGroup());
+		studentDto.setGroupDto(GroupMapper.toDto(student.getGroup()));
 		return studentDto;
 	}
 
@@ -29,7 +28,7 @@ public class StudentMapper {
 		student.setId(studentDto.getId());
 		student.setFirstName(studentDto.getFirstName());
 		student.setLastName(studentDto.getLastName());
-		student.setGroup(studentDto.getGroup());
+		student.setGroup(GroupMapper.toEntity(studentDto.getGroupDto()));
 		return student;
 
 	}

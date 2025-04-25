@@ -73,7 +73,7 @@ public class StudentService {
 	@Transactional
 	public void setGroup(StudentDto updatedStudentDto, int id) {
 		Student studentToBeUpdated = studentRepository.findById(id);
-		Group group = groupRepository.findById(updatedStudentDto.getGroup().getId());
+		Group group = groupRepository.findById(updatedStudentDto.getGroupDto().getId());
 		studentToBeUpdated.setGroup(group);
 		studentRepository.setGroup(studentToBeUpdated);
 		log.info("Student with id {} was updated correctly", id);

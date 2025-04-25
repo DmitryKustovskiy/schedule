@@ -8,10 +8,11 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+      format_sql: true
       show-sql: true
 logging:
   file:
-    name: src/main/resources/app.log
+    name: ${LOG_DIR:/Users/admin/Documents/Idea}/app.log
   level:
     root: warn
     spring.service: INFO

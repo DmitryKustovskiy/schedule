@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import spring.dto.SubjectDto;
 import spring.model.Subject;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SubjectMapper {
 
 	public static SubjectDto toDto(Subject subject) {

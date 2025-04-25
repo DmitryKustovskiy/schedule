@@ -25,7 +25,7 @@ public class Group {
 	@Column(nullable = false, unique = true)
 	private String name;
 	
-	@OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	private List<ScheduleItem> scheduleItems;
 
 	public Group(String name) {

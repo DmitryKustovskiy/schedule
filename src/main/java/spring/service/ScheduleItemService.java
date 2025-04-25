@@ -68,7 +68,9 @@ public class ScheduleItemService {
 
 	@Transactional
 	public ScheduleItem save(ScheduleItemDto scheduleItemDto) {
+		System.out.println(scheduleItemDto);
 		ScheduleItem scheduleItem = ScheduleItemMapper.toEntity(scheduleItemDto);
+		System.out.println(scheduleItem);
 		scheduleRepository.save(scheduleItem);
 		log.info("Schedule {} was saved correctly", scheduleItem);
 		return scheduleItem;
@@ -78,14 +80,17 @@ public class ScheduleItemService {
 	@Transactional
 	public ScheduleItem update(ScheduleItemDto updatedScheduleItemDto, int id) {
 		ScheduleItem scheduleItemToBeUpdated = scheduleRepository.findById(id);
+		ScheduleItem updatedGroup = ScheduleItemMapper.toEntity(updatedScheduleItemDto);
+
 		if (scheduleItemToBeUpdated == null) {
 			log.warn("Schedule with this id {} was not found", id);
 			throw new EntityNotFoundException("Schedule not found");
 		}
-		scheduleItemToBeUpdated.setGroup(updatedScheduleItemDto.getGroup());
-		scheduleItemToBeUpdated.setSubject(updatedScheduleItemDto.getSubject());
-		scheduleItemToBeUpdated.setStartTime(updatedScheduleItemDto.getStartTime());
-		scheduleItemToBeUpdated.setEndTime(updatedScheduleItemDto.getEndTime());
+
+		scheduleItemToBeUpdated.setGroup(updatedGroup.getGroup());
+		scheduleItemToBeUpdated.setSubject(updatedGroup.getSubject());
+		scheduleItemToBeUpdated.setStartTime(updatedGroup.getStartTime());
+		scheduleItemToBeUpdated.setEndTime(updatedGroup.getEndTime());
 		scheduleRepository.update(scheduleItemToBeUpdated);
 		log.info("Schedule with id {} was updated correctly", id);
 		return scheduleItemToBeUpdated;

@@ -28,7 +28,7 @@ public class ScheduleItemRepository {
 		 ScheduleItem singleResult = entityManager.createQuery(
 				"FROM ScheduleItem s WHERE s.startTime = :startTime", ScheduleItem.class)
 		 .setParameter("startTime", localDate.getYear() + "-" + localDate.getMonth() 
-		 + "-"+ localDate.getDayOfMonth()).getSingleResult();
+		 + "-" + localDate.getDayOfMonth()).getSingleResult();
 		 return singleResult;
 	}
 
@@ -47,12 +47,4 @@ public class ScheduleItemRepository {
 
 	}
 
-	public void deleteScheduleByClassId(ScheduleItem scheduleItem) {
-		entityManager.remove(scheduleItem);
-	}
-
-	public void deleteScheduleBySubjectId(ScheduleItem scheduleItem) {
-		entityManager.remove(scheduleItem);
-
-	}
 }

@@ -55,12 +55,12 @@
 </head>
 <body>
 <p style="font-weight: bold; color: slateblue; text-align: left;">Which group should be attached to this student?</p>
-<form th:method="POST" th:action="@{/students/{id}/changeGroup(id=${student.getId()})}" th:object="${student}">
-    <p th:utext="${student.getFirstName() + ' ' + student.getLastName() + ' is now studying in <b>' + '' + group.getName() + '</b>'}">
+<form th:method="POST" th:action="@{/students/{id}/changeGroup(id=${studentDto.getId()})}" th:object="${studentDto}">
+    <p th:utext="${studentDto.getFirstName() + ' ' + studentDto.getLastName() + ' is now studying in <b>' + '' + groupDto.getName() + '</b>'}">
     </p>
     <label for="classId">Choose a new Group:</label>
-    <select th:field="*{group.id}" id="classId">
-        <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
+    <select th:field="*{groupDto.id}" id="classId">
+        <option th:each="groupDto : ${groups}" th:value="${groupDto.id}" th:text="${groupDto.name}"></option>
     </select>
     <br/>
     <a th:href="@{/students}" class="button">Cancel</a>

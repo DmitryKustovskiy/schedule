@@ -9,7 +9,6 @@ import spring.dto.StudentDto;
 import spring.model.Group;
 import spring.model.Student;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GroupMapper {
 
 	public static GroupDto toDto(Group group) {

@@ -45,14 +45,12 @@
         th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:
 </h4>
 <ul>
-    <li th:each="schedule : ${schedules}">
-        <p><b>Group:</b> <span th:text="${schedule.getGroup().getName()}"></span></p>
-        <p><b>Subject:</b> <span th:text="${schedule.getSubject().getName()}"></span></p>
+    <li th:each="scheduleDto : ${schedules}">
+        <p><b>Group:</b> <span th:text="${scheduleDto.getGroupDto().getName()}"></span></p>
+        <p><b>Subject:</b> <span th:text="${scheduleDto.getSubjectDto().getName()}"></span></p>
         <p><b>Time:</b>
-            <span th:text="${#numbers.formatInteger(schedule.getStartTime().getHour(), 2)}"></span>:<span
-                    th:text="${#numbers.formatInteger(schedule.getStartTime().getMinute(), 2)}"></span> -
-            <span th:text="${#numbers.formatInteger(schedule.getEndTime().getHour(), 2)}"></span>:<span
-                    th:text="${#numbers.formatInteger(schedule.getEndTime().getMinute(), 2)}"></span>
+            <span th:text="${#strings.substring(scheduleDto.startTime, 11, 16)}"></span> -
+    		<span th:text="${#strings.substring(scheduleDto.endTime, 11, 16)}"></span>
         </p>
     </li>
 </ul>
