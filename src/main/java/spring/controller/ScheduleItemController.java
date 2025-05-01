@@ -48,11 +48,10 @@ public class ScheduleItemController {
 	@GetMapping("/{date}")
 	public String findByDate(@PathVariable("date") LocalDate date, Model model) {
 		List<ScheduleItemDto> schedules = scheduleItemService.findAllWithDetails().stream()
-	            .filter(schedule -> LocalDate.parse(schedule.getStartTime().substring(0, 10)).equals(date))
-	            .collect(Collectors.toList());
+				.filter(schedule -> LocalDate.parse(schedule.getStartTime().substring(0, 10)).equals(date))
+				.collect(Collectors.toList());
 		model.addAttribute("schedules", schedules);
 		model.addAttribute("uniqueDate", date);
-		System.out.println("Schedules size: " + schedules.size());
 		return "schedule/byDate";
 	}
 
@@ -67,14 +66,15 @@ public class ScheduleItemController {
 	public String save(@ModelAttribute("scheduleDto") ScheduleItemDto scheduleItemDto, Model model) {
 		Map<String, String> errors = new HashMap<>();
 
-		if (scheduleItemService.checkIfSubjectIsNull(scheduleItemDto.getSubjectDto().getId())) {
-			errors.put("errorMessageSubject", "Sorry, you should enter Subject");
-		}
-		if (scheduleItemService.checkIfStartTimeNull(DateConverter.stringToDate(scheduleItemDto.getStartTime()))) {
+		if (scheduleItemDto.getStartTime().isEmpty() || scheduleItemDto == null) {
 			errors.put("errorMessageStartTime", "Sorry, you should enter Start time");
 		}
-		if (scheduleItemService.checkIfEndTimeNull(DateConverter.stringToDate(scheduleItemDto.getEndTime()))) {
+		if (scheduleItemDto.getEndTime().isEmpty() || scheduleItemDto == null) {
 			errors.put("errorMessageEndTime", "Sorry, you should enter End time");
+		}
+
+		if (scheduleItemService.checkIfSubjectIsNull(scheduleItemDto.getSubjectDto().getId())) {
+			errors.put("errorMessageSubject", "Sorry, you should enter Subject");
 		}
 
 		if (!errors.isEmpty()) {
@@ -83,11 +83,7 @@ public class ScheduleItemController {
 			model.addAttribute("subjects", subjectService.findAll());
 			return "schedule/new";
 		}
-		int groupId = scheduleItemDto.getGroupDto().getId();
-	    int subjectId = scheduleItemDto.getSubjectDto().getId();
 
-	    scheduleItemDto.setGroupDto(groupService.findById(groupId));
-	    scheduleItemDto.setSubjectDto(subjectService.findById(subjectId));
 		scheduleItemService.save(scheduleItemDto);
 		return "redirect:/schedule";
 	}

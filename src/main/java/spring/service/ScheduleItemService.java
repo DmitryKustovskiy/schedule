@@ -68,9 +68,7 @@ public class ScheduleItemService {
 
 	@Transactional
 	public ScheduleItem save(ScheduleItemDto scheduleItemDto) {
-		System.out.println(scheduleItemDto);
 		ScheduleItem scheduleItem = ScheduleItemMapper.toEntity(scheduleItemDto);
-		System.out.println(scheduleItem);
 		scheduleRepository.save(scheduleItem);
 		log.info("Schedule {} was saved correctly", scheduleItem);
 		return scheduleItem;
