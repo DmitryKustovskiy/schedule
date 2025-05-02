@@ -83,10 +83,6 @@ public class GroupService {
 		log.info("Group with id {} was deleted correctly", id);
 	}
 
-	public boolean checkIfNull(String groupName) {
-		return groupName.isEmpty();
-	}
-
 	public boolean checkIfGroupExists(String groupName) {
 		List<Group> allGroups = groupRepository.findAll();
 		return allGroups.stream().anyMatch(existingGroup -> existingGroup.getName().equalsIgnoreCase(groupName));

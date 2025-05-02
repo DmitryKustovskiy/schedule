@@ -71,10 +71,6 @@ public class SubjectService {
 		subjectRepository.delete(existingSubject);
 	}
 
-	public boolean checkIfNull(String subjectName) {
-		return subjectName.isEmpty();
-	}
-
 	public boolean checkIfSubjectExists(String subjectName) {
 		List<Subject> allSubjects = subjectRepository.findAll();
 		return allSubjects.stream()

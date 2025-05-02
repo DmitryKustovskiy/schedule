@@ -3,12 +3,14 @@ package spring.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.validation.Valid;
 import spring.dto.SubjectDto;
 import spring.model.Subject;
 import spring.service.ScheduleItemService;
@@ -42,15 +44,18 @@ public class SubjectController {
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("subject") SubjectDto subjectDto, Model model) {
+	public String save(@ModelAttribute("subject") @Valid SubjectDto subjectDto, BindingResult bindingResult,
+			Model model) {
+
+		if (bindingResult.hasErrors()) {
+			return "subject/new";
+		}
+
 		if (subjectService.checkIfSubjectExists(subjectDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Subject with this name already exists.");
 			return "subject/new";
 		}
-		if (subjectService.checkIfNull(subjectDto.getName())) {
-			model.addAttribute("nullError", "You should enter subject name.");
-			return "subject/new";
-		}
+
 		subjectService.save(subjectDto);
 		return "redirect:/subjects";
 	}

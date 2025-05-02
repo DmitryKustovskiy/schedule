@@ -11,17 +11,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.validation.Valid;
 import spring.dto.ScheduleItemDto;
 import spring.service.GroupService;
 import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
-import spring.util.DateConverter;
 
 @Controller
 @RequestMapping("/schedule")
@@ -63,22 +64,10 @@ public class ScheduleItemController {
 	}
 
 	@PostMapping("/new")
-	public String save(@ModelAttribute("scheduleDto") ScheduleItemDto scheduleItemDto, Model model) {
-		Map<String, String> errors = new HashMap<>();
+	public String save(@ModelAttribute("scheduleDto") @Valid ScheduleItemDto scheduleItemDto,
+			BindingResult bindingResult, Model model) {
 
-		if (scheduleItemDto.getStartTime().isEmpty() || scheduleItemDto == null) {
-			errors.put("errorMessageStartTime", "Sorry, you should enter Start time");
-		}
-		if (scheduleItemDto.getEndTime().isEmpty() || scheduleItemDto == null) {
-			errors.put("errorMessageEndTime", "Sorry, you should enter End time");
-		}
-
-		if (scheduleItemService.checkIfSubjectIsNull(scheduleItemDto.getSubjectDto().getId())) {
-			errors.put("errorMessageSubject", "Sorry, you should enter Subject");
-		}
-
-		if (!errors.isEmpty()) {
-			model.addAllAttributes(errors);
+		if (bindingResult.hasErrors()) {
 			model.addAttribute("groups", groupService.findAll());
 			model.addAttribute("subjects", subjectService.findAll());
 			return "schedule/new";

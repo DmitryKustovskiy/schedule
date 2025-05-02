@@ -3,12 +3,14 @@ package spring.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.validation.Valid;
 import spring.dto.StudentDto;
 import spring.model.Student;
 import spring.service.GroupService;
@@ -46,15 +48,10 @@ public class StudentController {
 	}
 
 	@PostMapping("/new")
-	public String save(@ModelAttribute("student") StudentDto studentDto, Model model) {
-		if (studentService.checkIfNull(studentDto.getFirstName())) {
-			model.addAttribute("nullErrorFirstName", "You should enter first name of a student.");
+	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
 			model.addAttribute("groups", groupService.findAll());
-			return "student/new";
-		}
-
-		if (studentService.checkIfNull(studentDto.getLastName())) {
-			model.addAttribute("nullErrorLastName", "You should enter last name of a student.");
 			return "student/new";
 		}
 
@@ -72,7 +69,8 @@ public class StudentController {
 	}
 
 	@PostMapping("/{id}/changeGroup")
-	public String updateGroup(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id, Model model) {
+	public String updateGroup(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id,
+			Model model) {
 		studentService.setGroup(studentDto, id);
 		return "redirect:/students";
 	}
@@ -84,7 +82,11 @@ public class StudentController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id) {
+	public String update(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
+			@PathVariable("id") int id) {
+		if (bindingResult.hasErrors()) {
+			return "student/edit";
+		}
 		studentService.update(studentDto, id);
 		return "redirect:/students";
 	}

@@ -3,12 +3,14 @@ package spring.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.validation.Valid;
 import spring.dto.GroupDto;
 import spring.model.Group;
 import spring.service.GroupService;
@@ -42,15 +44,17 @@ public class GroupController {
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("group") GroupDto groupDto, Model model) {
+	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult, Model model) {
+
+		if (bindingResult.hasErrors()) {
+			return "group/new";
+		}
+
 		if (groupService.checkIfGroupExists(groupDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Group with this name already exists.");
 			return "group/new";
 		}
-		if (groupService.checkIfNull(groupDto.getName())) {
-			model.addAttribute("nullError", "You should enter a group name.");
-			return "group/new";
-		}
+
 		groupService.save(groupDto);
 		return "redirect:/groups";
 	}

@@ -75,15 +75,16 @@
     <select th:field="*{subjectDto.id}" id="subjectId">
         <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
     </select>
-    <span th:if="${errorMessageSubject}" th:text="${errorMessageSubject}" style="color: red; margin-left: 10px;"></span>
     <br/>
     <label for="startTime">Enter start date: </label>
     <input type="datetime-local" th:field="*{startTime}" id="startTime"/>
-    <span th:if="${errorMessageStartTime}" th:text="${errorMessageStartTime}" style="color: red; margin-left: 10px;"></span>
+	<div th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="error" 
+         style="color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></div>
     <br/>
     <label for="endTime">Enter end date: </label>
     <input type="datetime-local" th:field="*{endTime}" id="endTime"/>
-    <span th:if="${errorMessageEndTime}" th:text="${errorMessageEndTime}" style="color: red; margin-left: 10px;"></span>
+	<div th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="error" 
+         style="color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></div>
     <br/>
     <input type="submit" value="Create" class="button"/>
 </form>
