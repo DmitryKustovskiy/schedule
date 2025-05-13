@@ -1,7 +1,6 @@
 package spring.service;
 
 import java.time.LocalDate;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +34,10 @@ public class ScheduleItemService {
 		this.scheduleRepository = scheduleRepository;
 		this.groupRepository = groupRepository;
 		this.subjectRepository = subjectRepository;
+	}
+
+	public List<ScheduleItem> findByGroupName(String input) {
+		return scheduleRepository.findByGroupName(input);
 	}
 
 	public List<ScheduleItemDto> findAll() {

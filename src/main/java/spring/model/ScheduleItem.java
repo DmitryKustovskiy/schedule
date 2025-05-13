@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
+@Getter
 @Entity
 @Table(name = "schedule")
 public class ScheduleItem {

@@ -48,13 +48,12 @@ public class StudentController {
 	}
 
 	@PostMapping("/new")
-	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
-			Model model) {
+	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, 
+			BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("groups", groupService.findAll());
 			return "student/new";
 		}
-
 		studentService.save(studentDto);
 		return "redirect:/students";
 	}

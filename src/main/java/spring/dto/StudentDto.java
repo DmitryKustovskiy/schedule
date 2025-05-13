@@ -20,8 +20,6 @@ public class StudentDto {
 	@NotBlank(message = "Please, enter second name")
 	private String lastName;
 	
-	@NotNull(message = "Enter the group, please")
-	@Valid
 	private GroupDto groupDto;
 	
 }

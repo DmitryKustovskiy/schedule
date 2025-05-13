@@ -1,10 +1,9 @@
 package spring.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,9 +16,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
 import spring.dto.ScheduleItemDto;
+import spring.model.ScheduleItem;
 import spring.service.GroupService;
 import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
@@ -37,6 +38,18 @@ public class ScheduleItemController {
 		this.scheduleItemService = scheduleItemService;
 		this.groupService = groupService;
 		this.subjectService = subjectService;
+	}
+	
+	@GetMapping("/search")
+	public String searchSchedules(@RequestParam(value = "query", required = false) String query, Model model) {
+	    List<ScheduleItem> schedules = new ArrayList<>();
+
+	    if (query != null && !query.isBlank()) {
+	        schedules = scheduleItemService.findByGroupName(query);
+	    }
+	  
+	    model.addAttribute("schedules", schedules);
+	    return "schedule/search";
 	}
 
 	@GetMapping
@@ -66,13 +79,11 @@ public class ScheduleItemController {
 	@PostMapping("/new")
 	public String save(@ModelAttribute("scheduleDto") @Valid ScheduleItemDto scheduleItemDto,
 			BindingResult bindingResult, Model model) {
-
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("groups", groupService.findAll());
 			model.addAttribute("subjects", subjectService.findAll());
 			return "schedule/new";
 		}
-
 		scheduleItemService.save(scheduleItemDto);
 		return "redirect:/schedule";
 	}

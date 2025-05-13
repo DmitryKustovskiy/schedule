@@ -37,4 +37,5 @@ public class GroupRepository {
 		entityManager.remove(group);
 	}
 
+
 }
