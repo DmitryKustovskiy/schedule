@@ -20,8 +20,8 @@ import spring.model.ScheduleItem;
 @Repository
 public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Integer> {
 
-	@Query(value = "SELECT s FROM ScheduleItem s " + "JOIN FETCH s.group g " + "JOIN FETCH s.subject sb "
-			+ "WHERE g.name ILIKE %:input%")
+	@Query(value = "select s from ScheduleItem s " + "join fetch s.group g " + "join fetch s.subject sb "
+			+ "where lower (g.name) like lower (concat ('%', :input, '%'))")
 	List<ScheduleItem> findByGroupName(@Param("input") String input);
 
 	List<ScheduleItem> findAll();
