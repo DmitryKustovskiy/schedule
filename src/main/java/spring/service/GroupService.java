@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import spring.dto.GroupDto;
 import spring.mapper.GroupMapper;
 import spring.model.Group;
@@ -16,12 +17,13 @@ import spring.model.Student;
 import spring.repository.GroupRepository;
 import spring.repository.StudentRepository;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class GroupService {
+	
 	private final GroupRepository groupRepository;
 	private final StudentRepository studentRepository;
-	private static final Logger log = LoggerFactory.getLogger(GroupService.class);
 
 	@Autowired
 	public GroupService(GroupRepository groupRepository, StudentRepository studentRepository) {
@@ -35,18 +37,25 @@ public class GroupService {
 	}
 
 	public GroupDto findById(int id) {
-		Group existingGroup = groupRepository.findById(id);
-		if (existingGroup == null) {
+		Group group = groupRepository.findById(id).orElseThrow(() -> {
 			log.warn("Group with id {} was not found", id);
 			throw new EntityNotFoundException("Not found");
-		}
-		return GroupMapper.toDto(existingGroup);
+		});
+		
+		return GroupMapper.toDto(group);
 
 	}
 
 	public GroupDto findGroupByStudentId(int id) {
-		Student student = studentRepository.findById(id);
-		Group group = groupRepository.findById(student.getGroup().getId());
+		Student student = studentRepository.findById(id).orElseThrow(() -> {
+			log.warn("Student with id {} was not found", id);
+			throw new EntityNotFoundException("Not found");
+		});
+		Group group = groupRepository.findById(student.getGroup().getId()).orElseThrow(() -> {
+			log.warn("Group with id {} was not found", id);
+			throw new EntityNotFoundException("Not found");
+		});
+
 		return GroupMapper.toDto(group);
 	}
 
@@ -60,13 +69,13 @@ public class GroupService {
 
 	@Transactional
 	public Group update(GroupDto updatedGroupDto, int id) {
-		Group existingGroup = groupRepository.findById(id);
-		if (existingGroup == null) {
+		Group group = groupRepository.findById(id).orElseThrow(() -> {
 			log.warn("Group with this id {} was not found", id);
 			throw new EntityNotFoundException("Group was not found");
-		}
-		existingGroup.setName(updatedGroupDto.getName());
-		Group updatedGroup = groupRepository.update(existingGroup);
+		});
+
+		group.setName(updatedGroupDto.getName());
+		Group updatedGroup = groupRepository.save(group);
 		log.info("Group with id {} was updated correctly", id);
 		return updatedGroup;
 
@@ -74,13 +83,14 @@ public class GroupService {
 
 	@Transactional
 	public void delete(int id) {
-		Group existingGroup = groupRepository.findById(id);
-		if (existingGroup == null) {
+		Group group = groupRepository.findById(id).orElseThrow(() -> {
 			log.warn("Group with this id {} was not found", id);
 			throw new EntityNotFoundException("Group not found");
-		}
-		groupRepository.delete(existingGroup);
+		});
+
+		groupRepository.delete(group);
 		log.info("Group with id {} was deleted correctly", id);
+
 	}
 
 	public boolean checkIfGroupExists(String groupName) {

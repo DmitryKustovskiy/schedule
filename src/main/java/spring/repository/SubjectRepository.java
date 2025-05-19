@@ -1,44 +1,22 @@
 package spring.repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.transaction.annotation.Transactional;
-import spring.model.Group;
 import spring.model.Subject;
 
 @Repository
-public class SubjectRepository {
+public interface SubjectRepository extends JpaRepository<Subject, Integer> {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	List<Subject> findAll();
 
-	public List<Subject> findAll() {
-		return entityManager.createQuery("FROM Subject", Subject.class).getResultList();
-	}
+	Optional<Subject> findById(int id);
 
-	public Subject findById(int id) {
-		return entityManager.find(Subject.class, id);
-	}
+	Subject save(Subject subject);
 
-	public Subject save(Subject subject) {
-		entityManager.persist(subject);
-		return subject;
-	}
-
-	public Subject update(Subject updatedSubject) {
-		entityManager.merge(updatedSubject);
-		return updatedSubject;
-	}
-
-	public void delete(Subject subject) {
-		entityManager.remove(subject);
-	}
+	void delete(Subject subject);
 
 }

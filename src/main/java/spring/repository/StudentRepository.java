@@ -1,46 +1,22 @@
 package spring.repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import spring.model.Group;
 import spring.model.Student;
 
 @Repository
-public class StudentRepository {
+public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	List<Student> findAll();
 
-	public List<Student> findAll() {
-		return entityManager.createQuery("FROM Student", Student.class).getResultList();
+	Optional<Student> findById(int id);
 
-	}
+	Student save(Student student);
 
-	public Student findById(int id) {
-		return entityManager.find(Student.class, id);
-	}
+	void delete(Student studentToBeRemoved);
 
-	public Student save(Student student) {
-		entityManager.persist(student);
-		return student;
-	}
-
-	public Student update(Student updatedStudent) {
-		entityManager.merge(updatedStudent);
-		return updatedStudent;
-	}
-
-	public void setGroup(Student updatedStudent) {
-		entityManager.merge(updatedStudent);
-	}
-
-	public void delete(Student studentToBeRemoved) {
-		entityManager.remove(studentToBeRemoved);
-
-	}
 }

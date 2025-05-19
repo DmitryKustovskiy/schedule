@@ -9,16 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import spring.dto.SubjectDto;
 import spring.mapper.SubjectMapper;
 import spring.model.Subject;
 import spring.repository.SubjectRepository;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class SubjectService {
+
 	private final SubjectRepository subjectRepository;
-	private static final Logger log = LoggerFactory.getLogger(SubjectService.class);
 
 	@Autowired
 	public SubjectService(SubjectRepository subjectRepository) {
@@ -31,12 +33,12 @@ public class SubjectService {
 	}
 
 	public SubjectDto findById(int id) {
-		Subject existingSubject = subjectRepository.findById(id);
-		if (existingSubject == null) {
+		Subject subject = subjectRepository.findById(id).orElseThrow(() -> {
 			log.warn("Subject with this id {} was not found", id);
 			throw new EntityNotFoundException("Subject not found");
-		}
-		return SubjectMapper.toDto(existingSubject);
+		});
+
+		return SubjectMapper.toDto(subject);
 	}
 
 	@Transactional
@@ -44,31 +46,33 @@ public class SubjectService {
 		Subject subject = SubjectMapper.toEntity(subjectDto);
 		subjectRepository.save(subject);
 		log.info("Subject {} was saved correctly", subject);
+
 		return subject;
 	}
 
 	@Transactional
 	public Subject update(SubjectDto subjectDto, int id) {
-		Subject existingSubject = subjectRepository.findById(id);
-		if (existingSubject == null) {
+		Subject subject = subjectRepository.findById(id).orElseThrow(() -> {
 			log.warn("Subject with this id {} was not found", id);
 			throw new EntityNotFoundException("Subject not found");
-		}
-		existingSubject.setName(subjectDto.getName());
+		});
+
+		subject.setName(subjectDto.getName());
 		log.info("Subject {} was updated correctly");
-		return subjectRepository.update(existingSubject);
+
+		return subjectRepository.save(subject);
 
 	}
 
 	@Transactional
 	public void delete(int id) {
-		Subject existingSubject = subjectRepository.findById(id);
-		if (existingSubject == null) {
+		Subject subject = subjectRepository.findById(id).orElseThrow(() -> {
 			log.warn("Subject with this id {} was not found", id);
 			throw new EntityNotFoundException("Subject not found");
-		}
+		});
+
 		log.info("Subject with this id {} was deleted correctly", id);
-		subjectRepository.delete(existingSubject);
+		subjectRepository.delete(subject);
 	}
 
 	public boolean checkIfSubjectExists(String subjectName) {

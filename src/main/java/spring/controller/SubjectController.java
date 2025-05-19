@@ -44,8 +44,8 @@ public class SubjectController {
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("subject") @Valid SubjectDto subjectDto, 
-			BindingResult bindingResult, Model model) {
+	public String save(@ModelAttribute("subject") @Valid SubjectDto subjectDto, BindingResult bindingResult,
+			Model model) {
 		if (bindingResult.hasErrors()) {
 			return "subject/new";
 		}

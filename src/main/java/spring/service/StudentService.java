@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import spring.dto.StudentDto;
 import spring.mapper.StudentMapper;
 import spring.model.Group;
@@ -16,13 +17,13 @@ import spring.model.Student;
 import spring.repository.GroupRepository;
 import spring.repository.StudentRepository;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class StudentService {
 
 	private final StudentRepository studentRepository;
 	private final GroupRepository groupRepository;
-	private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
 	@Autowired
 	public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
@@ -37,12 +38,12 @@ public class StudentService {
 	}
 
 	public StudentDto findById(int id) {
-		Student existingStudent = studentRepository.findById(id);
-		if (existingStudent == null) {
+		Student student = studentRepository.findById(id).orElseThrow(() -> {
 			log.warn("Student with this id {} was not found", id);
 			throw new EntityNotFoundException("Student not found");
-		}
-		return StudentMapper.toDto(existingStudent);
+		});
+
+		return StudentMapper.toDto(student);
 
 	}
 
@@ -51,43 +52,53 @@ public class StudentService {
 		Student student = StudentMapper.toEntity(studentDto);
 		studentRepository.save(student);
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
+
 		return student;
 
 	}
 
 	@Transactional
 	public Student update(StudentDto updatedStudentDto, int id) {
-		Student existingStudent = studentRepository.findById(id);
-		if (existingStudent == null) {
+		Student student = studentRepository.findById(id).orElseThrow(() -> {
 			log.warn("Student with id {} was not found", id);
 			throw new EntityNotFoundException("Student not found");
-		}
-		existingStudent.setFirstName(updatedStudentDto.getFirstName());
-		existingStudent.setLastName(updatedStudentDto.getLastName());
-		Student updatedStudent = studentRepository.update(existingStudent);
+		});
+
+		student.setFirstName(updatedStudentDto.getFirstName());
+		student.setLastName(updatedStudentDto.getLastName());
+		Student updatedStudent = studentRepository.save(student);
 		log.info("Student with id {} was updated correctly", id);
+
 		return updatedStudent;
 
 	}
 
 	@Transactional
 	public void setGroup(StudentDto updatedStudentDto, int id) {
-		Student studentToBeUpdated = studentRepository.findById(id);
-		Group group = groupRepository.findById(updatedStudentDto.getGroupDto().getId());
+		Student studentToBeUpdated = studentRepository.findById(id).orElseThrow(() -> {
+			log.warn("Student with id {} was not found", id);
+			throw new EntityNotFoundException("Student not found");
+		});
+
+		Group group = groupRepository.findById(updatedStudentDto.getGroupDto().getId()).orElseThrow(() -> {
+			log.warn("Group with id {} was not found", id);
+			throw new EntityNotFoundException("Group not found");
+		});
+
 		studentToBeUpdated.setGroup(group);
-		studentRepository.setGroup(studentToBeUpdated);
+		studentRepository.save(studentToBeUpdated);
 		log.info("Student with id {} was updated correctly", id);
 
 	}
 
 	@Transactional
 	public void delete(int id) {
-		Student existingStudent = studentRepository.findById(id);
-		if (existingStudent == null) {
+		Student student = studentRepository.findById(id).orElseThrow(() -> {
 			log.warn("Student with id {} was not found", id);
 			throw new EntityNotFoundException("Student was not found");
-		}
-		studentRepository.delete(existingStudent);
+		});
+
+		studentRepository.delete(student);
 		log.info("Student with id {} was deleted correctly", id);
 
 	}

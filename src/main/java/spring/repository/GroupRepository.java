@@ -1,41 +1,22 @@
 package spring.repository;
 
 import java.util.List;
+import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import spring.model.Group;
 
 @Repository
-public class GroupRepository {
+public interface GroupRepository extends JpaRepository<Group, Integer> {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	List<Group> findAll();
 
-	public List<Group> findAll() {
-		return entityManager.createQuery("FROM Group", Group.class).getResultList();
-	}
+	Optional<Group> findById(int id);
 
-	public Group findById(int id) {
-		return entityManager.find(Group.class, id);
-	}
+	Group save(Group group);
 
-	public Group save(Group group) {
-		entityManager.persist(group);
-		return group;
-	}
-
-	public Group update(Group updatedGroup) {
-		entityManager.merge(updatedGroup);
-		return updatedGroup;
-	}
-
-	public void delete(Group group) {
-		entityManager.remove(group);
-	}
-
+	void delete(Group group);
 
 }

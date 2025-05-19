@@ -14,7 +14,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
 @Entity
 @Table(name = "class")
 public class Group {

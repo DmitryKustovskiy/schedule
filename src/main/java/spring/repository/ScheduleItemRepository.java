@@ -1,12 +1,13 @@
 package spring.repository;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Fetch;
@@ -15,57 +16,20 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
 import spring.model.Group;
 import spring.model.ScheduleItem;
-import spring.model.Subject;
 
 @Repository
-public class ScheduleItemRepository {
+public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Integer> {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	@Query(value = "SELECT s FROM ScheduleItem s " + "JOIN FETCH s.group g " + "JOIN FETCH s.subject sb "
+			+ "WHERE g.name ILIKE %:input%")
+	List<ScheduleItem> findByGroupName(@Param("input") String input);
 
-	public List<ScheduleItem> findByGroupName(String input) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ScheduleItem> query = cb.createQuery(ScheduleItem.class);
-		Root<ScheduleItem> scheduleItem = query.from(ScheduleItem.class);
-		Fetch<ScheduleItem, Group> groupFetch = scheduleItem.fetch("group", JoinType.INNER);
-		scheduleItem.fetch("subject", JoinType.INNER);
-		Join<ScheduleItem, Group> groupJoin = (Join<ScheduleItem, Group>) groupFetch;
-		query.select(scheduleItem).where(cb.like(cb.lower(groupJoin.get("name")), "%" + input.toLowerCase() + "%"));
+	List<ScheduleItem> findAll();
 
-		return entityManager.createQuery(query).getResultList();
+	Optional<ScheduleItem> findById(int id);
 
-	}
+	ScheduleItem save(ScheduleItem scheduleItem);
 
-	public List<ScheduleItem> findAll() {
-		return entityManager.createQuery("FROM ScheduleItem", ScheduleItem.class).getResultList();
-	}
-
-	public ScheduleItem findById(int id) {
-		return entityManager.find(ScheduleItem.class, id);
-	}
-
-	public ScheduleItem findByDate(LocalDate localDate) {
-		ScheduleItem singleResult = entityManager
-				.createQuery("FROM ScheduleItem s WHERE s.startTime = :startTime", ScheduleItem.class)
-				.setParameter("startTime",
-						localDate.getYear() + "-" + localDate.getMonth() + "-" + localDate.getDayOfMonth())
-				.getSingleResult();
-		return singleResult;
-	}
-
-	public ScheduleItem save(ScheduleItem scheduleItem) {
-		entityManager.persist(scheduleItem);
-		return scheduleItem;
-	}
-
-	public ScheduleItem update(ScheduleItem updatedScheduleItem) {
-		return entityManager.merge(updatedScheduleItem);
-
-	}
-
-	public void delete(ScheduleItem scheduleItem) {
-		entityManager.remove(scheduleItem);
-
-	}
+	void delete(ScheduleItem scheduleItem);
 
 }

@@ -39,17 +39,16 @@ public class ScheduleItemController {
 		this.groupService = groupService;
 		this.subjectService = subjectService;
 	}
-	
+
 	@GetMapping("/search")
 	public String searchSchedules(@RequestParam(value = "query", required = false) String query, Model model) {
-	    List<ScheduleItem> schedules = new ArrayList<>();
+		List<ScheduleItem> schedules = new ArrayList<>();
 
-	    if (query != null && !query.isBlank()) {
-	        schedules = scheduleItemService.findByGroupName(query);
-	    }
-	  
-	    model.addAttribute("schedules", schedules);
-	    return "schedule/search";
+		if (query != null && !query.isBlank()) {
+			schedules = scheduleItemService.findByGroupName(query);
+		}
+		model.addAttribute("schedules", schedules);
+		return "schedule/search";
 	}
 
 	@GetMapping

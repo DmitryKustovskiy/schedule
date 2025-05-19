@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
-@Getter
 @Entity
 @Table(name = "schedule")
 public class ScheduleItem {

@@ -44,8 +44,7 @@ public class GroupController {
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, 
-			BindingResult bindingResult, Model model) {
+	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "group/new";
 		}
