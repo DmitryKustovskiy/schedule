@@ -26,10 +26,11 @@ public class GroupService {
 	
 	private final GroupRepository groupRepository;
 	private final StudentRepository studentRepository;
+	private final GroupMapper groupMapper;
 
 	public List<GroupDto> findAll() {
 		List<Group> allGroups = groupRepository.findAll();
-		return GroupMapper.toDtoList(allGroups);
+		return groupMapper.toDtoList(allGroups);
 	}
 
 	public GroupDto findById(int id) {
@@ -38,7 +39,7 @@ public class GroupService {
 			throw new EntityNotFoundException("Not found");
 		});
 		
-		return GroupMapper.toDto(group);
+		return groupMapper.toDto(group);
 
 	}
 
@@ -52,12 +53,12 @@ public class GroupService {
 			throw new EntityNotFoundException("Not found");
 		});
 
-		return GroupMapper.toDto(group);
+		return groupMapper.toDto(group);
 	}
 
 	@Transactional
 	public Group save(GroupDto groupDto) {
-		Group group = GroupMapper.toEntity(groupDto);
+		Group group = groupMapper.toEntity(groupDto);
 		groupRepository.save(group);
 		log.info("Group {} was saved correctly", group);
 		return group;

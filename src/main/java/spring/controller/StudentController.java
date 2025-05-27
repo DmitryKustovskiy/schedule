@@ -1,6 +1,5 @@
 package spring.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import spring.dto.StudentDto;
+import spring.repository.StudentRepository;
 import spring.service.GroupService;
 import spring.service.StudentService;
 
@@ -20,7 +20,6 @@ import spring.service.StudentService;
 @RequestMapping("/students")
 @RequiredArgsConstructor
 public class StudentController {
-	
 	private final StudentService studentService;
 	private final GroupService groupService;
 
@@ -44,8 +43,8 @@ public class StudentController {
 	}
 
 	@PostMapping("/new")
-	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, 
-			BindingResult bindingResult, Model model) {
+	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
+			Model model) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("groups", groupService.findAll());
 			return "student/new";

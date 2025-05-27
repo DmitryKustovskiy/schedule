@@ -21,12 +21,12 @@ import spring.repository.SubjectRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SubjectService {
-
 	private final SubjectRepository subjectRepository;
+	private final SubjectMapper subjectMapper;
 
 	public List<SubjectDto> findAll() {
 		List<Subject> allSubjects = subjectRepository.findAll();
-		return SubjectMapper.toDtoList(allSubjects);
+		return subjectMapper.toDtoList(allSubjects);
 	}
 
 	public SubjectDto findById(int id) {
@@ -35,12 +35,12 @@ public class SubjectService {
 			throw new EntityNotFoundException("Subject not found");
 		});
 
-		return SubjectMapper.toDto(subject);
+		return subjectMapper.toDto(subject);
 	}
 
 	@Transactional
 	public Subject save(SubjectDto subjectDto) {
-		Subject subject = SubjectMapper.toEntity(subjectDto);
+		Subject subject = subjectMapper.toEntity(subjectDto);
 		subjectRepository.save(subject);
 		log.info("Subject {} was saved correctly", subject);
 

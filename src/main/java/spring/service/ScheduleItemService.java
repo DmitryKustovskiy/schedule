@@ -27,10 +27,10 @@ import spring.repository.SubjectRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ScheduleItemService {
-
 	private final ScheduleItemRepository scheduleRepository;
 	private final GroupRepository groupRepository;
 	private final SubjectRepository subjectRepository;
+	private final ScheduleItemMapper scheduleItemMapper;
 
 	public List<ScheduleItem> findByGroupName(String input) {
 		return scheduleRepository.findByGroupName(input);
@@ -38,7 +38,7 @@ public class ScheduleItemService {
 
 	public List<ScheduleItemDto> findAll() {
 		List<ScheduleItem> allScheduleItems = scheduleRepository.findAll();
-		return ScheduleItemMapper.toDtoList(allScheduleItems);
+		return scheduleItemMapper.toDtoList(allScheduleItems);
 	}
 
 	public Set<LocalDate> findAllUniqueDates() {
@@ -54,7 +54,7 @@ public class ScheduleItemService {
 			schedule.setSubject(subjectRepository.findById(schedule.getSubject().getId()).get());
 		}
 
-		return ScheduleItemMapper.toDtoList(schedules);
+		return scheduleItemMapper.toDtoList(schedules);
 
 	}
 
@@ -64,13 +64,13 @@ public class ScheduleItemService {
 			throw new EntityNotFoundException("Schedule not found");
 		});
 
-		return ScheduleItemMapper.toDto(existingSchedule);
+		return scheduleItemMapper.toDto(existingSchedule);
 
 	}
 
 	@Transactional
 	public ScheduleItem save(ScheduleItemDto scheduleItemDto) {
-		ScheduleItem scheduleItem = ScheduleItemMapper.toEntity(scheduleItemDto);
+		ScheduleItem scheduleItem = scheduleItemMapper.toEntity(scheduleItemDto);
 		scheduleRepository.save(scheduleItem);
 		log.info("Schedule {} was saved correctly", scheduleItem);
 
@@ -85,7 +85,7 @@ public class ScheduleItemService {
 			throw new EntityNotFoundException("Schedule not found");
 		});
 
-		ScheduleItem updatedGroup = ScheduleItemMapper.toEntity(updatedScheduleItemDto);
+		ScheduleItem updatedGroup = scheduleItemMapper.toEntity(updatedScheduleItemDto);
 
 		if (scheduleItemToBeUpdated == null) {
 			log.warn("Schedule with this id {} was not found", id);

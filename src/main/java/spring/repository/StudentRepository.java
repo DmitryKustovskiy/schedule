@@ -11,12 +11,4 @@ import spring.model.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-	List<Student> findAll();
-
-	Optional<Student> findById(Integer id);
-
-	Student save(Student student);
-
-	void delete(Student studentToBeRemoved);
-
 }

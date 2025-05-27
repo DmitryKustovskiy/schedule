@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.StudentDto;
 import spring.mapper.StudentMapper;
+import spring.mapper.SubjectMapper;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
@@ -23,13 +24,13 @@ import spring.repository.StudentRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StudentService {
-
 	private final StudentRepository studentRepository;
 	private final GroupRepository groupRepository;
+	private final StudentMapper studentMapper;
 
 	public List<StudentDto> findAll() {
 		List<Student> allStudents = studentRepository.findAll();
-		return StudentMapper.toDtoList(allStudents);
+		return studentMapper.toDtoList(allStudents);
 
 	}
 
@@ -39,13 +40,13 @@ public class StudentService {
 			throw new EntityNotFoundException("Student not found");
 		});
 
-		return StudentMapper.toDto(student);
+		return studentMapper.toDto(student);
 
 	}
 
 	@Transactional
 	public Student save(StudentDto studentDto) {
-		Student student = StudentMapper.toEntity(studentDto);
+		Student student = studentMapper.toEntity(studentDto);
 		studentRepository.save(student);
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
 

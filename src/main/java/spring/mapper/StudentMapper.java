@@ -1,48 +1,38 @@
 package spring.mapper;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import spring.dto.GroupDto;
+import lombok.RequiredArgsConstructor;
 import spring.dto.StudentDto;
 import spring.model.Student;
 
-public class StudentMapper {
+@Component
+@RequiredArgsConstructor
+public class StudentMapper implements Mapper<StudentDto, Student> {
+	private final GroupMapper groupMapper;
 
-	public static StudentDto toDto(Student student) {
+	@Override
+	public StudentDto toDto(Student student) {
 		if (student == null)
 			return null;
 		StudentDto studentDto = new StudentDto();
 		studentDto.setId(student.getId());
 		studentDto.setFirstName(student.getFirstName());
 		studentDto.setLastName(student.getLastName());
-		studentDto.setGroupDto(GroupMapper.toDto(student.getGroup()));
+		studentDto.setGroupDto(groupMapper.toDto(student.getGroup()));
 		return studentDto;
 	}
 
-	public static Student toEntity(StudentDto studentDto) {
+	@Override
+	public Student toEntity(StudentDto studentDto) {
 		if (studentDto == null)
 			return null;
 		Student student = new Student();
 		student.setId(studentDto.getId());
 		student.setFirstName(studentDto.getFirstName());
 		student.setLastName(studentDto.getLastName());
-		student.setGroup(GroupMapper.toEntity(studentDto.getGroupDto()));
+		student.setGroup(groupMapper.toEntity(studentDto.getGroupDto()));
 		return student;
-
-	}
-
-	public static List<StudentDto> toDtoList(List<Student> students) {
-		if (students == null)
-			return null;
-		return students.stream().map(StudentMapper::toDto).toList();
-	}
-
-	public static List<Student> toEntityList(List<StudentDto> studentDtos) {
-		if (studentDtos == null)
-			return null;
-		return studentDtos.stream().map(StudentMapper::toEntity).toList();
 	}
 
 }

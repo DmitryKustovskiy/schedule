@@ -26,12 +26,4 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Inte
 			+ "where lower (s.group.name) like lower (concat ('%', :input, '%'))")
 	List<ScheduleItem> findByGroupName(@Param("input") String input);
 
-	List<ScheduleItem> findAll();
-
-	Optional<ScheduleItem> findById(Integer id);
-
-	ScheduleItem save(ScheduleItem scheduleItem);
-
-	void delete(ScheduleItem scheduleItem);
-
 }

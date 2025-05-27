@@ -11,12 +11,4 @@ import spring.model.Subject;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Integer> {
 
-	List<Subject> findAll();
-
-	Optional<Subject> findById(Integer id);
-
-	Subject save(Subject subject);
-
-	void delete(Subject subject);
-
 }
