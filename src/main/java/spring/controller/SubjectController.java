@@ -11,20 +11,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import spring.dto.SubjectDto;
 import spring.model.Subject;
+import spring.service.GroupService;
 import spring.service.ScheduleItemService;
 import spring.service.SubjectService;
 
 @Controller
 @RequestMapping("/subjects")
+@RequiredArgsConstructor
 public class SubjectController {
+	
 	private final SubjectService subjectService;
-
-	@Autowired
-	public SubjectController(SubjectService subjectService, ScheduleItemService scheduleItemService) {
-		this.subjectService = subjectService;
-	}
 
 	@GetMapping
 	public String findAll(Model model) {

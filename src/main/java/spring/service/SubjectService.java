@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.SubjectDto;
 import spring.mapper.SubjectMapper;
@@ -18,14 +19,10 @@ import spring.repository.SubjectRepository;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SubjectService {
 
 	private final SubjectRepository subjectRepository;
-
-	@Autowired
-	public SubjectService(SubjectRepository subjectRepository) {
-		this.subjectRepository = subjectRepository;
-	}
 
 	public List<SubjectDto> findAll() {
 		List<Subject> allSubjects = subjectRepository.findAll();

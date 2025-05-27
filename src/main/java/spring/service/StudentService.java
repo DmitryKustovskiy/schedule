@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.StudentDto;
 import spring.mapper.StudentMapper;
@@ -20,16 +21,11 @@ import spring.repository.StudentRepository;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class StudentService {
 
 	private final StudentRepository studentRepository;
 	private final GroupRepository groupRepository;
-
-	@Autowired
-	public StudentService(StudentRepository studentRepository, GroupRepository groupRepository) {
-		this.studentRepository = studentRepository;
-		this.groupRepository = groupRepository;
-	}
 
 	public List<StudentDto> findAll() {
 		List<Student> allStudents = studentRepository.findAll();

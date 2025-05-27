@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.GroupDto;
 import spring.mapper.GroupMapper;
@@ -20,16 +21,11 @@ import spring.repository.StudentRepository;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class GroupService {
 	
 	private final GroupRepository groupRepository;
 	private final StudentRepository studentRepository;
-
-	@Autowired
-	public GroupService(GroupRepository groupRepository, StudentRepository studentRepository) {
-		this.groupRepository = groupRepository;
-		this.studentRepository = studentRepository;
-	}
 
 	public List<GroupDto> findAll() {
 		List<Group> allGroups = groupRepository.findAll();
@@ -88,7 +84,7 @@ public class GroupService {
 			throw new EntityNotFoundException("Group not found");
 		});
 
-		groupRepository.delete(group);
+		groupRepository.deleteById(group.getId());
 		log.info("Group with id {} was deleted correctly", id);
 
 	}

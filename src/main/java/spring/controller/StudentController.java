@@ -11,22 +11,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import spring.dto.StudentDto;
-import spring.model.Student;
 import spring.service.GroupService;
 import spring.service.StudentService;
 
 @Controller
 @RequestMapping("/students")
+@RequiredArgsConstructor
 public class StudentController {
+	
 	private final StudentService studentService;
 	private final GroupService groupService;
-
-	@Autowired
-	public StudentController(StudentService studentService, GroupService groupService) {
-		this.studentService = studentService;
-		this.groupService = groupService;
-	}
 
 	@GetMapping
 	public String findAll(Model model) {

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.ScheduleItemDto;
 import spring.mapper.ScheduleItemMapper;
@@ -24,19 +25,12 @@ import spring.repository.SubjectRepository;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ScheduleItemService {
 
 	private final ScheduleItemRepository scheduleRepository;
 	private final GroupRepository groupRepository;
 	private final SubjectRepository subjectRepository;
-
-	@Autowired
-	public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupRepository groupRepository,
-			SubjectRepository subjectRepository) {
-		this.scheduleRepository = scheduleRepository;
-		this.groupRepository = groupRepository;
-		this.subjectRepository = subjectRepository;
-	}
 
 	public List<ScheduleItem> findByGroupName(String input) {
 		return scheduleRepository.findByGroupName(input);

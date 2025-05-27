@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import spring.dto.GroupDto;
 import spring.model.Group;
 import spring.service.GroupService;
@@ -18,13 +19,10 @@ import spring.service.ScheduleItemService;
 
 @Controller
 @RequestMapping("/groups")
+@RequiredArgsConstructor
 public class GroupController {
+	
 	private final GroupService groupService;
-
-	@Autowired
-	public GroupController(GroupService groupService, ScheduleItemService scheduleItemService) {
-		this.groupService = groupService;
-	}
 
 	@GetMapping
 	public String findAll(Model model) {

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import spring.dto.ScheduleItemDto;
 import spring.model.ScheduleItem;
 import spring.service.GroupService;
@@ -27,18 +28,12 @@ import spring.service.SubjectService;
 
 @Controller
 @RequestMapping("/schedule")
+@RequiredArgsConstructor
 public class ScheduleItemController {
+	
 	private final ScheduleItemService scheduleItemService;
 	private final GroupService groupService;
 	private final SubjectService subjectService;
-
-	@Autowired
-	public ScheduleItemController(ScheduleItemService scheduleItemService, GroupService groupService,
-			SubjectService subjectService) {
-		this.scheduleItemService = scheduleItemService;
-		this.groupService = groupService;
-		this.subjectService = subjectService;
-	}
 
 	@GetMapping("/search")
 	public String searchSchedules(@RequestParam(value = "query", required = false) String query, Model model) {

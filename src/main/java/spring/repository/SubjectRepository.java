@@ -13,7 +13,7 @@ public interface SubjectRepository extends JpaRepository<Subject, Integer> {
 
 	List<Subject> findAll();
 
-	Optional<Subject> findById(int id);
+	Optional<Subject> findById(Integer id);
 
 	Subject save(Subject subject);
 

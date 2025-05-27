@@ -11,12 +11,4 @@ import spring.model.Group;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
 
-	List<Group> findAll();
-
-	Optional<Group> findById(int id);
-
-	Group save(Group group);
-
-	void delete(Group group);
-
 }
