@@ -23,7 +23,7 @@ import spring.repository.StudentRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class GroupService {
-	
+
 	private final GroupRepository groupRepository;
 	private final StudentRepository studentRepository;
 	private final GroupMapper groupMapper;
@@ -38,7 +38,7 @@ public class GroupService {
 			log.warn("Group with id {} was not found", id);
 			throw new EntityNotFoundException("Not found");
 		});
-		
+
 		return groupMapper.toDto(group);
 
 	}
@@ -59,8 +59,8 @@ public class GroupService {
 	@Transactional
 	public Group save(GroupDto groupDto) {
 		Group group = groupMapper.toEntity(groupDto);
-		groupRepository.save(group);
-		log.info("Group {} was saved correctly", group);
+		Group savedGroup = groupRepository.save(group);
+		log.info("Group {} was saved correctly", savedGroup);
 		return group;
 	}
 
