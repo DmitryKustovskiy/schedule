@@ -61,7 +61,7 @@ public class GroupService {
 		Group group = groupMapper.toEntity(groupDto);
 		Group savedGroup = groupRepository.save(group);
 		log.info("Group {} was saved correctly", savedGroup);
-		return group;
+		return savedGroup;
 	}
 
 	@Transactional
