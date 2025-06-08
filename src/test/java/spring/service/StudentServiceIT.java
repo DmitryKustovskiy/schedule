@@ -1,6 +1,6 @@
 package spring.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,10 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import spring.dto.GroupDto;
 import spring.dto.StudentDto;
-import spring.dto.SubjectDto;
-import spring.mapper.GroupMapper;
 import spring.mapper.StudentMapper;
 import spring.model.Group;
 import spring.model.Student;
@@ -100,18 +97,18 @@ public class StudentServiceIT {
 		assertEquals("NewGroup", studentToBeUpdated.getGroup().getName());
 
 	}
-	
+
 	@Test
 	void shouldDeleteStudent() {
 		var studentDtoToBeDeleted = studentService.findById(alex.getId());
 		studentService.delete(studentDtoToBeDeleted.getId());
-		
+
 		List<StudentDto> allStudentDtos = studentService.findAll();
 		assertEquals(1, allStudentDtos.size());
 		assertThat(allStudentDtos).extracting(StudentDto::getFirstName).doesNotContain("Alex");
 		assertThat(allStudentDtos).extracting(StudentDto::getLastName).doesNotContain("Alexeev");
 	}
-	
+
 	@Test
 	void studentNameShouldBeEmpty() {
 		String name = "";
@@ -119,7 +116,7 @@ public class StudentServiceIT {
 		assertTrue(emptyName);
 	}
 
-	private void saveStudents() {
+	public void saveStudents() {
 		alex = new Student();
 		alex.setFirstName("Alex");
 		alex.setLastName("Alexeev");
