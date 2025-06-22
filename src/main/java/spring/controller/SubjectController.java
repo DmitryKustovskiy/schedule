@@ -64,7 +64,11 @@ public class SubjectController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("subject") SubjectDto subjectDto, @PathVariable("id") int id, Model model) {
+	public String update(@ModelAttribute("subject") @Valid SubjectDto subjectDto,
+			BindingResult bindingResult, @PathVariable("id") int id, Model model) {
+		if(bindingResult.hasErrors()) {
+			return "subject/edit";
+		}
 		if (subjectService.checkIfSubjectExists(subjectDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Subject with this name already exists!");
 			return "subject/edit";

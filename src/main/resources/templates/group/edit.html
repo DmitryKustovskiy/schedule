@@ -68,6 +68,8 @@
     <label for="name">Enter group name: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error" 
+         style="color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></div>
     <br/>
     <input type="submit" value="Update" class="update"/>
     <br/>

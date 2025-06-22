@@ -47,10 +47,11 @@ public class StudentService {
 	@Transactional
 	public Student save(StudentDto studentDto) {
 		Student student = studentMapper.toEntity(studentDto);
-		studentRepository.save(student);
+		Student savedStudent = studentRepository.save(student);
+		System.out.println(savedStudent.getGroup().getName());
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
-
-		return student;
+		
+		return savedStudent;
 
 	}
 

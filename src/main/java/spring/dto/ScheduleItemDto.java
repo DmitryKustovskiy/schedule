@@ -28,11 +28,9 @@ public class ScheduleItemDto {
 	private String endTime;
 
 	@NotNull(message = "Group is required")
-	@Valid
 	private GroupDto groupDto;
 
 	@NotNull(message = "Subject is required")
-	@Valid
 	private SubjectDto subjectDto;
 
 }

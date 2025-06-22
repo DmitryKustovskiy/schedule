@@ -16,15 +16,13 @@ public class StudentDto {
 	private int id;
 
 	@NotBlank(message = "Please, enter first name")
-	@Size(min = 3, message = "Minimum 3 symbols required the firstname")
+	@Size(min = 2, message = "Minimum 3 symbols required the firstname")
 	private String firstName;
 
 	@NotBlank(message = "Please, enter second name")
-	@Size(min = 3, message = "Minimum 3 symbols required for the lastname")
+	@Size(min = 2, message = "Minimum 3 symbols required for the lastname")
 	private String lastName;
 
-	@NotNull
-	@Valid
 	private GroupDto groupDto;
 
 }

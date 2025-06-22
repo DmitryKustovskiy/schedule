@@ -46,6 +46,7 @@ public class StudentController {
 	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
+			System.out.println(bindingResult.getAllErrors());
 			model.addAttribute("groups", groupService.findAll());
 			return "student/new";
 		}

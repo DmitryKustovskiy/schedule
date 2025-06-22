@@ -21,7 +21,7 @@ import spring.service.ScheduleItemService;
 @RequestMapping("/groups")
 @RequiredArgsConstructor
 public class GroupController {
-	
+
 	private final GroupService groupService;
 
 	@GetMapping
@@ -42,7 +42,8 @@ public class GroupController {
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult, Model model) {
+	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult,
+			Model model) {
 		if (bindingResult.hasErrors()) {
 			return "group/new";
 		}
@@ -62,7 +63,11 @@ public class GroupController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("group") GroupDto groupDto, @PathVariable("id") int id, Model model) {
+	public String update(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult, @PathVariable("id") int id,
+			Model model) {
+		if (bindingResult.hasErrors()) {
+			return "group/edit";
+		}
 		if (groupService.checkIfGroupExists(groupDto.getName())) {
 			model.addAttribute("errorMessage", "Sorry! Group with this name already exists.");
 			return "group/edit";

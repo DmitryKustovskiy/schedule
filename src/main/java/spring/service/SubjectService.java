@@ -41,10 +41,10 @@ public class SubjectService {
 	@Transactional
 	public Subject save(SubjectDto subjectDto) {
 		Subject subject = subjectMapper.toEntity(subjectDto);
-		subjectRepository.save(subject);
+		Subject savedSubject = subjectRepository.save(subject);
 		log.info("Subject {} was saved correctly", subject);
 
-		return subject;
+		return savedSubject;
 	}
 
 	@Transactional
