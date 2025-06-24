@@ -58,13 +58,13 @@ public class ScheduleItemService {
 
 	}
 
-	public ScheduleItemDto findById(int id) {
+	public ScheduleItem findById(int id) {
 		ScheduleItem existingSchedule = scheduleRepository.findById(id).orElseThrow(() -> {
 			log.warn("Schedule with this id {} was not found", id);
 			throw new EntityNotFoundException("Schedule not found");
 		});
 
-		return scheduleItemMapper.toDto(existingSchedule);
+		return existingSchedule;
 
 	}
 
@@ -100,7 +100,18 @@ public class ScheduleItemService {
 		log.info("Schedule with id {} was updated correctly", id);
 
 		return scheduleItemToBeUpdated;
-		
+
+	}
+
+	@Transactional
+	public void delete(int id) {
+		ScheduleItem scheduleItem = scheduleRepository.findById(id).orElseThrow(() -> {
+			throw new EntityNotFoundException("Schedule was not found");
+		});
+
+		scheduleRepository.deleteById(scheduleItem.getId());
+		log.info("Schedule with id {} was deleted correctly", id);
+
 	}
 
 	public boolean checkIfSubjectIsNull(int subjectId) {

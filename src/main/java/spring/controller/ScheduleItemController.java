@@ -81,5 +81,12 @@ public class ScheduleItemController {
 		scheduleItemService.save(scheduleItemDto);
 		return "redirect:/schedule";
 	}
+	
+	@PostMapping("/{id}")
+	public String delete(@PathVariable("id") int id, Model model) {
+		scheduleItemService.delete(id);
+		
+		return "redirect:/schedule";
+	}
 
 }
