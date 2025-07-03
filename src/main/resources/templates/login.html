@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+
+    button:hover, input[type="submit"]:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+    
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+</style>
+<head>
+<meta charset="UTF-8">
+<title>Вход</title>
+</head>
+<body>
+	<h2>Страница входа</h2>
+
+	<form th:action="@{/login}" method="post">
+		<div>
+			<label>Логин:</label> <input type="text" name="username" />
+		</div>
+		<div>
+			<label>Пароль:</label> <input type="password" name="password" />
+		</div>
+		<div>
+			<button type="submit" class="button">Войти</button>
+		</div>
+
+		<div th:if="${param.error}">
+			<p style="color: red">Неверный логин или пароль</p>
+		</div>
+
+		<div th:if="${param.logout}">
+			<p style="color: green">Вы вышли из системы</p>
+		</div>
+	</form>
+	<a th:href="@{/register}" class="button">Registration</a>
+</body>
+</html>

@@ -43,6 +43,7 @@ public class ScheduleItemController {
 			schedules = scheduleItemService.findByGroupName(query);
 		}
 		model.addAttribute("schedules", schedules);
+		
 		return "schedule/search";
 	}
 
@@ -50,6 +51,7 @@ public class ScheduleItemController {
 	public String findAll(Model model) {
 		Set<LocalDate> uniqueDates = scheduleItemService.findAllUniqueDates();
 		model.addAttribute("uniqueDates", uniqueDates.stream().sorted(Comparator.naturalOrder()));
+		
 		return "schedule/findAll";
 	}
 
@@ -60,6 +62,7 @@ public class ScheduleItemController {
 				.collect(Collectors.toList());
 		model.addAttribute("schedules", schedules);
 		model.addAttribute("uniqueDate", date);
+		
 		return "schedule/byDate";
 	}
 
@@ -67,6 +70,7 @@ public class ScheduleItemController {
 	public String newSchedule(@ModelAttribute("scheduleDto") ScheduleItemDto scheduleItemDto, Model model) {
 		model.addAttribute("groups", groupService.findAll());
 		model.addAttribute("subjects", subjectService.findAll());
+		
 		return "schedule/new";
 	}
 
@@ -79,6 +83,7 @@ public class ScheduleItemController {
 			return "schedule/new";
 		}
 		scheduleItemService.save(scheduleItemDto);
+		
 		return "redirect:/schedule";
 	}
 	
