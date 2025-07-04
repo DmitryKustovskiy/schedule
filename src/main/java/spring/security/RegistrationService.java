@@ -24,7 +24,7 @@ public class RegistrationService {
 		person.setRole(role);
 		personRepository.save(person);
 	}
-	
+
 	public boolean userExists(String username) {
 		return personRepository.findByUsername(username).isPresent();
 	}
