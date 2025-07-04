@@ -22,10 +22,10 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(nullable = false, name = "username")
+	@Column(unique = true, nullable = false, name = "username")
 	private String username;
 	
-	@Column(name = "password", nullable = false)
+	@Column(nullable = false, name = "password")
 	private String password;
 	
 	@Column(name = "role", nullable = false)

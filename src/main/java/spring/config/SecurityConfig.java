@@ -2,6 +2,7 @@ package spring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,9 +17,14 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
-		security.csrf(csrf -> csrf.disable())
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/login", "/register").permitAll()
+				.requestMatchers(HttpMethod.GET, "/menu", "/students/**", "/groups/**", "/subjects/**", "/schedule/**")
+				.hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.POST, "/students/**", "/groups/**", "/subjects/**", "/schedule/**")
+				.hasRole("ADMIN")
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").permitAll()
@@ -26,7 +32,7 @@ public class SecurityConfig {
 				.logout(logout -> logout.logoutUrl("/logout")
 				.logoutSuccessUrl("/login")
 				.permitAll());
-		return security.build();
+		return http.build();
 	}
 
 	@Bean

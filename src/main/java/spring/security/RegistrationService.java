@@ -17,12 +17,16 @@ public class RegistrationService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public void register(String username, String rawPassword) {
+	public void register(String username, String rawPassword, Role role) {
 		Person person = new Person();
 		person.setUsername(username);
 		person.setPassword(passwordEncoder.encode(rawPassword));
-		person.setRole(Role.USER);
+		person.setRole(role);
 		personRepository.save(person);
+	}
+	
+	public boolean userExists(String username) {
+		return personRepository.findByUsername(username).isPresent();
 	}
 
 }
