@@ -49,30 +49,37 @@
         color: white;
         border: none;
         border-radius: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 2px;
+        margin-top: 8px;
         text-decoration: none;
         cursor: pointer;
     }
 </style>
+
 <head>
     <title>Create new student</title>
 </head>
 <body>
-<p style="font-weight: bold; color: slateblue; text-align: left;">Please enter name, lastname and group of a new student.</p>
+<p style="font-weight: bold; color: slateblue; text-align: left;">Please enter name, last name and group of a new
+    student.</p>
 <form th:method="POST" th:action="@{/students/new}" th:object="${student}">
     <label for="firstName">Enter first name: </label>
     <input type="text" th:field="*{firstName}" id="firstName"/>
+    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error" 
+         style="color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></div>
     <br/>
     <label for="lastName">Enter last name: </label>
     <input type="text" th:field="*{lastName}" id="lastName"/>
+	<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error" 
+         style="color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></div>
     <br/>
-    <label for="classId">Enter class Id: </label>
-    <input type="number" th:field="*{classId}" id="classId"/>
-    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
-    <p style="font-weight: bold; color: black;">Enter Id of the Group you want to attach.</p>
-    <div th:each="group : ${groups}">
-        <p th:utext="${group.getId() + ': ' + group.getName()}">Group</p>
-    </div>
+    <label for="classId">Enter Group: </label>
+    <select th:field="*{groupDto.id}" id="group">
+        <option th:each="groupDto : ${groups}" th:value="${groupDto.id}" th:text="${groupDto.name}"></option>
+    </select>
+    <div th:if="${#fields.hasErrors('groupDto')}" th:errors="*{groupDto}" class="error" 
+         style="color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></div>
+    <br/>
     <input type="submit" value="Create" class="button"/>
 </form>
 <a th:href="@{/students}" class="button">Cancel</a>

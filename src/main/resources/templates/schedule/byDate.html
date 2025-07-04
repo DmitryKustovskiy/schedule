@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Schedule on <span th:text="${date}"></span></title>
-    <style>
+<style>
         body {
             font-family: Arial, sans-serif;
         }
@@ -21,13 +19,15 @@
             color: rgb(27, 179, 25);
         }
 
-        a.button:hover {
+        a.button:hover,
+        input.button:hover {
             background-color: rgb(0, 123, 255);
             color: white;
             text-decoration: none;
         }
 
-        .button {
+        .button,
+        input.button {
             display: inline-block;
             padding: 7px 16px;
             font-size: 12px;
@@ -41,23 +41,28 @@
             cursor: pointer;
         }
     </style>
-</head>
+
 <body>
-
-<h4>Schedule for <span th:text="${date.getDayOfMonth() + ' ' + date.getMonth() + ' of ' + date.getYear()}"></span>:</h4>
-
+<h4>Schedule for <span
+        th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:
+</h4>
 <ul>
-    <li th:each="schedule : ${schedules}">
-        <p><b>Group:</b> <span th:text="${schedule.getGroup().getName()}"></span></p>
-        <p><b>Subject:</b> <span th:text="${schedule.getSubject().getName()}"></span></p>
+    <li th:each="scheduleDto : ${schedules}">
+        <p><b>Group:</b> <span th:text="${scheduleDto.getGroupDto().getName()}"></span></p>
+        <p><b>Subject:</b> <span th:text="${scheduleDto.getSubjectDto().getName()}"></span></p>
         <p><b>Time:</b>
-            <span th:text="${#numbers.formatInteger(schedule.getStartTime().getHour(), 2)}"></span>:<span th:text="${#numbers.formatInteger(schedule.getStartTime().getMinute(), 2)}"></span> -
-            <span th:text="${#numbers.formatInteger(schedule.getEndTime().getHour(), 2)}"></span>:<span th:text="${#numbers.formatInteger(schedule.getEndTime().getMinute(), 2)}"></span>
+            <span th:text="${#strings.substring(scheduleDto.startTime, 11, 16)}"></span> -
+    		<span th:text="${#strings.substring(scheduleDto.endTime, 11, 16)}"></span>
         </p>
     </li>
 </ul>
+<div style="display: inline-block;">
+    <form th:action="@{/schedule/{id}(id=${schedules[0].getId()})}" method="post" style="display: inline;">
+        <input type="submit" value="Delete" class="button"/>
+    </form>
 
-<a th:href="@{/schedule}" class="button">Back to all schedules</a>
+    <a th:href="@{/schedule}" class="button" style="display: inline-block; margin-left: 10px;">Back to all schedules</a>
+</div>
 
 </body>
 </html>

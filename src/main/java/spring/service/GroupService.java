@@ -2,59 +2,102 @@ package spring.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import spring.dto.GroupDto;
+import spring.mapper.GroupMapper;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
 import spring.repository.StudentRepository;
 
+@Slf4j
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class GroupService {
 
-    private final GroupRepository groupRepository;
-    private final StudentRepository studentRepository;
+	private final GroupRepository groupRepository;
+	private final StudentRepository studentRepository;
+	private final GroupMapper groupMapper;
 
-    @Autowired
-    public GroupService(GroupRepository groupRepository, StudentRepository studentRepository) {
-        this.groupRepository = groupRepository;
-        this.studentRepository = studentRepository;
-    }
+	public List<GroupDto> findAll() {
+		List<Group> allGroups = groupRepository.findAll();
+		return groupMapper.toDtoList(allGroups);
+	}
 
-    public List<Group> findAll() {
-        return groupRepository.findAll();
-    }
+	public GroupDto findById(int id) {
+		Group group = groupRepository.findById(id).orElseThrow(() -> {
+			log.warn("Group with id {} was not found", id);
+			throw new EntityNotFoundException("Not found");
+		});
 
-    public Group findById(int id) {
-        return groupRepository.findById(id);
-    }
+		return groupMapper.toDto(group);
 
-    public Group findGroupByStudentId(int id) {
-        Student student = studentRepository.findById(id);
-        return groupRepository.findById(student.getClassId());
-    }
+	}
 
-    public Group save(Group group) {
-        return groupRepository.save(group);
-    }
+	public GroupDto findGroupByStudentId(int id) {
+		Student student = studentRepository.findById(id).orElseThrow(() -> {
+			log.warn("Student with id {} was not found", id);
+			throw new EntityNotFoundException("Not found");
+		});
+		Group group = groupRepository.findById(student.getGroup().getId()).orElseThrow(() -> {
+			log.warn("Group with id {} was not found", id);
+			throw new EntityNotFoundException("Not found");
+		});
 
-    public void update(Group group, int id) {
-        groupRepository.update(group, id);
-    }
+		return groupMapper.toDto(group);
+	}
 
-    public boolean delete(int id) {
-        return groupRepository.delete(id);
-    }
+	@Transactional
+	public Group save(GroupDto groupDto) {
+		Group group = groupMapper.toEntity(groupDto);
+		Group savedGroup = groupRepository.save(group);
+		log.info("Group {} was saved correctly", savedGroup);
+		return savedGroup;
+	}
 
-    public boolean checkIfGroupExists(String groupName) {
-        List<Group> allGroups = groupRepository.findAll();
-        return (allGroups.stream().anyMatch(
-                existingGroup -> existingGroup.getName().equalsIgnoreCase(groupName)));
-    }
+	@Transactional
+	public Group update(GroupDto updatedGroupDto, int id) {
+		Group group = groupRepository.findById(id).orElseThrow(() -> {
+			log.warn("Group with this id {} was not found", id);
+			throw new EntityNotFoundException("Group was not found");
+		});
 
-    public boolean checkIfGroupIsNotEmpty(int id) {
-        return studentRepository.findAll().stream().anyMatch(student -> student.getClassId() == id);
-    }
+		group.setName(updatedGroupDto.getName());
+		Group updatedGroup = groupRepository.save(group);
+		log.info("Group with id {} was updated correctly", id);
+		return updatedGroup;
 
+	}
+
+	@Transactional
+	public void delete(int id) {
+		Group group = groupRepository.findById(id).orElseThrow(() -> {
+			log.warn("Group with this id {} was not found", id);
+			throw new EntityNotFoundException("Group not found");
+		});
+
+		groupRepository.deleteById(group.getId());
+		log.info("Group with id {} was deleted correctly", id);
+
+	}
+
+	public boolean checkIfGroupExists(String groupName) {
+		List<Group> allGroups = groupRepository.findAll();
+		return allGroups.stream().anyMatch(existingGroup -> existingGroup.getName().equalsIgnoreCase(groupName));
+
+	}
+
+	public boolean checkIfGroupIsNotEmpty(int id) {
+		return studentRepository.findAll().stream().anyMatch(student -> student.getGroup().getId() == id);
+
+	}
 }
