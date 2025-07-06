@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style>
     a {
         margin-bottom: 10px;
@@ -41,7 +41,8 @@
     <a th:href="@{/students/{id}(id=${student.getId()})}"
        th:text="${student.getFirstName() + ' ' + student.getLastName()}">Student</a>
 </div>
-<a href="/students/new" class="button">New Student</a>
+<a sec:authorize="hasRole('ADMIN')" href="/students/new" class="button">New Student</a>
+</sec:authorize>
 <br/>
 <a th:href="@{/menu}" class="button">Main menu</a>
 </body>

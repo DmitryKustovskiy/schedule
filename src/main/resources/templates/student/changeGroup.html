@@ -1,70 +1,74 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style>
-    a {
-        margin-bottom: 10px;
-        display: block;
-        text-decoration: none;
-    }
+a {
+	margin-bottom: 10px;
+	display: block;
+	text-decoration: none;
+}
 
-    a:hover {
-        color: rgb(27, 179, 25);
-    }
+a:hover {
+	color: rgb(27, 179, 25);
+}
 
-    button:hover, input[type="submit"]:hover {
-        background-color: rgb(0, 123, 255);
-        color: white;
-        text-decoration: none;
-    }
+button:hover, input[type="submit"]:hover {
+	background-color: rgb(0, 123, 255);
+	color: white;
+	text-decoration: none;
+}
 
-    a.button:hover {
-        background-color: rgb(0, 123, 255);
-        color: white;
-        text-decoration: none;
-    }
+a.button:hover {
+	background-color: rgb(0, 123, 255);
+	color: white;
+	text-decoration: none;
+}
 
-    label {
-        margin-bottom: 5px;
-        display: block;
-    }
+label {
+	margin-bottom: 5px;
+	display: block;
+}
 
-    input[type="number"] {
-        margin-bottom: 10px;
-        padding: 5px;
-        width: 20%;
-    }
+input[type="number"] {
+	margin-bottom: 10px;
+	padding: 5px;
+	width: 20%;
+}
 
-    .button {
-        display: inline-block;
-        padding: 7px 16px;
-        font-size: 12px;
-        text-align: center;
-        background-color: #343a40;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.button {
+	display: inline-block;
+	padding: 7px 16px;
+	font-size: 12px;
+	text-align: center;
+	background-color: #343a40;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	text-decoration: none;
+	cursor: pointer;
+}
 </style>
 
 <head>
-    <title>Attach group</title>
+<title>Attach group</title>
 </head>
 <body>
-<p style="font-weight: bold; color: slateblue; text-align: left;">Which group should be attached to this student?</p>
-<form th:method="POST" th:action="@{/students/{id}/changeGroup(id=${studentDto.getId()})}" th:object="${studentDto}">
-    <p th:utext="${studentDto.getFirstName() + ' ' + studentDto.getLastName() + ' is now studying in <b>' + '' + groupDto.getName() + '</b>'}">
-    </p>
-    <label for="classId">Choose a new Group:</label>
-    <select th:field="*{groupDto.id}" id="classId">
-        <option th:each="groupDto : ${groups}" th:value="${groupDto.id}" th:text="${groupDto.name}"></option>
-    </select>
-    <br/>
-    <a th:href="@{/students}" class="button">Cancel</a>
-    <input type="submit" value="Attach" class="button"/>
-</form>
+	<p style="font-weight: bold; color: slateblue; text-align: left;">Which
+		group should be attached to this student?</p>
+		<form th:method="POST"
+			th:action="@{/students/{id}/changeGroup(id=${studentDto.getId()})}"
+			th:object="${studentDto}">
+			<p
+				th:utext="${studentDto.getFirstName() + ' ' + studentDto.getLastName() + ' is now studying in <b>' + '' + groupDto.getName() + '</b>'}">
+			</p>
+			<label for="classId">Choose a new Group:</label> <select
+				th:field="*{groupDto.id}" id="classId">
+				<option th:each="groupDto : ${groups}" th:value="${groupDto.id}"
+					th:text="${groupDto.name}"></option>
+			</select> <br /> <a th:href="@{/students}" class="button">Cancel</a> <input
+				type="submit" value="Attach" class="button" />
+		</form>
 </body>
 </html>

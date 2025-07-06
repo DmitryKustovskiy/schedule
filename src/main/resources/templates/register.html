@@ -1,5 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<style>
+
+label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
+    input[type="password"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
+    button:hover, input[type="submit"]:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+    
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+</style>
 <head>
 <meta charset="UTF-8" />
 <title>Registration</title>
@@ -24,7 +71,9 @@
 		</select>
         <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" style="color: red;"></div>
     </div>
-    <button type="submit">Register</button>
+    <br/>
+    <button type="submit" class = "button">Register</button>
 </form>
+<a th:href="@{/menu}" class="button">Cancel</a>
 </body>
 </html>

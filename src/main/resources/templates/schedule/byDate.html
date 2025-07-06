@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,10 +58,10 @@
     </li>
 </ul>
 <div style="display: inline-block;">
-    <form th:action="@{/schedule/{id}(id=${schedules[0].getId()})}" method="post" style="display: inline;">
+    <form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{id}(id=${schedules[0].getId()})}" method="post" style="display: inline;">
         <input type="submit" value="Delete" class="button"/>
     </form>
-
+	</sec:authorize>
     <a th:href="@{/schedule}" class="button" style="display: inline-block; margin-left: 10px;">Back to all schedules</a>
 </div>
 

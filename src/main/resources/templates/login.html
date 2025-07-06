@@ -2,6 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <style>
 
+label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
+    input[type="password"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
     button:hover, input[type="submit"]:hover {
         background-color: rgb(0, 123, 255);
         color: white;
@@ -31,28 +48,28 @@
 </style>
 <head>
 <meta charset="UTF-8">
-<title>Вход</title>
+<title>Login</title>
 </head>
 <body>
-	<h2>Страница входа</h2>
+	<h2>Login Page</h2>
 
 	<form th:action="@{/login}" method="post">
 		<div>
-			<label>Логин:</label> <input type="text" name="username" />
+			<label>Login:</label> <input type="text" name="username" />
 		</div>
 		<div>
-			<label>Пароль:</label> <input type="password" name="password" />
+			<label>Password:</label> <input type="password" name="password" />
 		</div>
 		<div>
-			<button type="submit" class="button">Войти</button>
+			<button type="submit" class="button">Enter</button>
 		</div>
 
 		<div th:if="${param.error}">
-			<p style="color: red">Неверный логин или пароль</p>
+			<p style="color: red">Wrong login or password</p>
 		</div>
 
 		<div th:if="${param.logout}">
-			<p style="color: green">Вы вышли из системы</p>
+			<p style="color: green">You have logged out</p>
 		</div>
 	</form>
 	<a th:href="@{/register}" class="button">Registration</a>
