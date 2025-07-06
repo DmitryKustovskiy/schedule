@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+
+label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
+    input[type="password"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
+    button:hover, input[type="submit"]:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+    
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+</style>
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+</head>
+<body>
+	<h2>Login Page</h2>
+
+	<form th:action="@{/login}" method="post">
+		<div>
+			<label>Login:</label> <input type="text" name="username" />
+		</div>
+		<div>
+			<label>Password:</label> <input type="password" name="password" />
+		</div>
+		<div>
+			<button type="submit" class="button">Enter</button>
+		</div>
+
+		<div th:if="${param.error}">
+			<p style="color: red">Wrong login or password</p>
+		</div>
+
+		<div th:if="${param.logout}">
+			<p style="color: green">You have logged out</p>
+		</div>
+	</form>
+	<a th:href="@{/register}" class="button">Registration</a>
+</body>
+</html>

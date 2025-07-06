@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style>
     a {
         margin-bottom: 10px;
@@ -44,13 +45,15 @@
 </head>
 <body>
 <p> Group: <b th:text="${group.getName()}">VALUE</b></p>
-<a th:href="@{/groups/{id}/edit(id=${group.getId()})}"
+<a sec:authorize="hasRole('ADMIN')" th:href="@{/groups/{id}/edit(id=${group.getId()})}"
    class="button">Edit</a>
-<form th:method="DELETE"
+   </sec:authorize>
+<form sec:authorize="hasRole('ADMIN')" th:method="DELETE"
       th:action="@{/groups/{id}/delete(id=${group.getId()})}">
     <input type="submit" value="Delete" class="button"/>
     <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
 </form>
+</sec:authorize>
 <a th:href="@{/groups}" class="button">Back to the Main Page</a>
 </body>
 </html>

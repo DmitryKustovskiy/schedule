@@ -1,62 +1,129 @@
 package spring.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import spring.dto.ScheduleItemDto;
+import spring.mapper.ScheduleItemMapper;
 import spring.model.ScheduleItem;
 import spring.repository.GroupRepository;
 import spring.repository.ScheduleItemRepository;
 import spring.repository.SubjectRepository;
 
-import java.util.List;
-
+@Slf4j
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ScheduleItemService {
-    private final ScheduleItemRepository scheduleRepository;
-    private final GroupRepository groupRepository;
-    private final SubjectRepository subjectRepository;
+	private final ScheduleItemRepository scheduleRepository;
+	private final GroupRepository groupRepository;
+	private final SubjectRepository subjectRepository;
+	private final ScheduleItemMapper scheduleItemMapper;
 
-    @Autowired
-    public ScheduleItemService(ScheduleItemRepository scheduleRepository, GroupRepository groupRepository, SubjectRepository subjectRepository) {
-        this.scheduleRepository = scheduleRepository;
-        this.groupRepository = groupRepository;
-        this.subjectRepository = subjectRepository;
-    }
+	public List<ScheduleItem> findByGroupName(String input) {
+		return scheduleRepository.findByGroupName(input);
+	}
 
-    public List<ScheduleItem> findAll() {
-        return scheduleRepository.findAll();
-    }
+	public List<ScheduleItemDto> findAll() {
+		List<ScheduleItem> allScheduleItems = scheduleRepository.findAll();
+		return scheduleItemMapper.toDtoList(allScheduleItems);
+	}
 
-    public List<ScheduleItem> findAllWithDetails() {
-        List<ScheduleItem> schedules = scheduleRepository.findAll();
-        for (ScheduleItem schedule : schedules) {
-            schedule.setGroup(groupRepository.findById(schedule.getClassId()));
-            schedule.setSubject(subjectRepository.findById(schedule.getSubjectId()));
-        }
-        return schedules;
-    }
+	public Set<LocalDate> findAllUniqueDates() {
+		List<ScheduleItem> schedules = scheduleRepository.findAll();
+		return schedules.stream().map(schedule -> schedule.getStartTime().toLocalDate()).collect(Collectors.toSet());
+	}
 
-    public ScheduleItem findById(int id) {
-        return scheduleRepository.findById(id);
-    }
+	@Transactional
+	public List<ScheduleItemDto> findAllWithDetails() {
+		List<ScheduleItem> schedules = scheduleRepository.findAll();
+		for (ScheduleItem schedule : schedules) {
+			schedule.setGroup(groupRepository.findById(schedule.getGroup().getId()).get());
+			schedule.setSubject(subjectRepository.findById(schedule.getSubject().getId()).get());
+		}
 
-    public ScheduleItem save(ScheduleItem scheduleItem) {
-        return scheduleRepository.save(scheduleItem);
-    }
+		return scheduleItemMapper.toDtoList(schedules);
 
-    public void update(ScheduleItem scheduleItem, int id) {
-        scheduleRepository.update(scheduleItem, id);
-    }
+	}
 
-    public boolean delete(int id) {
-        return scheduleRepository.delete(id);
-    }
+	public ScheduleItem findById(int id) {
+		ScheduleItem existingSchedule = scheduleRepository.findById(id).orElseThrow(() -> {
+			log.warn("Schedule with this id {} was not found", id);
+			throw new EntityNotFoundException("Schedule not found");
+		});
 
-    public boolean deleteByClassId(int classId) {
-        return scheduleRepository.deleteScheduleByClassId(classId);
-    }
+		return existingSchedule;
 
-    public boolean deleteBySubjectId(int subjectId) {
-        return scheduleRepository.deleteScheduleBySubjectId(subjectId);
-    }
+	}
+
+	@Transactional
+	public ScheduleItem save(ScheduleItemDto scheduleItemDto) {
+		ScheduleItem scheduleItem = scheduleItemMapper.toEntity(scheduleItemDto);
+		scheduleRepository.save(scheduleItem);
+		log.info("Schedule {} was saved correctly", scheduleItem);
+
+		return scheduleItem;
+
+	}
+
+	@Transactional
+	public ScheduleItem update(ScheduleItemDto updatedScheduleItemDto, int id) {
+		ScheduleItem scheduleItemToBeUpdated = scheduleRepository.findById(id).orElseThrow(() -> {
+			log.warn("Schedule with this id {} was not found", id);
+			throw new EntityNotFoundException("Schedule not found");
+		});
+
+		ScheduleItem updatedGroup = scheduleItemMapper.toEntity(updatedScheduleItemDto);
+
+		if (scheduleItemToBeUpdated == null) {
+			log.warn("Schedule with this id {} was not found", id);
+			throw new EntityNotFoundException("Schedule not found");
+		}
+
+		scheduleItemToBeUpdated.setGroup(updatedGroup.getGroup());
+		scheduleItemToBeUpdated.setSubject(updatedGroup.getSubject());
+		scheduleItemToBeUpdated.setStartTime(updatedGroup.getStartTime());
+		scheduleItemToBeUpdated.setEndTime(updatedGroup.getEndTime());
+		scheduleRepository.save(scheduleItemToBeUpdated);
+		log.info("Schedule with id {} was updated correctly", id);
+
+		return scheduleItemToBeUpdated;
+
+	}
+
+	@Transactional
+	public void delete(int id) {
+		ScheduleItem scheduleItem = scheduleRepository.findById(id).orElseThrow(() -> {
+			throw new EntityNotFoundException("Schedule was not found");
+		});
+
+		scheduleRepository.deleteById(scheduleItem.getId());
+		log.info("Schedule with id {} was deleted correctly", id);
+
+	}
+
+	public boolean checkIfSubjectIsNull(int subjectId) {
+		return subjectId == 0;
+	}
+
+	public boolean checkIfStartTimeNull(LocalDateTime startTime) {
+		return startTime == null;
+	}
+
+	public boolean checkIfEndTimeNull(LocalDateTime endTime) {
+		return endTime == null;
+	}
 
 }

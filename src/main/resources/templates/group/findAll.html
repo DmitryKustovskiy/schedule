@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style>
     a {
         margin-bottom: 10px;
@@ -42,7 +43,8 @@
     <a th:href="@{/groups/{id}(id=${group.getId()})}"
        th:text="${group.getName()}">Group</a>
 </div>
-<a href="/groups/new" class="button">New Group</a>
+<a sec:authorize="hasRole('ADMIN')" href="/groups/new" class="button">New Group</a>
+</sec:authorize>
 <br/>
 <a th:href="@{/menu}" class="button">Main Menu</a>
 </body>
