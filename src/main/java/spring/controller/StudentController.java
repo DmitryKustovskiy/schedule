@@ -32,7 +32,7 @@ public class StudentController {
 	@GetMapping("/{id}")
 	public String findById(@PathVariable("id") int id, Model model) {
 		model.addAttribute("student", studentService.findById(id));
-		model.addAttribute("group", groupService.findGroupByStudentId(id));
+		model.addAttribute("group", groupService.findGroupByStudentGroupId(id));
 		return "student/findById";
 	}
 
@@ -46,7 +46,6 @@ public class StudentController {
 	public String save(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
-			System.out.println(bindingResult.getAllErrors());
 			model.addAttribute("groups", groupService.findAll());
 			return "student/new";
 		}
@@ -59,7 +58,7 @@ public class StudentController {
 		StudentDto studentDto = studentService.findById(id);
 		model.addAttribute("studentDto", studentDto);
 		model.addAttribute("groups", groupService.findAll());
-		model.addAttribute("groupDto", groupService.findGroupByStudentId(id));
+		model.addAttribute("groupDto", groupService.findGroupByStudentGroupId(id));
 		return "student/changeGroup";
 	}
 

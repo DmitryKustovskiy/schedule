@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import spring.dto.SubjectDto;
+import spring.exception.EntityAlreadyExistsException;
 import spring.model.Subject;
 import spring.service.GroupService;
 import spring.service.ScheduleItemService;
@@ -22,7 +23,7 @@ import spring.service.SubjectService;
 @RequestMapping("/subjects")
 @RequiredArgsConstructor
 public class SubjectController {
-	
+
 	private final SubjectService subjectService;
 
 	@GetMapping
@@ -48,13 +49,15 @@ public class SubjectController {
 		if (bindingResult.hasErrors()) {
 			return "subject/new";
 		}
-
-		if (subjectService.checkIfSubjectExists(subjectDto.getName())) {
-			model.addAttribute("errorMessage", "Sorry! Subject with this name already exists.");
+		
+		try {
+			subjectService.save(subjectDto);
+			return "redirect:/subjects";
+		} catch (EntityAlreadyExistsException ex) {
+			model.addAttribute("errorMessage", ex.getMessage());
 			return "subject/new";
 		}
-		subjectService.save(subjectDto);
-		return "redirect:/subjects";
+
 	}
 
 	@GetMapping("/{id}/edit")
@@ -64,17 +67,20 @@ public class SubjectController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("subject") @Valid SubjectDto subjectDto,
-			BindingResult bindingResult, @PathVariable("id") int id, Model model) {
-		if(bindingResult.hasErrors()) {
+	public String update(@ModelAttribute("subject") @Valid SubjectDto subjectDto, BindingResult bindingResult,
+			@PathVariable("id") int id, Model model) {
+		if (bindingResult.hasErrors()) {
 			return "subject/edit";
 		}
-		if (subjectService.checkIfSubjectExists(subjectDto.getName())) {
-			model.addAttribute("errorMessage", "Sorry! Subject with this name already exists!");
-			return "subject/edit";
+
+		try {
+			subjectService.update(subjectDto, id);
+			return "redirect:/subjects";
+		} catch (EntityAlreadyExistsException ex) {
+			model.addAttribute("errorMessage", ex.getMessage());
+			return "subject/new";
 		}
-		subjectService.update(subjectDto, id);
-		return "redirect:/subjects";
+
 	}
 
 	@PostMapping("/{id}/delete")

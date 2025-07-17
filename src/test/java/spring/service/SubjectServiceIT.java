@@ -89,19 +89,19 @@ public class SubjectServiceIT {
 
 	}
 
+//	@Test
+//	void shouldReturnTrueIfSubjectExists() {
+//		boolean expectedResult = subjectService.checkIfSubjectExists("Math");
+//		assertTrue(expectedResult);
+//
+//	}
+
 	@Test
-	void shouldReturnTrueIfSubjectExists() {
-		boolean expectedResult = subjectService.checkIfSubjectExists("Math");
-		assertTrue(expectedResult);
-
-	}
-
-	@Test
-	void shouldReturnFalseIfSubjectDoesNotExist() {
-		boolean expectedResult = subjectService.checkIfSubjectExists("History Of Spain");
-		assertFalse(expectedResult);
-
-	}
+//	void shouldReturnFalseIfSubjectDoesNotExist() {
+//		boolean expectedResult = subjectService.checkIfSubjectExists("History Of Spain");
+//		assertFalse(expectedResult);
+//
+//	}
 
 	private void saveTestSubjects() {
 		math = subjectRepository.save(new Subject("Math"));

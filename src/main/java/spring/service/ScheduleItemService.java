@@ -53,18 +53,12 @@ public class ScheduleItemService {
 			schedule.setGroup(groupRepository.findById(schedule.getGroup().getId()).get());
 			schedule.setSubject(subjectRepository.findById(schedule.getSubject().getId()).get());
 		}
-
 		return scheduleItemMapper.toDtoList(schedules);
-
 	}
 
 	public ScheduleItem findById(int id) {
-		ScheduleItem existingSchedule = scheduleRepository.findById(id).orElseThrow(() -> {
-			log.warn("Schedule with this id {} was not found", id);
-			throw new EntityNotFoundException("Schedule not found");
-		});
-
-		return existingSchedule;
+		ScheduleItem scheduleItem = findSchedule(id);
+		return scheduleItem;
 
 	}
 
@@ -73,34 +67,22 @@ public class ScheduleItemService {
 		ScheduleItem scheduleItem = scheduleItemMapper.toEntity(scheduleItemDto);
 		scheduleRepository.save(scheduleItem);
 		log.info("Schedule {} was saved correctly", scheduleItem);
-
 		return scheduleItem;
-
 	}
 
 	@Transactional
 	public ScheduleItem update(ScheduleItemDto updatedScheduleItemDto, int id) {
-		ScheduleItem scheduleItemToBeUpdated = scheduleRepository.findById(id).orElseThrow(() -> {
-			log.warn("Schedule with this id {} was not found", id);
-			throw new EntityNotFoundException("Schedule not found");
-		});
+		ScheduleItem scheduleItemToBeUpdated = findSchedule(id);
 
-		ScheduleItem updatedGroup = scheduleItemMapper.toEntity(updatedScheduleItemDto);
+		ScheduleItem updatedScheduleItem = scheduleItemMapper.toEntity(updatedScheduleItemDto);
 
-		if (scheduleItemToBeUpdated == null) {
-			log.warn("Schedule with this id {} was not found", id);
-			throw new EntityNotFoundException("Schedule not found");
-		}
-
-		scheduleItemToBeUpdated.setGroup(updatedGroup.getGroup());
-		scheduleItemToBeUpdated.setSubject(updatedGroup.getSubject());
-		scheduleItemToBeUpdated.setStartTime(updatedGroup.getStartTime());
-		scheduleItemToBeUpdated.setEndTime(updatedGroup.getEndTime());
+		scheduleItemToBeUpdated.setGroup(updatedScheduleItem.getGroup());
+		scheduleItemToBeUpdated.setSubject(updatedScheduleItem.getSubject());
+		scheduleItemToBeUpdated.setStartTime(updatedScheduleItem.getStartTime());
+		scheduleItemToBeUpdated.setEndTime(updatedScheduleItem.getEndTime());
 		scheduleRepository.save(scheduleItemToBeUpdated);
 		log.info("Schedule with id {} was updated correctly", id);
-
 		return scheduleItemToBeUpdated;
-
 	}
 
 	@Transactional
@@ -124,6 +106,13 @@ public class ScheduleItemService {
 
 	public boolean checkIfEndTimeNull(LocalDateTime endTime) {
 		return endTime == null;
+	}
+
+	private ScheduleItem findSchedule(int id) {
+		return scheduleRepository.findById(id).orElseThrow(() -> {
+			log.warn("Schedule with this id {} was not found", id);
+			throw new EntityNotFoundException("Sorry, schedule was not found!");
+		});
 	}
 
 }

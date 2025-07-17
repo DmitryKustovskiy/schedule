@@ -10,5 +10,7 @@ import spring.model.Subject;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Integer> {
+	
+	boolean existsByNameIgnoreCase(String name);
 
 }

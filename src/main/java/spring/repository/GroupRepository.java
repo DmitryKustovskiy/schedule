@@ -10,5 +10,7 @@ import spring.model.Group;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
+	
+	boolean existsByNameIgnoreCase(String name);
 
 }

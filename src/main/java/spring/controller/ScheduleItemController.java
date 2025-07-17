@@ -54,7 +54,7 @@ public class ScheduleItemController {
 		
 		return "schedule/findAll";
 	}
-
+	
 	@GetMapping("/{date}")
 	public String findByDate(@PathVariable("date") LocalDate date, Model model) {
 		List<ScheduleItemDto> schedules = scheduleItemService.findAllWithDetails().stream()

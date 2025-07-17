@@ -10,5 +10,7 @@ import spring.model.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
+	
+	boolean existsByGroupId(int id); 
 
 }

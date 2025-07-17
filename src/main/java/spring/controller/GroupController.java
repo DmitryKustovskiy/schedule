@@ -1,6 +1,5 @@
 package spring.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import spring.dto.GroupDto;
-import spring.model.Group;
+import spring.exception.EntityAlreadyExistsException;
+import spring.exception.GroupNotEmptyException;
 import spring.service.GroupService;
-import spring.service.ScheduleItemService;
 
 @Controller
 @RequestMapping("/groups")
@@ -42,18 +41,19 @@ public class GroupController {
 	}
 
 	@PostMapping
-	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult,
-			Model model) {
+	public String save(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "group/new";
 		}
 
-		if (groupService.checkIfGroupExists(groupDto.getName())) {
-			model.addAttribute("errorMessage", "Sorry! Group with this name already exists.");
+		try {
+			groupService.save(groupDto);
+			return "redirect:/groups";
+		} catch (EntityAlreadyExistsException ex) {
+			model.addAttribute("errorMessage", ex.getMessage());
 			return "group/new";
 		}
-		groupService.save(groupDto);
-		return "redirect:/groups";
+
 	}
 
 	@GetMapping("/{id}/edit")
@@ -63,28 +63,34 @@ public class GroupController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult, @PathVariable("id") int id,
-			Model model) {
+	public String update(@ModelAttribute("group") @Valid GroupDto groupDto, BindingResult bindingResult,
+			@PathVariable("id") int id, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "group/edit";
 		}
-		if (groupService.checkIfGroupExists(groupDto.getName())) {
-			model.addAttribute("errorMessage", "Sorry! Group with this name already exists.");
+		
+		try {
+			groupService.update(groupDto, id);
+			return "redirect:/groups";
+		} catch (EntityAlreadyExistsException ex) {
+			model.addAttribute("errorMessage", ex.getMessage());
 			return "group/edit";
 		}
-		groupService.update(groupDto, id);
-		return "redirect:/groups";
+
 	}
 
 	@PostMapping("/{id}/delete")
 	public String delete(@PathVariable("id") int id, Model model) {
-		model.addAttribute("group", groupService.findById(id));
-		if (groupService.checkIfGroupIsNotEmpty(id)) {
-			model.addAttribute("errorMessage", "Sorry! You can't delete group that is not empty.");
+		
+		try {
+			groupService.delete(id);
+			return "redirect:/groups";
+		} catch (GroupNotEmptyException ex) {
+			model.addAttribute("errorMessage", ex.getMessage());
+			model.addAttribute("group", groupService.findById(id));
 			return "group/findById";
 		}
-		groupService.delete(id);
-		return "redirect:/groups";
+
 	}
 
 }
