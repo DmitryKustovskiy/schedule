@@ -41,8 +41,6 @@ public class ScheduleItemMapper implements Mapper<ScheduleItemDto, ScheduleItem>
 		scheduleItem.setId(scheduleItemDto.getId());
 		scheduleItem.setStartTime(DateConverter.stringToDate(scheduleItemDto.getStartTime()));
 		scheduleItem.setEndTime(DateConverter.stringToDate(scheduleItemDto.getEndTime()));
-		scheduleItem.setGroup(groupMapper.toEntity(scheduleItemDto.getGroupDto()));
-		scheduleItem.setSubject(subjectMapper.toEntity(scheduleItemDto.getSubjectDto()));
 		scheduleItem.setVersion(scheduleItemDto.getVersion());
 		return scheduleItem;
 	}

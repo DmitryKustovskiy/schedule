@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.ScheduleItemDto;
 import spring.mapper.ScheduleItemMapper;
+import spring.model.Group;
 import spring.model.ScheduleItem;
+import spring.model.Subject;
 import spring.repository.GroupRepository;
 import spring.repository.ScheduleItemRepository;
 import spring.repository.SubjectRepository;
@@ -48,11 +47,7 @@ public class ScheduleItemService {
 
 	@Transactional
 	public List<ScheduleItemDto> findAllWithDetails() {
-		List<ScheduleItem> schedules = scheduleRepository.findAll();
-		for (ScheduleItem schedule : schedules) {
-			schedule.setGroup(groupRepository.findById(schedule.getGroup().getId()).get());
-			schedule.setSubject(subjectRepository.findById(schedule.getSubject().getId()).get());
-		}
+		List<ScheduleItem> schedules = scheduleRepository.findAllWithDetails();
 		return scheduleItemMapper.toDtoList(schedules);
 	}
 
@@ -64,7 +59,15 @@ public class ScheduleItemService {
 
 	@Transactional
 	public ScheduleItem save(ScheduleItemDto scheduleItemDto) {
+		Group group = groupRepository.findById(scheduleItemDto.getGroupDto().getId())
+				.orElseThrow(() -> new EntityNotFoundException("Group was not found"));
+
+		Subject subject = subjectRepository.findById(scheduleItemDto.getSubjectDto().getId())
+				.orElseThrow(() -> new EntityNotFoundException("Subject was not found"));
+		
 		ScheduleItem scheduleItem = scheduleItemMapper.toEntity(scheduleItemDto);
+		scheduleItem.setGroup(group);
+		scheduleItem.setSubject(subject);
 		scheduleRepository.save(scheduleItem);
 		log.info("Schedule {} was saved correctly", scheduleItem);
 		return scheduleItem;
@@ -75,7 +78,7 @@ public class ScheduleItemService {
 		ScheduleItem scheduleItem = new ScheduleItem();
 
 		ScheduleItem updatedItem = scheduleItemMapper.toEntity(updatedScheduleItemDto);
-		
+
 		scheduleItem.setId(id);
 		scheduleItem.setGroup(updatedItem.getGroup());
 		scheduleItem.setSubject(updatedItem.getSubject());
