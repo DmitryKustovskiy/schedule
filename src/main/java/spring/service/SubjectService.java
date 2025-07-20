@@ -49,13 +49,15 @@ public class SubjectService {
 
 	@Transactional
 	public Subject update(SubjectDto subjectDto, int id) {
-		Subject subject = findSubject(id);
-
 		if (subjectRepository.existsByNameIgnoreCase(subjectDto.getName())) {
 			throw new EntityAlreadyExistsException("Subject with this name already exists");
 		}
-
+		
+		Subject subject = new Subject();
+		subject.setId(id);
 		subject.setName(subjectDto.getName());
+		subject.setVersion(subjectDto.getVersion());
+		
 		log.info("Subject {} was updated correctly");
 		return subjectRepository.save(subject);
 	}

@@ -19,6 +19,7 @@ public class SubjectMapper implements Mapper<SubjectDto, Subject> {
 		SubjectDto subjectDto = new SubjectDto();
 		subjectDto.setId(subject.getId());
 		subjectDto.setName(subject.getName());
+		subjectDto.setVersion(subject.getVersion());
 		return subjectDto;
 	}
 
@@ -29,6 +30,7 @@ public class SubjectMapper implements Mapper<SubjectDto, Subject> {
 		Subject subject = new Subject();
 		subject.setId(subjectDto.getId());
 		subject.setName(subjectDto.getName());
+		subject.setVersion(subjectDto.getVersion());
 		return subject;
 	}
 

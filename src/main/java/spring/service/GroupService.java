@@ -71,12 +71,15 @@ public class GroupService {
 
 	@Transactional
 	public Group update(GroupDto updatedGroupDto, int id) {
-		Group group = findGroup(id);
-
 		if (groupRepository.existsByNameIgnoreCase(updatedGroupDto.getName())) {
 			throw new EntityAlreadyExistsException("Group with this name already exists");
 		}
+		
+		Group group = new Group();
+		group.setId(id);
 		group.setName(updatedGroupDto.getName());
+		group.setVersion(updatedGroupDto.getVersion());
+		
 		Group updatedGroup = groupRepository.save(group);
 		log.info("Group with id {} was updated correctly", id);
 		return updatedGroup;

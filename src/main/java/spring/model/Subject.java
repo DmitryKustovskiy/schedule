@@ -17,13 +17,17 @@ import lombok.NoArgsConstructor;
 public class Subject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
-	@Column(nullable = false, unique = true)
+	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	
 	@OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<ScheduleItem> scheduleItems;
+	
+	@Version
+	@Column(name = "version")
+	private Integer version;
 	
 	public Subject(String name) {
 		this.name = name;

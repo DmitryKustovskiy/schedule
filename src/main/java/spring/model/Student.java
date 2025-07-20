@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column(name = "first_name")
 	private String firstName;
@@ -27,6 +27,10 @@ public class Student {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id")
 	private Group group;
+	
+	@Version
+	@Column(name = "version")
+	private Integer version;
 
 	public Student(String firstName, String lastName, Group group) {
 		this.group=group;

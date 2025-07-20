@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StudentDto {
 
-	private int id;
+	private Integer id;
 
 	@NotBlank(message = "Please, enter first name")
 	@Size(min = 2, message = "Minimum 3 symbols required the firstname")
@@ -24,5 +24,7 @@ public class StudentDto {
 	private String lastName;
 
 	private GroupDto groupDto;
+	
+	private Integer version;
 
 }

@@ -40,7 +40,12 @@ public class StudentService {
 
 	@Transactional
 	public Student save(StudentDto studentDto) {
+		Group group = groupRepository.findById(studentDto.getGroupDto().getId())
+			    .orElseThrow(() -> new EntityNotFoundException("Group was not found"));
+		
 		Student student = studentMapper.toEntity(studentDto);
+		student.setGroup(group);
+		
 		Student savedStudent = studentRepository.save(student);
 		System.out.println(savedStudent.getGroup().getName());
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
@@ -49,10 +54,11 @@ public class StudentService {
 
 	@Transactional
 	public Student update(StudentDto updatedStudentDto, int id) {
-		Student student = findStudent(id);
-
+		Student student = new Student();
+		student.setId(id);
 		student.setFirstName(updatedStudentDto.getFirstName());
 		student.setLastName(updatedStudentDto.getLastName());
+		student.setVersion(updatedStudentDto.getVersion());
 		Student updatedStudent = studentRepository.save(student);
 		log.info("Student with id {} was updated correctly", id);
 		return updatedStudent;

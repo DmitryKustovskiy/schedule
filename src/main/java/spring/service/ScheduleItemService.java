@@ -72,17 +72,19 @@ public class ScheduleItemService {
 
 	@Transactional
 	public ScheduleItem update(ScheduleItemDto updatedScheduleItemDto, int id) {
-		ScheduleItem scheduleItemToBeUpdated = findSchedule(id);
+		ScheduleItem scheduleItem = new ScheduleItem();
 
-		ScheduleItem updatedScheduleItem = scheduleItemMapper.toEntity(updatedScheduleItemDto);
-
-		scheduleItemToBeUpdated.setGroup(updatedScheduleItem.getGroup());
-		scheduleItemToBeUpdated.setSubject(updatedScheduleItem.getSubject());
-		scheduleItemToBeUpdated.setStartTime(updatedScheduleItem.getStartTime());
-		scheduleItemToBeUpdated.setEndTime(updatedScheduleItem.getEndTime());
-		scheduleRepository.save(scheduleItemToBeUpdated);
+		ScheduleItem updatedItem = scheduleItemMapper.toEntity(updatedScheduleItemDto);
+		
+		scheduleItem.setId(id);
+		scheduleItem.setGroup(updatedItem.getGroup());
+		scheduleItem.setSubject(updatedItem.getSubject());
+		scheduleItem.setStartTime(updatedItem.getStartTime());
+		scheduleItem.setEndTime(updatedItem.getEndTime());
+		scheduleItem.setVersion(updatedItem.getVersion());
+		scheduleRepository.save(scheduleItem);
 		log.info("Schedule with id {} was updated correctly", id);
-		return scheduleItemToBeUpdated;
+		return scheduleItem;
 	}
 
 	@Transactional

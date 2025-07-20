@@ -15,10 +15,12 @@ import spring.model.ScheduleItem;
 @NoArgsConstructor
 public class GroupDto {
 
-	private int id;
+	private Integer id;
 
 	@NotBlank(message = "You should enter name of the group")
 	@Size(min = 2, message = "Minimum 2 symbols required")
 	private String name;
+	
+	private Integer version;
 
 }

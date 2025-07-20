@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class ScheduleItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column(name = "start_time")
 	private LocalDateTime startTime;
@@ -35,6 +35,10 @@ public class ScheduleItem {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subject_id")
 	private Subject subject;
+	
+	@Version
+	@Column(name = "version")
+	private Integer version;
 
 	public ScheduleItem(Group group, Subject subject, LocalDateTime startTime, LocalDateTime endTime) {
 		this.group = group;

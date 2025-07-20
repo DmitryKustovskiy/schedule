@@ -14,10 +14,12 @@ import spring.model.ScheduleItem;
 @NoArgsConstructor
 public class SubjectDto {
 
-	private int id;
+	private Integer id;
 
 	@NotBlank(message = "You should enter name of the subject")
 	@Size(min = 2, message = "Minimum 2 symbols required")
 	private String name;
+	
+	private Integer version;
 
 }

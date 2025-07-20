@@ -16,6 +16,7 @@ public class GroupMapper implements Mapper<GroupDto, Group> {
 		GroupDto groupDto = new GroupDto();
 		groupDto.setId(group.getId());
 		groupDto.setName(group.getName());
+		groupDto.setVersion(group.getVersion());
 		return groupDto;
 	}
 
@@ -26,6 +27,7 @@ public class GroupMapper implements Mapper<GroupDto, Group> {
 		Group group = new Group();
 		group.setId(groupDto.getId());
 		group.setName(groupDto.getName());
+		group.setVersion(groupDto.getVersion());
 		return group;
 	}
 

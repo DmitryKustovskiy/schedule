@@ -29,6 +29,7 @@ public class ScheduleItemMapper implements Mapper<ScheduleItemDto, ScheduleItem>
 		scheduleItemDto.setEndTime(DateConverter.dateToString(scheduleItem.getEndTime()));
 		scheduleItemDto.setGroupDto(groupMapper.toDto(scheduleItem.getGroup()));
 		scheduleItemDto.setSubjectDto(subjectMapper.toDto(scheduleItem.getSubject()));
+		scheduleItemDto.setVersion(scheduleItem.getVersion());
 		return scheduleItemDto;
 	}
 
@@ -42,6 +43,7 @@ public class ScheduleItemMapper implements Mapper<ScheduleItemDto, ScheduleItem>
 		scheduleItem.setEndTime(DateConverter.stringToDate(scheduleItemDto.getEndTime()));
 		scheduleItem.setGroup(groupMapper.toEntity(scheduleItemDto.getGroupDto()));
 		scheduleItem.setSubject(subjectMapper.toEntity(scheduleItemDto.getSubjectDto()));
+		scheduleItem.setVersion(scheduleItemDto.getVersion());
 		return scheduleItem;
 	}
 

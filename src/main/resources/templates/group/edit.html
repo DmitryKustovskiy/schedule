@@ -65,6 +65,8 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/groups/{id}(id=${group.getId()})}" th:object="${group}">
+    <input type="hidden" th:field="*{version}"/>
+    
     <label for="name">Enter group name: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>

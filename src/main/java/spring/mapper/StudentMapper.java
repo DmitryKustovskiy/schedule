@@ -20,6 +20,7 @@ public class StudentMapper implements Mapper<StudentDto, Student> {
 		studentDto.setFirstName(student.getFirstName());
 		studentDto.setLastName(student.getLastName());
 		studentDto.setGroupDto(groupMapper.toDto(student.getGroup()));
+		studentDto.setVersion(student.getVersion());
 		return studentDto;
 	}
 
@@ -31,7 +32,7 @@ public class StudentMapper implements Mapper<StudentDto, Student> {
 		student.setId(studentDto.getId());
 		student.setFirstName(studentDto.getFirstName());
 		student.setLastName(studentDto.getLastName());
-		student.setGroup(groupMapper.toEntity(studentDto.getGroupDto()));
+		student.setVersion(studentDto.getVersion());
 		return student;
 	}
 
