@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.GroupDto;
@@ -34,13 +35,13 @@ public class GroupService {
 	public List<GroupDto> findAll() {
 		List<Group> allGroups = groupRepository.findAll();
 		return groupMapper.toDtoList(allGroups);
-		
+
 	}
 
 	public GroupDto findById(int id) {
 		Group group = findGroup(id);
 		return groupMapper.toDto(group);
-		
+
 	}
 
 	public GroupDto findGroupByStudentGroupId(int id) {
@@ -53,7 +54,7 @@ public class GroupService {
 			throw new EntityNotFoundException("Group was not found");
 		});
 		return groupMapper.toDto(group);
-		
+
 	}
 
 	@Transactional
@@ -66,7 +67,7 @@ public class GroupService {
 		Group savedGroup = groupRepository.save(group);
 		log.info("Group {} was saved correctly", savedGroup);
 		return savedGroup;
-		
+
 	}
 
 	@Transactional
@@ -74,16 +75,17 @@ public class GroupService {
 		if (groupRepository.existsByNameIgnoreCase(updatedGroupDto.getName())) {
 			throw new EntityAlreadyExistsException("Group with this name already exists");
 		}
-		
-		Group group = new Group();
-		group.setId(id);
+
+		Group group = findGroup(id);
+
+		if (!group.getVersion().equals(updatedGroupDto.getVersion())) {
+			throw new OptimisticLockException();
+		}
 		group.setName(updatedGroupDto.getName());
-		group.setVersion(updatedGroupDto.getVersion());
-		
-		Group updatedGroup = groupRepository.save(group);
+
 		log.info("Group with id {} was updated correctly", id);
-		return updatedGroup;
-		
+		return groupRepository.save(group);
+
 	}
 
 	@Transactional
@@ -104,7 +106,7 @@ public class GroupService {
 			log.warn("Group with this id {} was not found", id);
 			throw new EntityNotFoundException("Sorry, group was not found!");
 		});
-		
+
 	}
 
 }

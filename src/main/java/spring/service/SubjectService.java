@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.SubjectDto;
@@ -48,17 +49,19 @@ public class SubjectService {
 	}
 
 	@Transactional
-	public Subject update(SubjectDto subjectDto, int id) {
-		if (subjectRepository.existsByNameIgnoreCase(subjectDto.getName())) {
+	public Subject update(SubjectDto updatedSubjectDto, int id) {
+		if (subjectRepository.existsByNameIgnoreCase(updatedSubjectDto.getName())) {
 			throw new EntityAlreadyExistsException("Subject with this name already exists");
 		}
-		
-		Subject subject = new Subject();
-		subject.setId(id);
-		subject.setName(subjectDto.getName());
-		subject.setVersion(subjectDto.getVersion());
-		
-		log.info("Subject {} was updated correctly");
+
+		Subject subject = findSubject(id);
+
+		if (!subject.getVersion().equals(updatedSubjectDto.getVersion())) {
+			throw new OptimisticLockException();
+		}
+		subject.setName(updatedSubjectDto.getName());
+
+		log.info("Group with id {} was updated correctly", id);
 		return subjectRepository.save(subject);
 	}
 

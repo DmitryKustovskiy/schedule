@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.StudentDto;
@@ -41,11 +42,11 @@ public class StudentService {
 	@Transactional
 	public Student save(StudentDto studentDto) {
 		Group group = groupRepository.findById(studentDto.getGroupDto().getId())
-			    .orElseThrow(() -> new EntityNotFoundException("Group was not found"));
-		
+				.orElseThrow(() -> new EntityNotFoundException("Group was not found"));
+
 		Student student = studentMapper.toEntity(studentDto);
 		student.setGroup(group);
-		
+
 		Student savedStudent = studentRepository.save(student);
 		System.out.println(savedStudent.getGroup().getName());
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
@@ -54,14 +55,16 @@ public class StudentService {
 
 	@Transactional
 	public Student update(StudentDto updatedStudentDto, int id) {
-		Student student = new Student();
-		student.setId(id);
+		Student student = findStudent(id);
+
+		if (!student.getVersion().equals(updatedStudentDto.getVersion())) {
+			throw new OptimisticLockException();
+		}
 		student.setFirstName(updatedStudentDto.getFirstName());
 		student.setLastName(updatedStudentDto.getLastName());
-		student.setVersion(updatedStudentDto.getVersion());
-		Student updatedStudent = studentRepository.save(student);
+
 		log.info("Student with id {} was updated correctly", id);
-		return updatedStudent;
+		return studentRepository.save(student);
 	}
 
 	@Transactional
@@ -72,7 +75,10 @@ public class StudentService {
 			log.warn("Group with id {} was not found", id);
 			throw new EntityNotFoundException("Group not found");
 		});
-
+		
+		if (!student.getVersion().equals(updatedStudentDto.getVersion())) {
+			throw new OptimisticLockException();
+		}
 		student.setGroup(group);
 		studentRepository.save(student);
 		log.info("Student with id {} was updated correctly", id);

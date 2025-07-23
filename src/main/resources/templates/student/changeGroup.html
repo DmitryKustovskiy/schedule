@@ -57,18 +57,19 @@ input[type="number"] {
 <body>
 	<p style="font-weight: bold; color: slateblue; text-align: left;">Which
 		group should be attached to this student?</p>
-		<form th:method="POST"
-			th:action="@{/students/{id}/changeGroup(id=${studentDto.getId()})}"
-			th:object="${studentDto}">
-			<p
-				th:utext="${studentDto.getFirstName() + ' ' + studentDto.getLastName() + ' is now studying in <b>' + '' + groupDto.getName() + '</b>'}">
-			</p>
-			<label for="classId">Choose a new Group:</label> <select
-				th:field="*{groupDto.id}" id="classId">
-				<option th:each="groupDto : ${groups}" th:value="${groupDto.id}"
-					th:text="${groupDto.name}"></option>
-			</select> <br /> <a th:href="@{/students}" class="button">Cancel</a> <input
-				type="submit" value="Attach" class="button" />
-		</form>
+	<form th:method="POST"
+		th:action="@{/students/{id}/changeGroup(id=${studentDto.getId()})}"
+		th:object="${studentDto}">
+		<input type="hidden" th:field="*{version}"/>
+		<p
+			th:utext="${studentDto.getFirstName() + ' ' + studentDto.getLastName() + ' is now studying in <b>' + '' + groupDto.getName() + '</b>'}">
+		</p>
+		<label for="classId">Choose a new Group:</label> <select
+			th:field="*{groupDto.id}" id="classId">
+			<option th:each="groupDto : ${groups}" th:value="${groupDto.id}"
+				th:text="${groupDto.name}"></option>
+		</select> <br /> <a th:href="@{/students}" class="button">Cancel</a> <input
+			type="submit" value="Attach" class="button" />
+	</form>
 </body>
 </html>

@@ -78,7 +78,7 @@ public class SubjectController {
 			return "redirect:/subjects";
 		} catch (EntityAlreadyExistsException ex) {
 			model.addAttribute("errorMessage", ex.getMessage());
-			return "subject/new";
+			return "subject/edit";
 		}
 
 	}

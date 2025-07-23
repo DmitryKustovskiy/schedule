@@ -65,6 +65,7 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/subjects/{id}(id=${subject.getId()})}" th:object="${subject}">
+    <input type="hidden" th:field="*{version}"/>
     <label for="name">Enter subject name: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
