@@ -33,6 +33,8 @@ public class ScheduleItemDto {
 	@NotNull(message = "Subject is required")
 	private SubjectDto subjectDto;
 	
+	private String datePart;
+	
 	private Integer version;
 
 }

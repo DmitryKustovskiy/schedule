@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<style>
+    button:hover, input[type="submit"]:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    a.button:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 20%;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-top: 6px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    a.update:hover {
+        background-color: rgb(0, 123, 255);
+        color: white;
+        text-decoration: none;
+    }
+
+    .update {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-top: 5px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<head>
+    <title>Update schedule</title>
+</head>
+<body>
+<form th:method="POST" 
+	  th:action="@{/schedule/{id}/edit(id=${schedule.id})}" 
+	  th:object="${schedule}">
+	  
+    <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{version}"/>
+    
+    <label for="startTime">Start time:</label>
+    <input type="text" th:field="*{startTime}" id="startTime"/>
+    
+    <label for="endTime">End time:</label>
+    <input type="text" th:field="*{endTime}" id="endTime"/>
+    
+    <label for="group">Group:</label>
+    <select th:field="*{groupDto.id}" id="group">
+        <option th:each="group : ${groups}"
+                th:value="${group.id}"
+                th:text="${group.name}"
+                th:selected="${group.id == schedule.groupDto.id}">
+        </option>
+    </select>
+    
+    <label for="subject">Subject:</label>
+    <select th:field="*{subjectDto.id}" id="subject">
+        <option th:each="subject : ${subjects}"
+                th:value="${subject.id}"
+                th:text="${subject.name}"
+                th:selected="${subject.id == schedule.subjectDto.id}">
+        </option>
+    </select>
+    
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-left: 10px;"></span>
+   
+    <br/>
+    <input type="submit" value="Update" class="update"/>
+    <br/>
+    <a th:href="@{/schedule}" class="button">Cancel</a>
+</form>
+</body>
+</html>

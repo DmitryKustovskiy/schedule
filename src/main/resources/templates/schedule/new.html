@@ -68,12 +68,12 @@
 <form th:method="POST" th:action="@{/schedule/new}" th:object="${scheduleDto}">
     <label for="classId">Enter Group: </label>
     <select th:field="*{groupDto.id}" id="classId">
-        <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
+    <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
     </select>
     <br/>
     <label for="subjectId">Enter Subject: </label>
     <select th:field="*{subjectDto.id}" id="subjectId">
-        <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
+    <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
     </select>
     <br/>
     <label for="startTime">Enter start date: </label>

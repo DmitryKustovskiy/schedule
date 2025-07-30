@@ -48,22 +48,48 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:
 </h4>
 <ul>
+
     <li th:each="scheduleDto : ${schedules}">
-        <p><b>Group:</b> <span th:text="${scheduleDto.getGroupDto().getName()}"></span></p>
-        <p><b>Subject:</b> <span th:text="${scheduleDto.getSubjectDto().getName()}"></span></p>
+        <p><b>Group:</b> <span th:text="${scheduleDto.groupDto.name}"></span></p>
+        <p><b>Subject:</b> <span th:text="${scheduleDto.subjectDto.name}"></span></p>
         <p><b>Time:</b>
             <span th:text="${#strings.substring(scheduleDto.startTime, 11, 16)}"></span> -
-    		<span th:text="${#strings.substring(scheduleDto.endTime, 11, 16)}"></span>
+            <span th:text="${#strings.substring(scheduleDto.endTime, 11, 16)}"></span>
         </p>
-    </li>
-</ul>
-<div style="display: inline-block;">
-    <form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{id}(id=${schedules[0].getId()})}" method="post" style="display: inline;">
+
+        <a th:href="@{/schedule/{id}/edit(id=${scheduleDto.id})}" class="button">Edit</a>
+        
+        <div style="display: inline-block;">
+    <form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{id}(id=${schedules[0].id})}" method="post" style="display: inline;">
         <input type="submit" value="Delete" class="button"/>
     </form>
-	</sec:authorize>
-    <a th:href="@{/schedule}" class="button" style="display: inline-block; margin-left: 10px;">Back to all schedules</a>
+
 </div>
 
-</body>
-</html>
+    </li>
+</ul>
+
+<h4>Add new schedule.
+</h4>
+<form th:action="@{/schedule/{date}/add(date=${uniqueDate})}" method="post" style="margin-top:20px;">
+    <input type="hidden" name="date" th:value="${uniqueDate}"/>
+
+    <label>Group:</label>
+    <select name="groupId" required>
+        <option th:each="group : ${allGroups}" th:value="${group.id}" th:text="${group.name}"></option>
+    </select>
+
+    <label>Subject:</label>
+    <select name="subjectId" required>
+        <option th:each="subject : ${allSubjects}" th:value="${subject.id}" th:text="${subject.name}"></option>
+    </select>
+
+    <label>Start Time:</label>
+    <input type="time" name="startTime" required/>
+    
+    <label>End Time:</label>
+    <input type="time" name="endTime" required/>
+    <button type="submit" class="button">Add Schedule</button>
+</form>
+
+<a th:href="@{/schedule}" class="button" style="display: inline-block; margin-left: 10px;">Back to all schedules</a>

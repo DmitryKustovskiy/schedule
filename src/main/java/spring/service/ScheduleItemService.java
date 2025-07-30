@@ -39,6 +39,12 @@ public class ScheduleItemService {
 		List<ScheduleItem> allScheduleItems = scheduleRepository.findAll();
 		return scheduleItemMapper.toDtoList(allScheduleItems);
 	}
+	
+	public ScheduleItem findByDate(LocalDateTime date) {
+		 return scheduleRepository.findByDate(date).orElseThrow(()
+				 -> new EntityNotFoundException("Schedule was not found"));
+		 
+	}
 
 	public Set<LocalDate> findAllUniqueDates() {
 		List<ScheduleItem> schedules = scheduleRepository.findAll();
@@ -51,9 +57,11 @@ public class ScheduleItemService {
 		return scheduleItemMapper.toDtoList(schedules);
 	}
 
-	public ScheduleItem findById(int id) {
-		ScheduleItem scheduleItem = findSchedule(id);
-		return scheduleItem;
+	public ScheduleItemDto findById(int id) {
+		ScheduleItem scheduleItem = scheduleRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Schedule was not found"));
+
+		return scheduleItemMapper.toDto(scheduleItem);
 
 	}
 
@@ -64,7 +72,7 @@ public class ScheduleItemService {
 
 		Subject subject = subjectRepository.findById(scheduleItemDto.getSubjectDto().getId())
 				.orElseThrow(() -> new EntityNotFoundException("Subject was not found"));
-		
+
 		ScheduleItem scheduleItem = scheduleItemMapper.toEntity(scheduleItemDto);
 		scheduleItem.setGroup(group);
 		scheduleItem.setSubject(subject);
@@ -74,20 +82,26 @@ public class ScheduleItemService {
 	}
 
 	@Transactional
-	public ScheduleItem update(ScheduleItemDto updatedScheduleItemDto, int id) {
-		ScheduleItem scheduleItem = new ScheduleItem();
-
-		ScheduleItem updatedItem = scheduleItemMapper.toEntity(updatedScheduleItemDto);
-
-		scheduleItem.setId(id);
-		scheduleItem.setGroup(updatedItem.getGroup());
-		scheduleItem.setSubject(updatedItem.getSubject());
-		scheduleItem.setStartTime(updatedItem.getStartTime());
-		scheduleItem.setEndTime(updatedItem.getEndTime());
-		scheduleItem.setVersion(updatedItem.getVersion());
-		scheduleRepository.save(scheduleItem);
-		log.info("Schedule with id {} was updated correctly", id);
-		return scheduleItem;
+	public ScheduleItem update(ScheduleItemDto dto, int id) {
+		ScheduleItem schedule = scheduleRepository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Schedule was not found"));
+		
+		Group group = groupRepository.findById(dto.getGroupDto().getId())
+		        .orElseThrow(() -> new EntityNotFoundException("Group was not found"));
+		    Subject subject = subjectRepository.findById(dto.getSubjectDto().getId())
+		        .orElseThrow(() -> new EntityNotFoundException("Subject was not found"));
+		    
+		ScheduleItem updatedSchedule = scheduleItemMapper.toEntity(dto);
+		
+		schedule.setGroup(group);
+		schedule.setSubject(subject);
+		schedule.setStartTime(updatedSchedule.getStartTime());
+		schedule.setEndTime(updatedSchedule.getEndTime());
+		schedule.setVersion(updatedSchedule.getVersion());
+	    
+		scheduleRepository.save(schedule);
+		log.info("Schedule with id {} was updated correctly", dto.getId());
+		return schedule;
 	}
 
 	@Transactional
@@ -111,13 +125,6 @@ public class ScheduleItemService {
 
 	public boolean checkIfEndTimeNull(LocalDateTime endTime) {
 		return endTime == null;
-	}
-
-	private ScheduleItem findSchedule(int id) {
-		return scheduleRepository.findById(id).orElseThrow(() -> {
-			log.warn("Schedule with this id {} was not found", id);
-			throw new EntityNotFoundException("Sorry, schedule was not found!");
-		});
 	}
 
 }

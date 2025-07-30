@@ -1,5 +1,6 @@
 package spring.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,13 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Fetch;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Root;
-import spring.model.Group;
 import spring.model.ScheduleItem;
 
 @Repository
@@ -28,5 +22,8 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Inte
 	
 	@Query(value = "SELECT s FROM ScheduleItem s JOIN FETCH s.group JOIN FETCH s.subject")
 	List<ScheduleItem> findAllWithDetails();
+	
+	@Query(value = "SELECT s FROM ScheduleItem s WHERE s.startTime = :date")
+	Optional<ScheduleItem> findByDate(@Param("date") LocalDateTime date);
 
 }
