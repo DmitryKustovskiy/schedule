@@ -39,22 +39,28 @@ public class ScheduleItemController {
 
 	@GetMapping("/search")
 	public String searchSchedules(@RequestParam(value = "query", required = false) String query, Model model) {
-		List<ScheduleItem> schedules = new ArrayList<>();
+		List<ScheduleItemDto> scheduleDtos = new ArrayList<>();
 
 		if (query != null && !query.isBlank()) {
-			schedules = scheduleItemService.findByGroupName(query);
+			scheduleDtos = scheduleItemService.findByGroupName(query);
 		}
-		model.addAttribute("schedules", schedules);
+		model.addAttribute("scheduleDtos", scheduleDtos);
 
 		return "schedule/search";
+		
 	}
 
 	@GetMapping
 	public String findAll(Model model) {
 		Set<LocalDate> uniqueDates = scheduleItemService.findAllUniqueDates();
 		model.addAttribute("uniqueDates", uniqueDates.stream().sorted(Comparator.naturalOrder()));
+		model.addAttribute("schedules", scheduleItemService.findAll());
+	    model.addAttribute("scheduleDto", new ScheduleItemDto());
+		model.addAttribute("allGroups", groupService.findAll());
+	    model.addAttribute("allSubjects", subjectService.findAll());
 
 		return "schedule/findAll";
+		
 	}
 
 	@GetMapping("/{date}")
@@ -64,7 +70,6 @@ public class ScheduleItemController {
 				.collect(Collectors.toList());
 		model.addAttribute("schedules", schedules);
 		model.addAttribute("uniqueDate", date);
-		
 		model.addAttribute("allGroups", groupService.findAll());
 	    model.addAttribute("allSubjects", subjectService.findAll());
 
@@ -99,16 +104,13 @@ public class ScheduleItemController {
 	        @RequestParam("groupId") int groupId,
 	        @RequestParam("subjectId") int subjectId,
 	        @RequestParam("startTime") String startTime,
-	        @RequestParam("endTime") String endTime) {
+	        @RequestParam("endTime") String endTime
+	) {
 	    String startDateTime = date + "T" + startTime;
 	    String endDateTime = date + "T" + endTime;
 
 	    GroupDto group = groupService.findById(groupId);
 	    SubjectDto subject = subjectService.findById(subjectId);
-
-	    if (group == null || subject == null) {
-	        throw new IllegalArgumentException("Group or Subject not found");
-	    }
 
 	    ScheduleItemDto newItem = new ScheduleItemDto();
 	    newItem.setGroupDto(group);

@@ -36,8 +36,8 @@ public class Group {
 	}
 
 	@Override
-	public String toString() {
-		return name;
-	}
+    public String toString() {
+        return "Group{name='" + name + "'}";
+    }
 
 }

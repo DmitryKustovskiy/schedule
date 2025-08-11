@@ -27,12 +27,16 @@ import spring.repository.SubjectRepository;
 @Transactional
 @ActiveProfiles("test")
 public class ScheduleItemServiceIT {
+	
 	@Autowired
 	private GroupRepository groupRepository;
+	
 	@Autowired
 	private ScheduleItemService scheduleItemService;
+	
 	@Autowired
 	private ScheduleItemRepository itemRepository;
+	
 	@Autowired
 	private SubjectRepository subjectRepository;
 
@@ -40,9 +44,13 @@ public class ScheduleItemServiceIT {
 
 	private ScheduleItem secondScheduleItem;
 
-	private Group group;
+	private Group group1;
 
-	private Subject subject;
+	private Subject subject1;
+	
+	private Group group2;
+
+	private Subject subject2;
 
 	@BeforeEach
 	void setUp() {
@@ -51,29 +59,57 @@ public class ScheduleItemServiceIT {
 
 	@Test
 	void shouldFindAllSchedules() {
-		List<ScheduleItemDto> allSchedules = scheduleItemService.findAll();
-		assertEquals(2, allSchedules.size());
+		var actualResult = scheduleItemService.findAll();
+		assertEquals(2, actualResult.size());
+		
+	}
+	
+	@Test
+	void shouldFindScheduleByGroupName() {
+		var actualResult = scheduleItemService.findByGroupName("trinixy");
+		
+		assertThat(actualResult).isNotEmpty();
+		assertThat(actualResult.get(0).getGroupDto().getName()).isEqualTo("Trinixy");
+	    assertThat(actualResult.get(0).getSubjectDto().getName()).isEqualTo("History");
+	    
+	}
+	
+	@Test
+	void shouldReturnEmptyListIfGroupWasNotFound() {
+		var actualResult = scheduleItemService.findByGroupName("notExistedGroup");
+		
+		assertThat(actualResult).isEmpty();
+		
+	}
+	
+	@Test
+	void shouldReturnEmptyListWhenGroupNameIsEmpty() {
+	    var actualResult = scheduleItemService.findByGroupName("");
+	    
+	    assertThat(actualResult).isEmpty();
 	}
 
-	public void saveScheduleItems() {
-		group = new Group("Leads");
-		groupRepository.save(group);
-		subject = new Subject("Math");
-		subjectRepository.save(subject);
+	private void saveScheduleItems() {
+		group1 = groupRepository.save(new Group("Leads"));
+		subject1 = subjectRepository.save(new Subject("Math"));
 
+		group2 = groupRepository.save(new Group("Trinixy"));
+		subject2 = subjectRepository.save(new Subject("History"));
+		
 		firstScheduleItem = new ScheduleItem();
-		firstScheduleItem.setStartTime(LocalDateTime.of(2025, 11, 12, 18, 20));
-		firstScheduleItem.setEndTime(LocalDateTime.of(2025, 11, 12, 19, 20));
-		firstScheduleItem.setGroup(group);
-		firstScheduleItem.setSubject(subject);
+		firstScheduleItem.setStartTime(LocalDateTime.now());
+		firstScheduleItem.setEndTime(LocalDateTime.now());
+		firstScheduleItem.setGroup(group1);
+		firstScheduleItem.setSubject(subject1);
 		itemRepository.save(firstScheduleItem);
-
+		
 		secondScheduleItem = new ScheduleItem();
-		secondScheduleItem.setStartTime(LocalDateTime.of(2025, 06, 10, 13, 30));
-		secondScheduleItem.setEndTime(LocalDateTime.of(2025, 06, 10, 14, 30));
-		secondScheduleItem.setGroup(group);
-		secondScheduleItem.setSubject(subject);
+		secondScheduleItem.setStartTime(LocalDateTime.now());
+		secondScheduleItem.setEndTime(LocalDateTime.now());
+		secondScheduleItem.setGroup(group2);
+		secondScheduleItem.setSubject(subject2);
 		itemRepository.save(secondScheduleItem);
+
 	}
 
 }

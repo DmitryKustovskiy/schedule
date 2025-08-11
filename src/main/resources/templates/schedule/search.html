@@ -34,18 +34,18 @@ a.button:hover {
     <button type="submit">Search</button>
 </form>
 
-<div th:if="${#lists.isEmpty(schedules)}">
+<div th:if="${#lists.isEmpty(scheduleDtos)}">
     <p>No results</p>
 </div>
 
-<div th:if="${!#lists.isEmpty(schedules)}">
+<div th:if="${!#lists.isEmpty(scheduleDtos)}">
     <h3>Results:</h3>
     <ul>
-        <li th:each="schedule : ${schedules}">
-        	Group: <span th:text="${schedule.group.name}"></span>,
-            Subject: <span th:text="${schedule.subject.name}"></span>,
-            Start time: <span th:text="${#temporals.format(schedule.startTime, 'dd.MM.yyyy HH:mm')}"></span>,
-            End Time: <span th:text="${#temporals.format(schedule.endTime, 'dd.MM.yyyy HH:mm')}"></span>
+        <li th:each="scheduleDto : ${scheduleDtos}">
+        	Group: <span th:text="${scheduleDto.groupDto.name}"></span>,
+            Subject: <span th:text="${scheduleDto.subjectDto.name}"></span>,
+            Start time: <span th:text="${scheduleDto.startTime}"></span>,
+            End Time: <span th:text="${scheduleDto.endTime}"></span>
         </li>
     </ul>
 </div>

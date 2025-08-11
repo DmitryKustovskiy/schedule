@@ -32,6 +32,19 @@ public class ScheduleItemMapper implements Mapper<ScheduleItemDto, ScheduleItem>
 		scheduleItemDto.setVersion(scheduleItem.getVersion());
 		return scheduleItemDto;
 	}
+	
+	public ScheduleItemDto toSearchDto(ScheduleItem scheduleItem) {
+		if (scheduleItem == null)
+			return null;
+		ScheduleItemDto scheduleItemDto = new ScheduleItemDto();
+		scheduleItemDto.setId(scheduleItem.getId());
+		scheduleItemDto.setStartTime(DateConverter.dateToDisplayString(scheduleItem.getStartTime()));
+		scheduleItemDto.setEndTime(DateConverter.dateToDisplayString(scheduleItem.getEndTime()));
+		scheduleItemDto.setGroupDto(groupMapper.toDto(scheduleItem.getGroup()));
+		scheduleItemDto.setSubjectDto(subjectMapper.toDto(scheduleItem.getSubject()));
+		scheduleItemDto.setVersion(scheduleItem.getVersion());
+		return scheduleItemDto;
+	}
 
 	@Override
 	public ScheduleItem toEntity(ScheduleItemDto scheduleItemDto) {

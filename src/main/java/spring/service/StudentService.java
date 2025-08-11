@@ -48,7 +48,6 @@ public class StudentService {
 		student.setGroup(group);
 
 		Student savedStudent = studentRepository.save(student);
-		System.out.println(savedStudent.getGroup().getName());
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
 		return savedStudent;
 	}

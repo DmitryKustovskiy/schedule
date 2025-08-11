@@ -19,6 +19,7 @@ import spring.model.Subject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleItemDto {
+	
 	private Integer id;
 
 	@NotBlank(message = "You should enter start time")

@@ -12,6 +12,11 @@ public class DateConverter {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		return localDateTime.format(formatter);
 	}
+	
+	public String dateToDisplayString(LocalDateTime localDateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+		return localDateTime.format(formatter);
+	}
 
 	public LocalDateTime stringToDate(String dateTime) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");

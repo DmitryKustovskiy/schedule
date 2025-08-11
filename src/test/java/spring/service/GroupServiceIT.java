@@ -15,22 +15,32 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import spring.dto.GroupDto;
+import spring.dto.StudentDto;
+import spring.exception.EntityAlreadyExistsException;
+import spring.exception.GroupNotEmptyException;
+import spring.mapper.GroupMapper;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
-import spring.repository.StudentRepository;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
 public class GroupServiceIT {
+
 	@Autowired
 	private GroupService groupService;
+
 	@Autowired
 	private GroupRepository groupRepository;
+
 	@Autowired
-	StudentRepository studentRepository;
+	private StudentService studentService;
+
+	@Autowired
+	private GroupMapper groupMapper;
 
 	private Group leads;
 
@@ -43,10 +53,10 @@ public class GroupServiceIT {
 
 	@Test
 	void shouldFindAllGroups() {
-		List<GroupDto> expectedGroups = groupService.findAll();
+		var actualResult = groupService.findAll();
 
-		assertEquals(2, expectedGroups.size());
-		assertThat(expectedGroups).extracting(GroupDto::getName).containsExactlyInAnyOrder("Leads", "United");
+		assertEquals(2, actualResult.size());
+		assertThat(actualResult).extracting(GroupDto::getName).containsExactlyInAnyOrder("Leads", "United");
 
 	}
 
@@ -56,70 +66,106 @@ public class GroupServiceIT {
 		assertEquals("United", groupService.findById(united.getId()).getName());
 
 	}
-	
+
 	@Test
-	void findGroupByStudentId() {
-		Group expectedGroup = new Group();
-		expectedGroup.setName("Leads");
-		
-		Student testStudent = new Student();
-		testStudent.setFirstName("FirstName");		
-		testStudent.setLastName("LastName");
-		testStudent.setGroup(leads);
-		studentRepository.save(testStudent);
-		
-		Student student = studentRepository.findById(testStudent.getId()).get();
-		Group actualGroup = groupRepository.findById(student.getGroup().getId()).get();
-		
-		assertEquals(expectedGroup.getName(), actualGroup.getName());
-		
-		
+	void shouldFindGroupByStudentGroupId() {
+		var testStudentDto = new StudentDto();
+		testStudentDto.setFirstName("FirstName");
+		testStudentDto.setLastName("LastName");
+		testStudentDto.setGroupDto(groupMapper.toDto(leads));
+		var savedStudent = studentService.save(testStudentDto);
+		var actualResult = groupService.findGroupByStudentGroupId(savedStudent.getId());
+
+		assertEquals(leads.getName(), actualResult.getName());
+
 	}
 
 	@Test
 	void shouldThrowExceptionIfGroupNotFound() {
-		int nonexistentId = Integer.MAX_VALUE;
-		assertThrows(EntityNotFoundException.class, () -> groupService.findById(nonexistentId));
+		int notExistedId = Integer.MAX_VALUE;
+		assertThrows(EntityNotFoundException.class, () -> groupService.findById(notExistedId));
 
 	}
 
 	@Test
 	void shouldSaveGroup() {
-		GroupDto groupDto = new GroupDto();
-		groupDto.setName("TestGroup");
-		Group expectedGroup = groupService.save(groupDto);
+		var testGroupDto = new GroupDto();
+		testGroupDto.setName("TestGroup");
+		var actualResult = groupService.save(testGroupDto);
 
-		assertNotNull(expectedGroup.getId());
-		assertEquals("TestGroup", expectedGroup.getName());
+		assertNotNull(actualResult.getId());
+		assertEquals(testGroupDto.getName(), actualResult.getName());
 
 	}
 
 	@Test
 	void shouldUpdateGroup() {
-		GroupDto testGroup = new GroupDto();
-		testGroup.setName("TestGroup");
-		
-		GroupDto groupToBeUpdated = groupService.findById(leads.getId());
-		Group expectedGroup = groupService.update(testGroup, groupToBeUpdated.getId());
+		var updatedGroupDto = new GroupDto();
+		updatedGroupDto.setName("TestGroup");
+		var groupToBeUpdated = groupService.findById(leads.getId());
+		updatedGroupDto.setVersion(groupToBeUpdated.getVersion());
+		var actualResult = groupService.update(updatedGroupDto, groupToBeUpdated.getId());
 
-		assertEquals("TestGroup", expectedGroup.getName());
+		assertEquals(updatedGroupDto.getName(), actualResult.getName());
 
 	}
 
 	@Test
 	void shouldDeleteGroup() {
-		GroupDto unitedGroup = groupService.findById(united.getId());
-		groupService.delete(unitedGroup.getId());
-		List<GroupDto> allGroups = groupService.findAll();
+		var existedGroupDto = groupService.findById(united.getId());
+		groupService.delete(existedGroupDto.getId());
+		var allGroups = groupService.findAll();
 
 		assertEquals(1, allGroups.size());
 		assertThat(allGroups).extracting(GroupDto::getName).doesNotContain("United");
 
 	}
 
+	@Test
+	void shouldThrowGroupIsNotEmptyException() {
+		var testGroupDto = new GroupDto();
+		testGroupDto.setName("TestGroup");
+		var savedGroup = groupService.save(testGroupDto);
+		var testStudentDto = new StudentDto();
+		testStudentDto.setFirstName("Alex");
+		testStudentDto.setLastName("Alexeev");
+		testStudentDto.setGroupDto(groupMapper.toDto(savedGroup));
+		studentService.save(testStudentDto);
+
+		assertThrows(GroupNotEmptyException.class, () -> groupService.delete(savedGroup.getId()));
+
+	}
+
+	@Test
+	void shouldThrowEntityAlreadyExistsExceptionOnGroupSave() {
+		var testGroupDto = new GroupDto();
+		testGroupDto.setName("Leads");
+
+		assertThrows(EntityAlreadyExistsException.class, () -> groupService.save(testGroupDto));
+
+	}
+
+	@Test
+	void shouldThrowEntityAlreadyExistsExceptionOnGroupUpdate() {
+		var updatedGroupDto = new GroupDto();
+		updatedGroupDto.setName("Leads");
+
+		assertThrows(EntityAlreadyExistsException.class, () -> groupService.update(updatedGroupDto, leads.getId()));
+	}
+
+	@Test
+	void shouldThrowOptimisticLockExceptionOnGroupUpdate() {
+		var testGroupDto = groupService.findById(leads.getId());
+		testGroupDto.setName("TestGroup");
+		testGroupDto.setVersion(testGroupDto.getVersion() - 1);
+
+		assertThrows(OptimisticLockException.class, () -> groupService.update(testGroupDto, leads.getId()));
+	}
+
 	private void saveTestGroups() {
 		leads = groupRepository.save(new Group("Leads"));
 		united = groupRepository.save(new Group("United"));
+		
 	}
 
 }

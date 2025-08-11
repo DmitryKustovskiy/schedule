@@ -23,8 +23,10 @@ import spring.repository.SubjectRepository;
 @Transactional
 @ActiveProfiles("test")
 public class SubjectServiceIT {
+	
 	@Autowired
 	private SubjectService subjectService;
+	
 	@Autowired
 	private SubjectRepository subjectRepository;
 
@@ -39,11 +41,10 @@ public class SubjectServiceIT {
 
 	@Test
 	void shouldFindAllSubjects() {
-		List<SubjectDto> expectedSubjects = subjectService.findAll();
+		var actualResult = subjectService.findAll();
 
-		assertEquals(2, expectedSubjects.size());
-		assertThat(expectedSubjects).extracting(SubjectDto::getName)
-		.containsExactlyInAnyOrder("Math", "History");
+		assertEquals(2, actualResult.size());
+		assertThat(actualResult).extracting(SubjectDto::getName).containsExactlyInAnyOrder("Math", "History");
 
 	}
 
@@ -58,54 +59,42 @@ public class SubjectServiceIT {
 
 	@Test
 	void shouldSaveSubject() {
-		SubjectDto subjectDto = new SubjectDto();
-		subjectDto.setName("TestSubject");
-		Subject expectedSubject = subjectService.save(subjectDto);
+		var testSubjectDto = new SubjectDto();
+		testSubjectDto.setName("TestSubject");
+		var actualResult = subjectService.save(testSubjectDto);
 
-		assertNotNull(expectedSubject.getId());
-		assertEquals("TestSubject", expectedSubject.getName());
+		assertNotNull(actualResult.getId());
+		assertEquals(testSubjectDto.getName(), actualResult.getName());
 
 	}
 
 	@Test
 	void shouldUpdateSubject() {
-		SubjectDto testSubject = new SubjectDto();
-		testSubject.setName("TestSubject");
+		var testSubjectDto = new SubjectDto();
+		testSubjectDto.setName("TestSubject");
+		var mathSubject = subjectService.findById(math.getId());
+		testSubjectDto.setVersion(mathSubject.getVersion());
+		var actualResult = subjectService.update(testSubjectDto, mathSubject.getId());
 
-		SubjectDto groupToBeUpdated = subjectService.findById(math.getId());
-		Subject expectedGroup = subjectService.update(testSubject, groupToBeUpdated.getId());
+		assertEquals(testSubjectDto.getName(), actualResult.getName());
 
-		assertEquals("TestSubject", expectedGroup.getName());
 	}
 
 	@Test
 	void shouldDeleteSubject() {
-		SubjectDto mathSubject = subjectService.findById(math.getId());
-		subjectService.delete(mathSubject.getId());
-		List<SubjectDto> allSubjects = subjectService.findAll();
+		var existedSubjectDto = subjectService.findById(math.getId());
+		subjectService.delete(existedSubjectDto.getId());
+		var allSubjects = subjectService.findAll();
 
 		assertEquals(1, allSubjects.size());
 		assertThat(allSubjects).extracting(SubjectDto::getName).doesNotContain("Math");
 
 	}
 
-//	@Test
-//	void shouldReturnTrueIfSubjectExists() {
-//		boolean expectedResult = subjectService.checkIfSubjectExists("Math");
-//		assertTrue(expectedResult);
-//
-//	}
-
-	@Test
-//	void shouldReturnFalseIfSubjectDoesNotExist() {
-//		boolean expectedResult = subjectService.checkIfSubjectExists("History Of Spain");
-//		assertFalse(expectedResult);
-//
-//	}
-
 	private void saveTestSubjects() {
 		math = subjectRepository.save(new Subject("Math"));
 		history = subjectRepository.save(new Subject("History"));
+		
 	}
 
 }

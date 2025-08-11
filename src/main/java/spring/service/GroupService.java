@@ -50,7 +50,7 @@ public class GroupService {
 			throw new EntityNotFoundException("Student was not found");
 		});
 		Group group = groupRepository.findById(student.getGroup().getId()).orElseThrow(() -> {
-			log.warn("Group with id {} was not found", id);
+			log.warn("Group with id {} was not found", student.getGroup().getId());
 			throw new EntityNotFoundException("Group was not found");
 		});
 		return groupMapper.toDto(group);
