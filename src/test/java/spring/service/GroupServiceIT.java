@@ -66,6 +66,15 @@ public class GroupServiceIT {
 		assertEquals("United", groupService.findById(united.getId()).getName());
 
 	}
+	
+	@Test
+	void shouldThrowEntitytNotFoundExceptionIfGroupNotFound() {
+		int notExistedId = Integer.MAX_VALUE;
+		
+		assertThrows(EntityNotFoundException.class, 
+				() -> groupService.findById(notExistedId));
+		
+	}
 
 	@Test
 	void shouldFindGroupByStudentGroupId() {

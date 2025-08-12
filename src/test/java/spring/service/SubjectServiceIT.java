@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityNotFoundException;
 import spring.dto.SubjectDto;
 import spring.model.Subject;
 import spring.repository.SubjectRepository;
@@ -55,6 +57,15 @@ public class SubjectServiceIT {
 		assertEquals("Math", subjectService.findById(math.getId()).getName());
 		assertEquals("History", subjectService.findById(history.getId()).getName());
 
+	}
+	
+	@Test
+	void shouldThrowEntityNotFoundExceptionIfSubjectNotFound() {
+		int notExistedId = Integer.MAX_VALUE;
+		
+		assertThrows(EntityNotFoundException.class, 
+				() -> subjectService.findById(notExistedId));
+		
 	}
 
 	@Test

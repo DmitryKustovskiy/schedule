@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
 import spring.dto.GroupDto;
 import spring.dto.StudentDto;
@@ -68,6 +69,15 @@ public class StudentServiceIT {
 		assertEquals("Ivan", studentService.findById(ivan.getId()).getFirstName());
 		
 	}
+	
+	@Test
+	void shouldThrowEntityNotFoundExceptionIfStudentNotFound() {
+		int notExistedId = Integer.MAX_VALUE;
+		
+		assertThrows(EntityNotFoundException.class, 
+				() -> studentService.findById(notExistedId));
+		
+	}
 
 	@Test
 	void shouldSaveStudent() {
@@ -119,7 +129,7 @@ public class StudentServiceIT {
 		studentToBeUpdated.setFirstName("FirstName");
 		studentToBeUpdated.setLastName("LastName");
 		studentToBeUpdated.setGroupDto(groupMapper.toDto(savedOldGroup));
-		Student savedToBeUpdatedStudent = studentService.save(studentToBeUpdated);
+		var savedToBeUpdatedStudent = studentService.save(studentToBeUpdated);
 
 		var updatedStudent = new StudentDto();
 		updatedStudent.setFirstName("FirstName");
@@ -127,7 +137,7 @@ public class StudentServiceIT {
 		updatedStudent.setGroupDto(groupMapper.toDto(savedNewGroup));
 		updatedStudent.setVersion(savedToBeUpdatedStudent.getVersion());
 		studentService.setGroup(updatedStudent, savedToBeUpdatedStudent.getId());
-		StudentDto existedStudentDto = studentService.findById(savedToBeUpdatedStudent.getId());
+		var existedStudentDto = studentService.findById(savedToBeUpdatedStudent.getId());
 
 		assertEquals("NewGroup", existedStudentDto.getGroupDto().getName());
 
@@ -146,9 +156,9 @@ public class StudentServiceIT {
 	}
 
 	@Test
-	void studentNameShouldBeEmpty() {
+	void studentNameShouldNotBeEmpty() {
 		var name = "";
-		boolean actualResult = studentService.checkIfNull(name);
+		var actualResult = studentService.checkIfNull(name);
 		
 		assertTrue(actualResult);
 		
@@ -191,7 +201,7 @@ public class StudentServiceIT {
 
 	}
 
-	public void saveStudents() {
+	private void saveStudents() {
 		alex = new Student();
 		alex.setFirstName("Alex");
 		alex.setLastName("Alexeev");

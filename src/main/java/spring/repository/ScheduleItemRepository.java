@@ -22,8 +22,5 @@ public interface ScheduleItemRepository extends JpaRepository<ScheduleItem, Inte
 	
 	@Query(value = "SELECT s FROM ScheduleItem s JOIN FETCH s.group JOIN FETCH s.subject")
 	List<ScheduleItem> findAllWithDetails();
-	
-	@Query(value = "SELECT s FROM ScheduleItem s WHERE s.startTime = :date")
-	Optional<ScheduleItem> findByDate(@Param("date") LocalDateTime date);
 
 }
