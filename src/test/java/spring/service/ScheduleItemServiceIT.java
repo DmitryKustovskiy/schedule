@@ -89,6 +89,16 @@ public class ScheduleItemServiceIT {
 	}
 	
 	@Test
+	void shouldReturnEmptyListForNoSchedules() {
+		scheduleItemService.delete(firstScheduleItem.getId());
+		scheduleItemService.delete(secondScheduleItem.getId());
+		List<ScheduleItemDto> actualResult = scheduleItemService.findAll();
+		
+		assertThat(actualResult.isEmpty());
+		
+	}
+	
+	@Test
 	void shouldFindScheduleByGroupName() {
 		var actualResult = scheduleItemService.findByGroupName("trinixy");
 		
@@ -179,7 +189,8 @@ public class ScheduleItemServiceIT {
 		testScheduleItem.setEndTime(LocalDateTime.now());
 		testScheduleItem.setGroup(savedGroup);
 		testScheduleItem.setSubject(savedSubject);
-		var actualResult = scheduleItemRepository.save(testScheduleItem);
+		ScheduleItemDto dtoSchedule = itemMapper.toDto(testScheduleItem);
+		var actualResult = scheduleItemService.save(dtoSchedule);
 		
 		assertNotNull(actualResult.getId());
 		assertNotNull(actualResult.getStartTime());
@@ -250,6 +261,15 @@ public class ScheduleItemServiceIT {
 		assertEquals(1, allSchedules.size());
 		assertThat(allSchedules.get(0).getGroupDto().getName())
 		.isEqualTo(secondScheduleItem.getGroup().getName());
+		
+	}
+	
+	@Test
+	void shouldThrowEntitytNotFoundExceptionOnDeleteIfScheduleWasNotFound() {
+		int notExistedId = Integer.MAX_VALUE;
+		
+		assertThrows(EntityNotFoundException.class, 
+				() -> scheduleItemService.delete(notExistedId));
 		
 	}
 	

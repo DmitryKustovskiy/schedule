@@ -49,10 +49,8 @@ public class GroupService {
 			log.warn("Student with id {} was not found", id);
 			throw new EntityNotFoundException("Student was not found");
 		});
-		Group group = groupRepository.findById(student.getGroup().getId()).orElseThrow(() -> {
-			log.warn("Group with id {} was not found", student.getGroup().getId());
-			throw new EntityNotFoundException("Group was not found");
-		});
+		Group group = groupRepository.findById(student.getGroup().getId()).get();
+		
 		return groupMapper.toDto(group);
 
 	}
@@ -62,7 +60,6 @@ public class GroupService {
 		if (groupRepository.existsByNameIgnoreCase(groupDto.getName())) {
 			throw new EntityAlreadyExistsException("Group with this name already exists");
 		}
-
 		Group group = groupMapper.toEntity(groupDto);
 		Group savedGroup = groupRepository.save(group);
 		log.info("Group {} was saved correctly", savedGroup);

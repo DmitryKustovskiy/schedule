@@ -17,7 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
+import spring.dto.GroupDto;
 import spring.dto.SubjectDto;
+import spring.exception.EntityAlreadyExistsException;
 import spring.model.Subject;
 import spring.repository.SubjectRepository;
 
@@ -78,6 +81,16 @@ public class SubjectServiceIT {
 		assertEquals(testSubjectDto.getName(), actualResult.getName());
 
 	}
+	
+	@Test
+	void shouldThrowEntityAlreadyExistsExceptionOnSubjectSave() {
+		var testSubjectDto = new SubjectDto();
+		testSubjectDto.setName("Math");
+
+		assertThrows(EntityAlreadyExistsException.class, 
+				() -> subjectService.save(testSubjectDto));
+
+	}
 
 	@Test
 	void shouldUpdateSubject() {
@@ -90,7 +103,26 @@ public class SubjectServiceIT {
 		assertEquals(testSubjectDto.getName(), actualResult.getName());
 
 	}
+	
+	@Test
+	void shouldThrowEntityAlreadyExistsExceptionOnSubjectUpdate() {
+		var updatedSubjectDto = new SubjectDto();
+		updatedSubjectDto.setName("Math");
 
+		assertThrows(EntityAlreadyExistsException.class, () -> subjectService.update(updatedSubjectDto, math.getId()));
+
+	}
+
+	@Test
+	void shouldThrowOptimisticLockExceptionOnSubjectUpdate() {
+		var testSubjectDto = subjectService.findById(math.getId());
+		testSubjectDto.setName("Japanese");
+		testSubjectDto.setVersion(testSubjectDto.getVersion() -1);
+
+		assertThrows(OptimisticLockException.class, () -> subjectService.update(testSubjectDto, math.getId()));
+	
+	}
+	
 	@Test
 	void shouldDeleteSubject() {
 		var existedSubjectDto = subjectService.findById(math.getId());

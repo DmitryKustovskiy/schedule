@@ -41,8 +41,7 @@ public class StudentService {
 
 	@Transactional
 	public Student save(StudentDto studentDto) {
-		Group group = groupRepository.findById(studentDto.getGroupDto().getId())
-				.orElseThrow(() -> new EntityNotFoundException("Group was not found"));
+		Group group = groupRepository.findById(studentDto.getGroupDto().getId()).get();
 
 		Student student = studentMapper.toEntity(studentDto);
 		student.setGroup(group);
@@ -50,6 +49,7 @@ public class StudentService {
 		Student savedStudent = studentRepository.save(student);
 		log.info("Student {} was saved correctly", student.getFirstName() + " " + student.getLastName());
 		return savedStudent;
+		
 	}
 
 	@Transactional
@@ -59,28 +59,28 @@ public class StudentService {
 		if (!student.getVersion().equals(updatedStudentDto.getVersion())) {
 			throw new OptimisticLockException();
 		}
+		
 		student.setFirstName(updatedStudentDto.getFirstName());
 		student.setLastName(updatedStudentDto.getLastName());
 
 		log.info("Student with id {} was updated correctly", id);
 		return studentRepository.save(student);
+		
 	}
 
 	@Transactional
 	public void setGroup(StudentDto updatedStudentDto, int id) {
 		Student student = findStudent(id);
-
-		Group group = groupRepository.findById(updatedStudentDto.getGroupDto().getId()).orElseThrow(() -> {
-			log.warn("Group with id {} was not found", id);
-			throw new EntityNotFoundException("Group not found");
-		});
+		Group group = groupRepository.findById(updatedStudentDto.getGroupDto().getId()).get();
 		
 		if (!student.getVersion().equals(updatedStudentDto.getVersion())) {
 			throw new OptimisticLockException();
 		}
+		
 		student.setGroup(group);
 		studentRepository.save(student);
 		log.info("Student with id {} was updated correctly", id);
+		
 	}
 
 	@Transactional

@@ -88,12 +88,14 @@ public class GroupServiceIT {
 		assertEquals(leads.getName(), actualResult.getName());
 
 	}
-
+	
 	@Test
-	void shouldThrowExceptionIfGroupNotFound() {
+	void shouldThrowEntityNotFoundExceptionWhenStudentNotFound() {
 		int notExistedId = Integer.MAX_VALUE;
-		assertThrows(EntityNotFoundException.class, () -> groupService.findById(notExistedId));
-
+		
+		assertThrows(EntityNotFoundException.class,
+				() -> groupService.findGroupByStudentGroupId(notExistedId));
+		
 	}
 
 	@Test
@@ -104,6 +106,15 @@ public class GroupServiceIT {
 
 		assertNotNull(actualResult.getId());
 		assertEquals(testGroupDto.getName(), actualResult.getName());
+
+	}
+	
+	@Test
+	void shouldThrowEntityAlreadyExistsExceptionOnGroupSave() {
+		var testGroupDto = new GroupDto();
+		testGroupDto.setName("Leads");
+
+		assertThrows(EntityAlreadyExistsException.class, () -> groupService.save(testGroupDto));
 
 	}
 
@@ -117,6 +128,15 @@ public class GroupServiceIT {
 
 		assertEquals(updatedGroupDto.getName(), actualResult.getName());
 
+	}
+	
+	@Test
+	void shouldThrowEntityAlreadyExistsExceptionOnGroupUpdate() {
+		var updatedGroupDto = new GroupDto();
+		updatedGroupDto.setName("Leads");
+
+		assertThrows(EntityAlreadyExistsException.class, () -> groupService.update(updatedGroupDto, leads.getId()));
+	
 	}
 
 	@Test
@@ -146,29 +166,13 @@ public class GroupServiceIT {
 	}
 
 	@Test
-	void shouldThrowEntityAlreadyExistsExceptionOnGroupSave() {
-		var testGroupDto = new GroupDto();
-		testGroupDto.setName("Leads");
-
-		assertThrows(EntityAlreadyExistsException.class, () -> groupService.save(testGroupDto));
-
-	}
-
-	@Test
-	void shouldThrowEntityAlreadyExistsExceptionOnGroupUpdate() {
-		var updatedGroupDto = new GroupDto();
-		updatedGroupDto.setName("Leads");
-
-		assertThrows(EntityAlreadyExistsException.class, () -> groupService.update(updatedGroupDto, leads.getId()));
-	}
-
-	@Test
 	void shouldThrowOptimisticLockExceptionOnGroupUpdate() {
 		var testGroupDto = groupService.findById(leads.getId());
 		testGroupDto.setName("TestGroup");
 		testGroupDto.setVersion(testGroupDto.getVersion() - 1);
 
 		assertThrows(OptimisticLockException.class, () -> groupService.update(testGroupDto, leads.getId()));
+	
 	}
 
 	private void saveTestGroups() {
