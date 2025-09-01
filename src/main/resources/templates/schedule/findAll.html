@@ -44,11 +44,6 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
        th:text="${date.getDayOfMonth() + ' of ' + date.getMonth() + ', ' + date.getYear()}">
     </a>
 </div>
-<a th:href="@{/menu}" class="button">Main Menu</a>
-<a sec:authorize="hasRole('ADMIN')" th:href="@{schedule/new}" class="button">Create new schedule</a>
-</sec:authorize>
-</body>
-
 <h4 style="font-weight: bold; color: blue; text-align: left;">Add New Schedule:</h4>
 <form th:method="POST" th:action="@{/schedule/new}" th:object="${scheduleDto}" style="margin-top:20px;">
     <label>Group:</label>
@@ -65,5 +60,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <input type="datetime-local" name="endTime" required/>
     <button type="submit" class="button">Add Schedule</button>
 </form>
+<a th:href="@{/menu}" class="button">Main Menu</a>
+</body>
 </html>
 

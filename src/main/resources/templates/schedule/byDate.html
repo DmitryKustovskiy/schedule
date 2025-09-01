@@ -60,7 +60,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         <a th:href="@{/schedule/{id}/edit(id=${scheduleDto.id})}" class="button">Edit</a>
         
         <div style="display: inline-block;">
-    <form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{id}(id=${schedules[0].id})}" method="post" style="display: inline;">
+    <form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{id}(id=${schedules[0].id})}" method="POST" style="display: inline;">
         <input type="submit" value="Delete" class="button"/>
     </form>
 
