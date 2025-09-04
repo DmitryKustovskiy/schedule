@@ -29,11 +29,13 @@ public class SubjectService {
 	public List<SubjectDto> findAll() {
 		List<Subject> allSubjects = subjectRepository.findAll();
 		return subjectMapper.toDtoList(allSubjects);
+		
 	}
 
 	public SubjectDto findById(int id) {
 		Subject subject = findSubject(id);
 		return subjectMapper.toDto(subject);
+		
 	}
 
 	@Transactional
@@ -46,6 +48,7 @@ public class SubjectService {
 		Subject savedSubject = subjectRepository.save(subject);
 		log.info("Subject {} was saved correctly", subject);
 		return savedSubject;
+		
 	}
 
 	@Transactional
@@ -63,6 +66,7 @@ public class SubjectService {
 
 		log.info("Group with id {} was updated correctly", id);
 		return subjectRepository.save(subject);
+		
 	}
 
 	@Transactional
@@ -71,6 +75,7 @@ public class SubjectService {
 
 		subjectRepository.delete(subject);
 		log.info("Subject with this id {} was deleted correctly", id);
+		
 	}
 
 	private Subject findSubject(int id) {
@@ -78,6 +83,7 @@ public class SubjectService {
 			log.warn("Subject with this id {} was not found", id);
 			throw new EntityNotFoundException("Sorry, subject was not found!");
 		});
+		
 	}
 
 }

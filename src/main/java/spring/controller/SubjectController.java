@@ -49,7 +49,7 @@ public class SubjectController {
 		if (bindingResult.hasErrors()) {
 			return "subject/new";
 		}
-		
+
 		try {
 			subjectService.save(subjectDto);
 			return "redirect:/subjects";

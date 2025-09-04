@@ -63,8 +63,7 @@ public class StudentController {
 	}
 
 	@PostMapping("/{id}/changeGroup")
-	public String updateGroup(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id,
-			Model model) {
+	public String updateGroup(@ModelAttribute("student") StudentDto studentDto, @PathVariable("id") int id) {
 		studentService.setGroup(studentDto, id);
 		return "redirect:/students";
 	}

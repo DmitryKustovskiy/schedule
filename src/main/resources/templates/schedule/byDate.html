@@ -48,7 +48,6 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         th:text="${uniqueDate.getDayOfMonth() + ' ' + uniqueDate.getMonth() + ' of ' + uniqueDate.getYear()}"></span>:
 </h4>
 <ul>
-
     <li th:each="scheduleDto : ${schedules}">
         <p><b>Group:</b> <span th:text="${scheduleDto.groupDto.name}"></span></p>
         <p><b>Subject:</b> <span th:text="${scheduleDto.subjectDto.name}"></span></p>
@@ -65,9 +64,9 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     </form>
 
 </div>
-
     </li>
 </ul>
+
 <h4>Add new schedule.
 </h4>
 <form th:action="@{/schedule/{date}/add(date=${uniqueDate})}" method="post" style="margin-top:20px;">

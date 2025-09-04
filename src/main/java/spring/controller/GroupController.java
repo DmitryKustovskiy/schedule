@@ -27,17 +27,20 @@ public class GroupController {
 	public String findAll(Model model) {
 		model.addAttribute("groups", groupService.findAll());
 		return "group/findAll";
+		
 	}
 
 	@GetMapping("/{id}")
 	public String findById(@PathVariable("id") int id, Model model) {
 		model.addAttribute("group", groupService.findById(id));
 		return "group/findById";
+		
 	}
 
 	@GetMapping("/new")
 	public String create(@ModelAttribute("group") GroupDto groupDto) {
 		return "group/new";
+		
 	}
 
 	@PostMapping
@@ -52,6 +55,7 @@ public class GroupController {
 		} catch (EntityAlreadyExistsException ex) {
 			model.addAttribute("errorMessage", ex.getMessage());
 			return "group/new";
+			
 		}
 
 	}
@@ -60,6 +64,7 @@ public class GroupController {
 	public String edit(Model model, @PathVariable("id") int id) {
 		model.addAttribute("group", groupService.findById(id));
 		return "group/edit";
+		
 	}
 
 	@PostMapping("/{id}")
@@ -75,13 +80,13 @@ public class GroupController {
 		} catch (EntityAlreadyExistsException ex) {
 			model.addAttribute("errorMessage", ex.getMessage());
 			return "group/edit";
+			
 		}
 
 	}
 
 	@PostMapping("/{id}/delete")
 	public String delete(@PathVariable("id") int id, Model model) {
-		
 		try {
 			groupService.delete(id);
 			return "redirect:/groups";
@@ -89,6 +94,7 @@ public class GroupController {
 			model.addAttribute("errorMessage", ex.getMessage());
 			model.addAttribute("group", groupService.findById(id));
 			return "group/findById";
+			
 		}
 
 	}
