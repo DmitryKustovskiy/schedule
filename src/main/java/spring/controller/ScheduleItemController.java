@@ -74,6 +74,7 @@ public class ScheduleItemController {
 	    model.addAttribute("allSubjects", subjectService.findAll());
 
 		return "schedule/byDate";
+		
 	}
 
 	@GetMapping("/{id}/edit")

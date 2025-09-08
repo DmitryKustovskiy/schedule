@@ -14,7 +14,9 @@ import spring.service.SubjectService;
 public class MenuController {
 
 	@GetMapping
-	public String menu(Model model) {
+	public String menu() {
 		return "mainMenu";
+		
 	}
+	
 }

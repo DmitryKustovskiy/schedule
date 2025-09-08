@@ -115,7 +115,7 @@ public class GroupControllerUnitTest {
 	}
 
 	@Test
-	void shouldReturnEditFormWhenEditGroup() {
+	void shouldReturnEditFormAndSetGroupWhenEditGroup() {
 		int groupId = 1;
 		var groupDto = new GroupDto(groupId, "TestGroup", 5);
 		when(groupService.findById(1)).thenReturn(groupDto);
@@ -145,7 +145,7 @@ public class GroupControllerUnitTest {
 	}
 
 	@Test
-	void shouldReturnEditFormWhenValidationFails() {
+	void shouldReturnEditFormWhenValidationFailsOnUpdate() {
 		var groupDto = new GroupDto(1, "TestGroup", 5);
 		var bindingResult = mock(BindingResult.class);
 		var model = new ExtendedModelMap();

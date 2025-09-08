@@ -19,7 +19,7 @@ import spring.model.Subject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleItemDto {
-	
+
 	private Integer id;
 
 	@NotBlank(message = "You should enter start time")
@@ -33,9 +33,7 @@ public class ScheduleItemDto {
 
 	@NotNull(message = "Subject is required")
 	private SubjectDto subjectDto;
-	
-	private String datePart;
-	
+
 	private Integer version;
 
 }
