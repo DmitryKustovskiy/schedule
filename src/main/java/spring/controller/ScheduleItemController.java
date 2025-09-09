@@ -85,6 +85,7 @@ public class ScheduleItemController {
 		model.addAttribute("subjects", subjectService.findAll());
 
 		return "schedule/edit";
+		
 	}
 
 	@PostMapping("/{id}/edit")
@@ -97,6 +98,7 @@ public class ScheduleItemController {
 		}
 		scheduleItemService.update(dto, id);
 		return "redirect:/schedule";
+		
 	}
 	
 	@PostMapping("/{date}/add")
@@ -122,6 +124,7 @@ public class ScheduleItemController {
 	    scheduleItemService.save(newItem);
 
 	    return "redirect:/schedule/" + date;
+	    
 	}
 
 	@GetMapping("/new")
@@ -130,6 +133,7 @@ public class ScheduleItemController {
 		model.addAttribute("subjects", subjectService.findAll());
 
 		return "schedule/new";
+		
 	}
 
 	@PostMapping("/new")
@@ -144,13 +148,15 @@ public class ScheduleItemController {
 		scheduleItemService.save(scheduleItemDto);
 
 		return "redirect:/schedule";
+		
 	}
 
 	@PostMapping("/{id}")
-	public String delete(@PathVariable("id") int id, Model model) {
+	public String delete(@PathVariable("id") int id) {
 		scheduleItemService.delete(id);
 
 		return "redirect:/schedule";
+		
 	}
 
 }

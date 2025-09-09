@@ -1,6 +1,7 @@
 package spring.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCharSequence;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -157,7 +158,8 @@ public class ScheduleItemControllerUnitTest {
 	void shouldRedirectToNewScheduleFormWhenUpdateSucceeds() {
 		var groupDto = new GroupDto(1, "Test", 5);
 		var subjectDto = new SubjectDto(1, "Math", 5);
-		var scheduleItemDto = new ScheduleItemDto(1, "2025-11-11T14:50", "2025-11-11T15:50", groupDto, subjectDto, 5);
+		var scheduleItemDto = new ScheduleItemDto
+				(1, "2025-11-11T14:50", "2025-11-11T15:50", groupDto, subjectDto, 5);
 		var model = new ExtendedModelMap();
 		var bindingResult = mock(BindingResult.class);
 		when(bindingResult.hasErrors()).thenReturn(false);
@@ -184,6 +186,88 @@ public class ScheduleItemControllerUnitTest {
 		assertThat(model.containsAttribute("groups")).isTrue();
 		assertThat(model.containsAttribute("subjects")).isTrue();
 		verify(scheduleItemService, times(0)).update(scheduleItemDto, 1);
+		
+	}
+	
+	@Test
+	void shouldRedirectToScheduleOnAddSucceeds() {
+		var localDate = LocalDate.of(2025, 11, 11);
+		int groupId = 1;
+		int subjectId = 1;
+		var startTime = "10:00";
+		var endTime = "12:00";
+		var groupDto = new GroupDto(groupId, "TestGroup", 1);
+	    var subjectDto = new SubjectDto(subjectId, "Math", 1);
+	    when(groupService.findById(groupId)).thenReturn(groupDto);
+	    when(subjectService.findById(subjectId)).thenReturn(subjectDto);
+	    
+	    var scheduleItemDto = new ScheduleItemDto();
+	    scheduleItemDto.setGroupDto(groupDto);
+	    scheduleItemDto.setSubjectDto(subjectDto);
+	    scheduleItemDto.setStartTime(localDate + "T" + startTime);
+	    scheduleItemDto.setEndTime(localDate + "T" + endTime);
+
+	    var actualResult = scheduleItemController
+	            .addSchedule(localDate, groupId, subjectId, startTime, endTime);
+
+	    assertThat(actualResult).isEqualTo("redirect:/schedule/" + localDate);
+	    verify(scheduleItemService, times(1)).save(scheduleItemDto);
+		
+	}
+	
+	@Test
+	void shouldReturnNewScheduleItemFormAndSetGroupsSubjectsOnSave() {
+		var groupDto = new GroupDto(1, "Test", 5);
+		var subjectDto = new SubjectDto(1, "Math", 5);
+		var scheduleItemDto = new ScheduleItemDto(1, "2025-11-11T14:50", "2025-11-11T15:50", groupDto, subjectDto, 5);
+		var model = new ExtendedModelMap();
+		
+		var actualResult = scheduleItemController.newSchedule(scheduleItemDto, model);
+		
+		assertThat(actualResult).isEqualTo("schedule/new");
+		assertThat(model.containsAttribute("groups")).isTrue();
+		assertThat(model.containsAttribute("subjects")).isTrue();
+		
+	}
+	
+	@Test
+	void shouldRedirectToAllSchedulesPageOnSaveSucceeds() {
+		var scheduleItemDto = new ScheduleItemDto();
+		var model = new ExtendedModelMap();
+		var bindingResult = mock(BindingResult.class);
+		when(bindingResult.hasErrors()).thenReturn(false);
+		
+		var actualResult = scheduleItemController.save(scheduleItemDto, bindingResult, model);
+		
+		assertThat(actualResult).isEqualTo("redirect:/schedule");
+		verify(scheduleItemService, times(1)).save(scheduleItemDto);
+		
+	}
+	
+	@Test
+	void shouldReturnNewScheduleItemFormAndSetGroupsSubjectsOnValidationFailes() {
+		var scheduleItemDto = new ScheduleItemDto();
+		var model = new ExtendedModelMap();
+		var bindingResult = mock(BindingResult.class);
+		when(bindingResult.hasErrors()).thenReturn(true);
+		
+		var actualResult = scheduleItemController.save(scheduleItemDto, bindingResult, model);
+		
+		assertThat(actualResult).isEqualTo("schedule/new");
+		assertThat(model.containsAttribute("groups")).isTrue();
+		assertThat(model.containsAttribute("subjects")).isTrue();
+		verify(scheduleItemService, times(0)).save(scheduleItemDto);
+		
+	}
+	
+	@Test
+	void shouldRedirectToAllSchedulesOnDelete() {
+		int scheduleItemId = 1;
+
+		var actualResult = scheduleItemController.delete(scheduleItemId);
+		
+		assertThat(actualResult).isEqualTo("redirect:/schedule");
+		verify(scheduleItemService, times(1)).delete(scheduleItemId);
 		
 	}
 	
