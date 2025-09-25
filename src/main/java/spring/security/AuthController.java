@@ -19,12 +19,14 @@ public class AuthController {
 	@GetMapping("/login")
 	public String loginPage() {
 		return "login";
+		
 	}
 
 	@GetMapping("/register")
 	public String registerPage(Model model) {
 		model.addAttribute("registrationDto", new RegistrationDto());
 		return "register";
+		
 	}
 
 	@PostMapping("/register")
@@ -41,6 +43,7 @@ public class AuthController {
 
 		registrationService.register(dto.getUsername(), dto.getPassword(), dto.getRole());
 		return "redirect:/login";
+		
 	}
 
 }

@@ -56,7 +56,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
             <span th:text="${#strings.substring(scheduleDto.endTime, 11, 16)}"></span>
         </p>
 
-        <a th:href="@{/schedule/{id}/edit(id=${scheduleDto.id})}" class="button">Edit</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/schedule/{id}/edit(id=${scheduleDto.id})}" class="button">Edit</a>
         
         <div style="display: inline-block;">
     <form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{id}(id=${schedules[0].id})}" method="POST" style="display: inline;">
@@ -66,10 +66,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 </div>
     </li>
 </ul>
-
-<h4>Add new schedule.
-</h4>
-<form th:action="@{/schedule/{date}/add(date=${uniqueDate})}" method="post" style="margin-top:20px;">
+<h4 sec:authorize="hasRole('ADMIN')">Add schedule on this day:</h4>
+<form sec:authorize="hasRole('ADMIN')" th:action="@{/schedule/{date}/add(date=${uniqueDate})}" method="post" style="margin-top:20px;">
     <input type="hidden" name="date" th:value="${uniqueDate}"/>
     <label>Group:</label>
     <select name="groupId" required>

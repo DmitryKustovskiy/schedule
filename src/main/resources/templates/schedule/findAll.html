@@ -44,8 +44,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
        th:text="${date.getDayOfMonth() + ' of ' + date.getMonth() + ', ' + date.getYear()}">
     </a>
 </div>
-<h4 style="font-weight: bold; color: blue; text-align: left;">Add New Schedule:</h4>
-<form th:method="POST" th:action="@{/schedule/new}" th:object="${scheduleDto}" style="margin-top:20px;">
+<h4 sec:authorize="hasRole('ADMIN')" style="font-weight: bold; color: blue; text-align: left;">Add New Schedule:</h4>
+<form sec:authorize="hasRole('ADMIN')" th:method="POST" th:action="@{/schedule/new}" th:object="${scheduleDto}" style="margin-top:20px;">
     <label>Group:</label>
     <select th:field="*{groupDto.id}">
         <option th:each="group : ${allGroups}" th:value="${group.id}" th:text="${group.name}"></option>
