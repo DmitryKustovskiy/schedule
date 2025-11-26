@@ -1,96 +1,81 @@
-Schedule Application
+🗓️ ScheduleApp
 
-A Spring Boot web application for managing schedules. Built with Java, Thymeleaf, Spring Data JPA, Spring Security, and H2 database for quick setup.
+Java Backend Project with Spring Boot, Spring Security, Spring Data JPA, Hibernate, JDBC, SQL, and Thymeleaf.
 
-Features
+A simple schedule management application demonstrating:
 
-CRUD operations for schedule items
+REST APIs
 
-User authentication and authorization with Spring Security
+Server-side rendered pages with sessions
 
-Server-side rendered UI with Thymeleaf
+JWT authentication
 
-REST API endpoints for schedule management
+🛠️ Technologies
 
-Unit and integration testing with JUnit and Mockito
+Java 17, Spring Boot 3.4
 
-Easy setup with in-memory H2 database
+Backend: Spring Security, Spring Data JPA, Hibernate
 
-Technologies
+Database: JDBC, SQL, H2 (in-memory demo)
 
-Java 17
+Frontend: Thymeleaf (server-side rendering)
 
-Spring Boot 3
+Testing: JUnit & Mockito, Jacoco coverage
 
-Spring Core / Spring Security / Spring Data JPA / Hibernate
+Build & Run: Gradle
 
-Thymeleaf
+⚡ Features
 
-H2 database (in-memory)
+View, create, update, delete schedule items
 
-Gradle
+REST API endpoints
 
-JUnit, Mockito
+Thymeleaf-based UI with session support
 
-Lombok
+JWT authentication for secure API
 
-Setup & Run
+Unit & integration tests
+
+🚀 Quick Start
+
 1️⃣ Clone the repository
+
 git clone https://github.com/DmitryKustovskiy/schedule.git
 cd schedule
 
-2️⃣ Run the application using H2 database
+2️⃣ Run the app with H2 in-memory database
+
 ./gradlew bootRun --args='--spring.profiles.active=h2'
 
 
-The app will use an in-memory H2 database. No additional database setup is required.
+🌐 Application URL: http://localhost:8080/register
 
-3️⃣ Open in browser
+🗄️ H2 console: http://localhost:8080/h2-console
 
-Application UI: http://localhost:8080/register
+💡 Tip: H2 is in-memory, tables are auto-created, and data will reset on app restart. No PostgreSQL setup needed.
 
-H2 Console: http://localhost:8080/h2-console
+3️⃣ Run tests & generate coverage report
 
-JDBC URL: jdbc:h2:mem:schedule
-
-User: sa
-
-Password: (leave empty)
-
-4️⃣ Running Tests
 ./gradlew test
+./gradlew jacocoTestReport
 
 
-HTML code coverage report: build/reports/jacoco/test/html/index.html
+📄 Test report: build/reports/jacoco/test/html/index.html
 
-Project Structure
+🔗 Projects
 
-controller/ – REST & Thymeleaf controllers
+Thymeleaf & sessions demo: GitHub Repo
 
-service/ – Business logic, CRUD operations
+REST API demo: GitHub Repo
 
-repository/ – JPA repositories
+👤 About Me
 
-model/ – Entities (ScheduleItem, Group, Subject)
+Dmitriy Kustovskiy – Java Backend Developer with hands-on experience in:
 
-security/ – JWT and Spring Security configuration
+Java Core, Spring Boot, Spring Security, Spring Data JPA, Hibernate, JDBC, SQL, Thymeleaf
 
-dto/ – Data transfer objects
+Building REST APIs and server-side web apps with JWT & session authentication
 
-mapper/ – Mapping between entities and DTOs
+Unit & integration testing using JUnit & Mockito
 
-Notes
-
-Uses H2 in-memory database for demo purposes.
-
-Switching to PostgreSQL requires updating application.yaml with database credentials.
-
-Author
-
-Dmitriy Kustovskiy
-
-20+ years of experience as a radio host (Pilot FM, Unistar)
-
-Strong communication & leadership skills
-
-GitHub: https://github.com/DmitryKustovskiy
+💬 Soft skills: Strong communication and leadership skills developed over 20 years as a radio host on top Belarusian radiostations (Pilot FM, Unistar).
