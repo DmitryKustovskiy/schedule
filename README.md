@@ -35,6 +35,7 @@ JUnit, Mockito
 Lombok
 
 Setup & Run
+
 1️⃣ Clone the repository
 git clone https://github.com/DmitryKustovskiy/schedule.git
 cd schedule
