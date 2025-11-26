@@ -90,8 +90,4 @@ Author
 
 Dmitriy Kustovskiy
 
-20+ years of experience as a radio host (Pilot FM, Unistar)
-
-Strong communication & leadership skills
-
 GitHub: https://github.com/DmitryKustovskiy
