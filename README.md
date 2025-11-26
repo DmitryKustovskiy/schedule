@@ -38,6 +38,11 @@ Unit & integration tests
 
 🚀 Quick Start
 
+<<<<<<< HEAD
+=======
+Setup & Run
+
+>>>>>>> fbf50910b1d9a47c3c1e26df2f94160ba1fb5492
 1️⃣ Clone the repository
 
 git clone https://github.com/DmitryKustovskiy/schedule.git
@@ -78,4 +83,18 @@ Building REST APIs and server-side web apps with JWT & session authentication
 
 Unit & integration testing using JUnit & Mockito
 
+<<<<<<< HEAD
 💬 Soft skills: Strong communication and leadership skills developed over 20 years as a radio host on top Belarusian radiostations (Pilot FM, Unistar).
+=======
+Notes
+
+Uses H2 in-memory database for demo purposes.
+
+Switching to PostgreSQL requires updating application.yaml with database credentials.
+
+Author
+
+Dmitriy Kustovskiy
+
+GitHub: https://github.com/DmitryKustovskiy
+>>>>>>> fbf50910b1d9a47c3c1e26df2f94160ba1fb5492
