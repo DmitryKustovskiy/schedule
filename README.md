@@ -38,11 +38,8 @@ Unit & integration tests
 
 🚀 Quick Start
 
-<<<<<<< HEAD
-=======
 Setup & Run
 
->>>>>>> fbf50910b1d9a47c3c1e26df2f94160ba1fb5492
 1️⃣ Clone the repository
 
 git clone https://github.com/DmitryKustovskiy/schedule.git
@@ -51,7 +48,6 @@ cd schedule
 2️⃣ Run the app with H2 in-memory database
 
 ./gradlew bootRun --args='--spring.profiles.active=h2'
-
 
 🌐 Application URL: http://localhost:8080/register
 
@@ -63,7 +59,6 @@ cd schedule
 
 ./gradlew test
 ./gradlew jacocoTestReport
-
 
 📄 Test report: build/reports/jacoco/test/html/index.html
 
@@ -83,9 +78,6 @@ Building REST APIs and server-side web apps with JWT & session authentication
 
 Unit & integration testing using JUnit & Mockito
 
-<<<<<<< HEAD
-💬 Soft skills: Strong communication and leadership skills developed over 20 years as a radio host on top Belarusian radiostations (Pilot FM, Unistar).
-=======
 Notes
 
 Uses H2 in-memory database for demo purposes.
