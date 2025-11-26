@@ -24,7 +24,7 @@ Testing: JUnit & Mockito, Jacoco coverage
 
 Build & Run: Gradle
 
-⚡ Features
+🛠️ Features
 
 View, create, update, delete schedule items
 
@@ -89,4 +89,3 @@ Author
 Dmitriy Kustovskiy
 
 GitHub: https://github.com/DmitryKustovskiy
->>>>>>> fbf50910b1d9a47c3c1e26df2f94160ba1fb5492
