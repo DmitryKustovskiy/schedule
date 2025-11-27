@@ -1,14 +1,18 @@
 🗓️ ScheduleApp
 
-Java Backend Project with Spring Boot, Spring Security, Spring Data JPA, Hibernate, JDBC, SQL, and Thymeleaf.
+Java Backend Application built with Spring Boot, Spring Security, Spring Data JPA, Hibernate, JDBC, SQL, and Thymeleaf.
 
-A simple schedule management application demonstrating:
+A simple schedule management system demonstrating:
 
-REST APIs
+Server-side rendering (Thymeleaf)
 
-Server-side rendered pages with sessions
+Session-based authentication (Spring Security)
 
-JWT authentication
+JPA/Hibernate entity listeners
+
+Optimistic locking for safe concurrent updates
+
+CRUD operations for schedule items, students, subjects anf groups
 
 🛠️ Technologies
 
@@ -16,76 +20,105 @@ Java 17, Spring Boot 3.4
 
 Backend: Spring Security, Spring Data JPA, Hibernate
 
-Database: JDBC, SQL, H2 (in-memory demo)
+Concurrency safety: Optimistic Locking (@Version)
 
-Frontend: Thymeleaf (server-side rendering)
+Entity Lifecycle: @PrePersist, @PreUpdate, custom listeners
 
-Testing: JUnit & Mockito, Jacoco coverage
+Database: H2 (in-memory demo), JDBC, SQL
 
-Build & Run: Gradle
+Frontend: Thymeleaf templates
 
-🛠️ Features
+Testing: JUnit 5, Mockito, Jacoco
 
-View, create, update, delete schedule items
+Build tool: Gradle
 
-REST API endpoints
+⚡ Features
+🔐 Authentication
 
-Thymeleaf-based UI with session support
+Spring Security
 
-JWT authentication for secure API
+Session-based login (not JWT)
 
-Unit & integration tests
+Login, registration, protected pages
+
+📅 Schedule Management
+
+Create, read, update, delete schedule items
+
+Validation on all forms
+
+Optimistic locking (prevents conflicts when two users edit same record)
+
+🔍 Persistence Layer
+
+JPA entities with:
+
+@Version field for concurrency control
+
+@EntityListeners for automatic timestamps, auditing, and logging
+
+🖥️ Frontend
+
+Server-side rendered HTML (Thymeleaf)
+
+Form-based workflow
+
+Error messages, validation hints
+
+🧪 Testing
+
+Unit tests with JUnit & Mockito
+
+Integration tests
+
+Code coverage via Jacoco
 
 🚀 Quick Start
 
-Setup & Run
-
 1️⃣ Clone the repository
-
 git clone https://github.com/DmitryKustovskiy/schedule.git
 cd schedule
 
-2️⃣ Run the app with H2 in-memory database
-
+2️⃣ Run the application (H2 in-memory)
 ./gradlew bootRun --args='--spring.profiles.active=h2'
 
-🌐 Application URL: http://localhost:8080/register
 
-🗄️ H2 console: http://localhost:8080/h2-console
+🌐 App URL:
+http://localhost:8080/register
 
-💡 Tip: H2 is in-memory, tables are auto-created, and data will reset on app restart. No PostgreSQL setup needed.
+🗄️ H2 Console:
+http://localhost:8080/h2-console
 
-3️⃣ Run tests & generate coverage report
+H2 is fully in-memory → tables auto-create → data resets on every restart.
+Perfect for demo/testing. No PostgreSQL config required.
 
+3️⃣ Run tests & generate coverage
 ./gradlew test
 ./gradlew jacocoTestReport
 
-📄 Test report: build/reports/jacoco/test/html/index.html
 
-🔗 Projects
+📄 Coverage report:
+build/reports/jacoco/test/html/index.html
 
-Thymeleaf & sessions demo: GitHub Repo
+📁 Project Structure (short overview)
+src/
+ ├─ main/
+ │   ├─ java/yourapp/
+ │   │    ├─ controllers/      # MVC controllers
+ │   │    ├─ services/         # business logic
+ │   │    ├─ repositories/     # Spring Data JPA
+ │   │    ├─ entities/         # JPA entities + @Version
+ │   │    ├─ listeners/        # Entity listeners (@PrePersist, @PreUpdate)
+ │   │    └─ security/         # Security config, user details
+ │   └─ resources/
+ │        ├─ templates/        # Thymeleaf HTML
+ │        ├─ application.yaml
+ │        └─ static/
+ └─ test/                      # unit & integration tests
 
-REST API demo: GitHub Repo
-
-👤 About Me
-
-Dmitriy Kustovskiy – Java Backend Developer with hands-on experience in:
-
-Java Core, Spring Boot, Spring Security, Spring Data JPA, Hibernate, JDBC, SQL, Thymeleaf
-
-Building REST APIs and server-side web apps with JWT & session authentication
-
-Unit & integration testing using JUnit & Mockito
-
-Notes
-
-Uses H2 in-memory database for demo purposes.
-
-Switching to PostgreSQL requires updating application.yaml with database credentials.
-
-Author
+👤 Author
 
 Dmitriy Kustovskiy
+Java Backend Developer
 
 GitHub: https://github.com/DmitryKustovskiy
