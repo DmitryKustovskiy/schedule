@@ -1,114 +1,184 @@
 🗓️ ScheduleApp
+Spring Boot + Thymeleaf + Security + JPA + H2/PostgreSQL
 
-Java Backend Application built with Spring Boot, Spring Security, Spring Data JPA, Hibernate, PostgreSQL (also can run in H2 database), JDBC, SQL, and Thymeleaf.
+A complete training project with DTO/mappers, optimistic locking, event listeners, layered architecture, and full testing coverage.
 
-A simple schedule management system demonstrating:
+🚀 Overview
 
-Server-side rendering (Thymeleaf)
+ScheduleApp is a server-side Java application for managing study schedules.
+The project demonstrates solid backend engineering using:
 
-Session-based authentication (Spring Security)
+Spring Boot 3
 
-JPA/Hibernate entity listeners
+Spring Security (session-based authentication)
 
-Optimistic locking for safe concurrent updates
+Spring Data JPA + Hibernate
 
-CRUD operations for schedule items, students, subjects anf groups
+Thymeleaf (server-side rendering)
+
+H2 (demo) / PostgreSQL (production)
+
+DTO + Mapper layer
+
+Optimistic Locking (@Version)
+
+EntityGraph, JOIN FETCH optimization
+
+Application & Security Event Listeners
+
+Unit + Integration tests
+
+The application includes a full UI (non-REST) for managing:
+
+groups
+
+subjects
+
+students
+
+schedule items
+
+It also provides full validation, error handling, and service-layer business logic.
 
 🛠️ Technologies
+Backend
 
-Java 17, Spring Boot 3.4
+Java 17
 
-Backend: Spring Security, Spring Data JPA, Hibernate
-
-Concurrency safety: Optimistic Locking (@Version)
-
-Entity Lifecycle: @PrePersist, @PreUpdate, custom listeners
-
-Database: H2 (in-memory demo), JDBC, SQL
-
-Frontend: Thymeleaf templates
-
-Testing: JUnit 5, Mockito, Jacoco
-
-Build tool: Gradle
-
-⚡ Features
-🔐 Authentication
+Spring Boot 3.4
 
 Spring Security
 
-Session-based login (not JWT)
+Spring Data JPA
 
-Login, registration, protected pages
+Hibernate
 
-📅 Schedule Management
+DTO & Mapper layer
 
-Create, read, update, delete schedule items, students, subjects and groups
+ApplicationListener events
 
-Validation on all forms
+Database
 
-Optimistic locking (prevents conflicts when two users edit same record)
+H2 in-memory (development/demo)
 
-🔍 Persistence Layer
+PostgreSQL (production)
 
-JPA entities with:
+Frontend
 
-@Version field for concurrency control
+Thymeleaf (HTML templates)
 
-@EntityListeners for automatic timestamps, auditing, and logging
+Server-side rendering only
 
-🖥️ Frontend
+Testing
 
-Server-side rendered HTML (Thymeleaf)
+JUnit 5
 
-Form-based workflow
+Mockito
 
-Error messages, validation hints
+SpringBootTest Integration Testing
+
+Jacoco coverage reports
+
+Build
+
+Gradle 8
+
+✨ Features
+📌 Schedule Management
+
+Create, edit, delete schedule items
+
+Assign groups and subjects
+
+Filter schedules by group name
+
+Get unique schedule dates
+
+View daily schedules
+
+🗂️ Directories
+
+Full CRUD for:
+
+Groups
+
+Subjects
+
+Students
+
+Schedule Items
+
+🔐 Security
+
+Spring Security (form login)
+
+Session-based authentication
+
+Custom login page
+
+Logout
+
+Login/Logout event listeners
+
+🧩 Architecture Concepts
+
+DTO → Mapper → Entity separation
+
+Service-layer business logic
+
+Repository-level optimization
+
+@EntityGraph and JOIN FETCH for N+1 query reduction
+
+Optimistic locking with @Version
+
+Custom exceptions + global error handler
 
 🧪 Testing
 
-Unit tests with JUnit & Mockito
+Integration tests for:
 
-Integration tests
+CRUD operations
 
-Code coverage via Jacoco
+Optimistic locking
+
+Filtering
+
+Entity relations
+
+Unit tests for:
+Services, controllers
+
+small utility methods
 
 🚀 Quick Start
-
-1️⃣ Clone the repository
+1️⃣ Clone the project
 git clone https://github.com/DmitryKustovskiy/schedule.git
 cd schedule
 
-2️⃣ Run the application (H2 in-memory)
+2️⃣ Run with H2 (demo mode)
 ./gradlew bootRun --args='--spring.profiles.active=h2'
 
-
-🌐 App URL:
+Application:
 http://localhost:8080/register
 
-🗄️ H2 Console:
+H2 Console:
 http://localhost:8080/h2-console
 
-H2 is fully in-memory → tables auto-create → data resets on every restart.
-Perfect for demo/testing. No PostgreSQL config required.
+H2 tables are generated automatically.
 
-3️⃣ Run tests & generate coverage
+3️⃣ Run all tests
 ./gradlew test
 ./gradlew jacocoTestReport
 
 
-📄 Coverage report:
+Coverage report:
 build/reports/jacoco/test/html/index.html
 
 👤 Author
-Dmitriy Kustovskiy – Java Backend Developer experienced in:
 
-Java Core, Spring Boot, Spring Security
+Dmitriy Kustovskiy — Java Backend Developer
 
-Spring Data JPA, Hibernate, JDBC, SQL
+🔗 GitHub: https://github.com/DmitryKustovskiy
 
-Thymeleaf & server-side rendering
-
-Unit testing (JUnit, Mockito)
-
-GitHub: https://github.com/DmitryKustovskiy
+💼 LinkedIn: https://www.linkedin.com/in/dmitry-kustovskiy/
