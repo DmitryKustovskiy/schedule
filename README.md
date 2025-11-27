@@ -1,6 +1,6 @@
 🗓️ ScheduleApp
 
-Java Backend Application built with Spring Boot, Spring Security, Spring Data JPA, Hibernate, JDBC, SQL, and Thymeleaf.
+Java Backend Application built with Spring Boot, Spring Security, Spring Data JPA, Hibernate, PostgreSQL, JDBC, SQL, and Thymeleaf.
 
 A simple schedule management system demonstrating:
 
@@ -43,7 +43,7 @@ Login, registration, protected pages
 
 📅 Schedule Management
 
-Create, read, update, delete schedule items
+Create, read, update, delete schedule items, students, subjects and groups
 
 Validation on all forms
 
