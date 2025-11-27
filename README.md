@@ -1,6 +1,6 @@
 🗓️ ScheduleApp
 
-Java Backend Application built with Spring Boot, Spring Security, Spring Data JPA, Hibernate, PostgreSQL, JDBC, SQL, and Thymeleaf.
+Java Backend Application built with Spring Boot, Spring Security, Spring Data JPA, Hibernate, PostgreSQL (also can run in H2 database), JDBC, SQL, and Thymeleaf.
 
 A simple schedule management system demonstrating:
 
