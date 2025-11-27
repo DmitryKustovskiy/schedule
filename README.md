@@ -100,25 +100,15 @@ Perfect for demo/testing. No PostgreSQL config required.
 📄 Coverage report:
 build/reports/jacoco/test/html/index.html
 
-📁 Project Structure (short overview)
-src/
- ├─ main/
- │   ├─ java/yourapp/
- │   │    ├─ controllers/      # MVC controllers
- │   │    ├─ services/         # business logic
- │   │    ├─ repositories/     # Spring Data JPA
- │   │    ├─ entities/         # JPA entities + @Version
- │   │    ├─ listeners/        # Entity listeners (@PrePersist, @PreUpdate)
- │   │    └─ security/         # Security config, user details
- │   └─ resources/
- │        ├─ templates/        # Thymeleaf HTML
- │        ├─ application.yaml
- │        └─ static/
- └─ test/                      # unit & integration tests
-
 👤 Author
+Dmitriy Kustovskiy – Java Backend Developer experienced in:
 
-Dmitriy Kustovskiy
-Java Backend Developer
+Java Core, Spring Boot, Spring Security
+
+Spring Data JPA, Hibernate, JDBC, SQL
+
+Thymeleaf & server-side rendering
+
+Unit testing (JUnit, Mockito)
 
 GitHub: https://github.com/DmitryKustovskiy
