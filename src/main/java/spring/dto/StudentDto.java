@@ -22,7 +22,8 @@ public class StudentDto {
 	@NotBlank(message = "Please, enter second name")
 	@Size(min = 2, message = "Minimum 3 symbols required for the lastname")
 	private String lastName;
-
+	
+	@NotNull(message = "Please, choose the group")
 	private GroupDto groupDto;
 	
 	private Integer version;
