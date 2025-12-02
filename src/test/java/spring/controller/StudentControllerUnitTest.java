@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 
 import spring.dto.GroupDto;
 import spring.dto.StudentDto;
+import spring.dto.StudentUpdateDto;
 import spring.service.GroupService;
 import spring.service.StudentService;
 
@@ -170,7 +171,7 @@ public class StudentControllerUnitTest {
 	@Test
 	void shouldReirectToAllStudentsOnUpdateSucceeds() {
 		int studentId = 1;
-		var studentDto = new StudentDto();
+		var studentDto = new StudentUpdateDto();
 		var bindingResult = mock(BindingResult.class);
 		when(bindingResult.hasErrors()).thenReturn(false);
 
@@ -184,7 +185,7 @@ public class StudentControllerUnitTest {
 	@Test
 	void shouldReturnStudentEditFormWhenValidationFailsOnUpdate() {
 		int studentId = 1;
-		var studentDto = new StudentDto();
+		var studentDto = new StudentUpdateDto();
 		var bindingResult = mock(BindingResult.class);
 		when(bindingResult.hasErrors()).thenReturn(true);
 

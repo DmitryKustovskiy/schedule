@@ -2,9 +2,6 @@ package spring.service;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +10,8 @@ import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import spring.dto.StudentDto;
+import spring.dto.StudentUpdateDto;
 import spring.mapper.StudentMapper;
-import spring.mapper.SubjectMapper;
 import spring.model.Group;
 import spring.model.Student;
 import spring.repository.GroupRepository;
@@ -53,7 +50,7 @@ public class StudentService {
 	}
 
 	@Transactional
-	public Student update(StudentDto updatedStudentDto, int id) {
+	public Student update(StudentUpdateDto updatedStudentDto, int id) {
 		Student student = findStudent(id);
 
 		if (!student.getVersion().equals(updatedStudentDto.getVersion())) {
@@ -64,7 +61,10 @@ public class StudentService {
 		student.setLastName(updatedStudentDto.getLastName());
 
 		log.info("Student with id {} was updated correctly", id);
-		return studentRepository.save(student);
+		Student saved = studentRepository.save(student);
+		log.info("Saved student: {}", saved);
+		
+		return saved;
 		
 	}
 

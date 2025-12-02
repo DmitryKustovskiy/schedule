@@ -18,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
 import spring.dto.GroupDto;
 import spring.dto.StudentDto;
+import spring.dto.StudentUpdateDto;
 import spring.mapper.GroupMapper;
 import spring.mapper.StudentMapper;
 import spring.model.Group;
@@ -103,7 +104,7 @@ public class StudentServiceIT {
 
 	@Test
 	void shouldUpdateStudent() {
-		var updatedStudentDto = new StudentDto();
+		var updatedStudentDto = new StudentUpdateDto();
 		updatedStudentDto.setFirstName("FirstName");
 		updatedStudentDto.setLastName("LastName");
 		var studentToBeUpdated = studentService.findById(alex.getId());
@@ -167,11 +168,16 @@ public class StudentServiceIT {
 	@Test
 	void shouldThrowOptimisticLockExceptionOnUpdate() {
 		var existedStudentDto = studentService.findById(alex.getId());
-		existedStudentDto.setFirstName("Test");
-		existedStudentDto.setVersion(existedStudentDto.getVersion() -1);
+		var studentUpdateDto = new StudentUpdateDto(
+		        existedStudentDto.getId(),
+		        "Test",
+		        existedStudentDto.getLastName(),
+		        existedStudentDto.getGroupDto(),
+		        existedStudentDto.getVersion() - 1
+		    );
 		
 		assertThrows(OptimisticLockException.class, 
-				() -> studentService.update(existedStudentDto, alex.getId()));
+				() -> studentService.update(studentUpdateDto, alex.getId()));
 		
 	}
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import spring.dto.StudentDto;
-import spring.repository.StudentRepository;
+import spring.dto.StudentUpdateDto;
 import spring.service.GroupService;
 import spring.service.StudentService;
 
@@ -75,12 +75,13 @@ public class StudentController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("student") @Valid StudentDto studentDto, BindingResult bindingResult,
+	public String update(@ModelAttribute("student") @Valid StudentUpdateDto studentUpdateDto, BindingResult bindingResult,
 			@PathVariable("id") int id) {
 		if (bindingResult.hasErrors()) {
 			return "student/edit";
 		}
-		studentService.update(studentDto, id);
+		
+		studentService.update(studentUpdateDto, id);
 		return "redirect:/students";
 	}
 
